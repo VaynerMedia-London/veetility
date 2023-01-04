@@ -1,0 +1,10 @@
+fuzzywuzzy
+gspread
+gspread_dataframe
+numpy
+pandas
+psycopg2
+regex
+requests
+SQLAlchemy
+tqdm

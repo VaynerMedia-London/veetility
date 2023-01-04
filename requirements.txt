@@ -1,0 +1,10 @@
+fuzzywuzzy==0.18.0
+gspread==5.4.0
+gspread_dataframe==3.3.0
+numpy==1.21.5
+pandas==1.4.2
+psycopg2==2.8.6
+regex==2022.3.15
+requests==2.27.1
+SQLAlchemy==1.4.32
+tqdm==4.64.0
