@@ -3,7 +3,7 @@ import json
 import pandas as pd
 import regex as re
 import numpy as np
-from datetime import datetime
+from datetime import datetime,timedelta
 import time
 from fuzzywuzzy import fuzz
 from tqdm.auto import tqdm
@@ -14,7 +14,7 @@ import gspread
 import pickle
 import gspread_dataframe as gd
 import os
-from sqlalchemy import create_engine
+import sqlalchemy as sa
 
 emoji_pattern = re.compile("["
                            u"\U0001F600-\U0001F64F"  # emoticons
@@ -23,7 +23,7 @@ emoji_pattern = re.compile("["
                            u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
                            "]+", flags=re.UNICODE)
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('UtilityFunctions')
 if logger.hasHandlers():
     logger.handlers = []
 if os.path.isdir('logs') == False:
@@ -32,7 +32,7 @@ logger.setLevel(logging.INFO)
 logger.addHandler(logging.StreamHandler(sys.stdout))
 formatter = logging.Formatter('%(levelname)s %(asctime)s - %(message)s')
 
-file_handler = logging.FileHandler(f'./logs/{__name__}.log')
+file_handler = logging.FileHandler(f'./logs/UtilityFunctions.log')
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
@@ -40,19 +40,40 @@ class UtilityFunctions():
 
     def __init__(self, gspread_filepath='',db_user='',db_password='',db_host='',
                         db_port='',db_name=''):
-        self.sa = gspread.service_account(filename=gspread_filepath)              
+        """Initialise a gspread email account from reading from a json file contaning authorisation details
+            and provide login details for a postgreSQL table
+            This means you can only connect to one google account and one database per instance 
+            of the UtilityFunctions class
+            
+            Parameters 
+            -----------------
+            gspread_filepath : str
 
-        self.db_user, self.db_password, self.db_host, self.db_port, self.db_name = \
-        db_user, db_password, db_host, db_port, db_name
+            """
+        if gspread_filepath != '':
+            self.sa = gspread.service_account(filename=gspread_filepath)              
+        if db_user != '':
+            self.db_user, self.db_password, self.db_host, self.db_port, self.db_name = \
+            db_user, db_password, db_host, db_port, db_name
+            postgres_str = f'postgresql://{self.db_user}:{self.db_password}@{self.db_host}:{self.db_port}/{self.db_name}'
+            self.postgresql_engine = sa.create_engine(postgres_str)
     
     def prepare_string_matching(self,string, is_url=False):
         """Prepare strings for matching say in a merge function by removing unnecessary 
                 detail, whitespaces and converting to lower case
             Remove emojis as sometimes they can not come through properly in Tracer data
-            Params:
-                string (str): the string to be cleaned
-                is_url (bool): if True then remove characters after the '?' which are utm parameters
-                                    These can be present in soem urls we recieve and others not
+
+            Parameters
+            -----------------
+            string : str
+                The string to be cleaned
+            is_url : bool
+                If True then remove characters after the '?' which are utm parameters
+                These can be present in some urls we recieve
+            
+            Returns
+            -----------------
+            string : The cleaned string containing no spaces, punctuation or utm parameters
         """
         string = string.lower()
         if is_url:
@@ -72,24 +93,40 @@ class UtilityFunctions():
             Then for the row items that haven't matched then use the second set of columns and try to match them 
             using fuzzy matching
             
-            Params:
-                df_1 (df): Dataframe that will be searched to see if any corresponding values in df_2, if merge=True df_2 will be left joined onto df_1
-                df_2 (df): Dataframe that if merge = True will be left joined onto df_1
-                df_1_exact_col (str): Column name from df_1 that will be first attempted to find exact matches
-                df_2_exact_col (str): Column name from df_2 that will be first attempted to find exact matches
-                df_1_fuzzy_col (str): Column name from df_1 that will be attempted to fuzzy match if there was no exact match before
-                df_2_fuzzy_col (str): Column name from df_2 that will be attempted to fuzzy match if there was no exact match before
-                is_exact_col_link (bool): Boolean Flag, is the set of columns to be exact matched hyperlinks? If so they will be cleaned to remove utm parameters
-                matched_col_name (str): String to name the column which will contain boolean values to indicate whether row items in df_1 found a match in df_2
-                merge (bool): Boolean Flag, if true then df_2 will be left joined onto df_1. Else df_1 will be left unchanged apart from column indicating whether there is a match
-                cols_to_merge (list of str): List of strings to merge on if 'merge' = True
-                pickle_name (str): Name of the dictionary of best matches found by fuzzy matching to be stored as a pickle file. The next time the function is 
-                                    run with the same pickle_name, the pickle file is used t    o find matches without having to do slow fuzzy matching from scratch
+            Parameters
+            -----------------
+                df_1 : DataFrame
+                    The Dataframe that will be searched to see if any corresponding values in df_2, if merge=True df_2 will be left joined onto df_1
+                df_2 : df 
+                    The Dataframe that if merge = True will be left joined onto df_1
+                df_1_exact_col : str
+                    The Column name from df_1 that will be first attempted to find exact matches
+                df_2_exact_col : str
+                    The Column name from df_2 that will be first attempted to find exact matches
+                df_1_fuzzy_col : str
+                    The Column name from df_1 that will be attempted to fuzzy match if there was no exact match before
+                df_2_fuzzy_col : str
+                    The Column name from df_2 that will be attempted to fuzzy match if there was no exact match before
+                is_exact_col_link : bool
+                    Boolean Flag, is the set of columns to be exact matched hyperlinks? If so they will be cleaned to remove utm parameters
+                matched_col_name : str
+                    String to name the column which will contain boolean values to indicate whether row items in df_1 found a match in df_2
+                merge : bool
+                    Boolean Flag, if true then df_2 will be left joined onto df_1. Else df_1 will be left unchanged apart from column indicating whether there is a match
+                cols_to_merge : list, str
+                    List of strings to merge on if 'merge' = True
+                pickle_name : 
+                    Name of the dictionary of best matches found by fuzzy matching to be stored as a pickle file. The next time the function is 
+                    run with the same pickle_name, the pickle file is used to find matches without having to do slow fuzzy matching from scratch
                 
-            Returns:
-                df_1 (df): The original df_1 with just a column to indicate whether a match has occured if merge = False else df_1 will have df_2 left joined on
-                df_2 (df): The original df_2 with cleaned columns and 'Match String' column to help quality check why some rows have or haven't matched
-                df_2_no_match (df): A dataframe of df_2 row items that haven't found a match in df_1
+            Returns
+            ----------------
+                df_1 : DataFrame
+                    The original df_1 with just a column to indicate whether a match has occured if merge = False else df_1 will have df_2 left joined on
+                df_2 : DataFrame
+                    The original df_2 with cleaned columns and 'Match String' column to help quality check why some rows have or haven't matched
+                df_2_no_match : DataFrame
+                    A dataframe of df_2 row items that haven't found a match in df_1
                 """
                 
         df_1_num_rows = df_1.shape[0] #Used later to check we don't lose of rows by merging
@@ -201,16 +238,21 @@ class UtilityFunctions():
             The dictionary of matches will be saved as a pickle file to be used next time the function is run to save
             having to do searches on a string if we've already found a match in the past
 
-            Params:
-                list_1 (list of str): First List of strings, every item will be searched for a fuzzy match in list_2
-                list_2 (list of str): Second List of strings, every item in list_1 will be fuzzy matched with every item in list 2 and best fuzzy match score wins
-                threshold (str): value between 0 and 100 signifying percentage fuzzy match score at which a match is considered sufficiently close
-                pickle_name (str): name of pickle_file to create or add to if a pickle of the dictionary already exists
+            Paramaters
+            -------------------
+                list_1 : list
+                    First List of strings, every item will be searched for a fuzzy match in list_2
+                list_2 : list
+                    Second List of strings, every item in list_1 will be fuzzy matched with every item in list 2 and best fuzzy match score wins
+                threshold : integer between 0 and 100
+                    value between 0 and 100 signifying percentage fuzzy match score at which a match is considered sufficiently close
+                pickle_name : str 
+                    name of pickle_file to create or add to if a pickle of the dictionary already exists
             
             Returns:
-                best_match_dict (dict): Dictionary of matches (with highest fuzzy match score) between strings in list_1 and list_2 
-                                            key = string in list_1, value = string in list_2 
-                """
+                best_match_dict : Dictionary
+                    Dictionary of matches (with highest fuzzy match score) between strings in list_1 and list_2 
+                    key = string in list_1, value = string in list_2 """
 
         best_match_dict = {} 
         stored_best_dict = {} #
@@ -264,21 +306,26 @@ class UtilityFunctions():
         """Writes a dataframe to a PostgreSQL database table using a SQLalchemy engine defined elsewhere.
             If writing fails it waits 10 seconds then trys again
             
-            Params:
-                df (df): Dataframe to send to the PostGreSQL table
-                table_name (str): the name of the table to rite the df to
-                if_exists (str): either 'replace' or 'append' which describes what to do if a table with
-                                        that name already exists
+            Paramaters
+            --------------
+                df : DataFrame
+                    The Dataframe to send to the PostGreSQL table
+                table_name : str
+                    The name of the table to write the dataframe to
+                if_exists : str
+                    Either 'replace' or 'append' which describes what to do if a table with
+                    that name already exists
                                         
-            Returns: 
-                error_message (str): an error message saying that the connection has failed """
+            Returns
+            --------------
+                error_message : str
+                    An error message saying that the connection has failed """
         # create a SQL alchemy engine to write the data to the database after cleaning
-        postgres_str = f'postgresql://{self.db_user}:{self.db_password}@{self.db_host}:{self.db_port}/{self.db_name}'
-        engine = create_engine(postgres_str)
+        
         error_message = ''
         try:
             now = time.time()
-            df.to_sql(table_name, con=engine, index=False, if_exists=if_exists)
+            df.to_sql(table_name, con=self.postgresql_engine, index=False, if_exists=if_exists)
             time_taken = round(time.time() - now,2)
             logger.info(f"Time Taken to write {table_name} = {time_taken}secs")
             logger.info(f"Sent Data to {table_name}")
@@ -287,13 +334,56 @@ class UtilityFunctions():
             time.sleep(10) # wait for 10 seconds then try again
             try:
                 now = time.time()
-                df.to_sql(table_name, con=engine, index=False, if_exists=if_exists)
+                df.to_sql(table_name, con=self.postgresql_engine, index=False, if_exists=if_exists)
                 time_taken = round(time.time() - now,2)
                 logger.info(f"Time Taken to write {table_name} = {time_taken}secs")
             except Exception as error_message:
                 logger.error(f'Connection failed again {error_message}',exc_info=True)
                 return f'{table_name} error: ' + error_message
         return error_message
+    
+    def table_exists(self,table_name):
+        """Determine whether a table called 'table_name' exists"""
+        all_table_names = sa.inspect(self.postgresql_engine).get_table_names()
+        return (table_name in all_table_names)
+    
+    def store_daily_organic_data(self,df,output_table_name,num_days_to_store=30,date_column_name='Date'):
+        """Takes in an organic data table with each row item reflecting an organic post with the metric totals
+            updating and increasing in the same row item each day rather than creating a new row item each day.
+            Returns an organic table which has a row item  
+            
+            Parameters
+            ----------------
+                df : DataFrame
+                    The Dataframe source of organic data
+                output_table : str
+                    The name of the output table to write the data to
+                num_days_to_store : integer
+                    The number of days to look back
+                date_column_name : str
+                    The name of the column which contains the date that the post was originally posted"""
+        today_datetime = datetime.today()
+        today_date = today_datetime.date() 
+        if today_datetime.hour < 15: #Before 3 o'clock in the afternoon
+            logger.info("It may be better to run the API later on in the day to make sure the USA data has had time to refresh")
+        #Check Tracer data has actually updated
+        if self.table_exists(output_table_name):
+            old_df = self.read_from_postgresql(output_table_name)
+
+            if old_df['DateUpdated'].max().date() == today_date:
+                logger.info("It looks like this has already been run today")
+            else:
+                cutoff_date = today_date - timedelta(days=num_days_to_store)
+                #create temporary date column that you can change the date format, that you then delete so it doesn't affect original date format
+                df[date_column_name + 'temp'] = pd.to_datetime(df[date_column_name]).dt.date
+                df = df[df[date_column_name + 'temp']>=(cutoff_date)]
+                df['DateUpdated'] = today_datetime
+                df = df.drop(columns=[date_column_name + 'temp']) #drop temporary date column used for filtering dates
+                self.write_to_postgresql(df,output_table_name,if_exists='append')
+        else:
+            df['DateUpdated'] = today_datetime
+            self.write_to_postgresql(df,output_table_name)
+
 
     def read_from_postgresql(self,table_name):
         """Reads a table from a PostgreSQL database table using a pscopg2 connection.
@@ -347,11 +437,12 @@ class UtilityFunctions():
         df = pd.DataFrame(worksheet.get_all_records())
         return df
     
-    def identify_paid_or_organic(self,data):
+    def identify_paid_or_organic(self,df):
+        """Identify whether a given dataframe contains paid data"""
         paid_or_organic = 'Organic'
         #make columns to check lower case so can work on
         # columns that have or haven't been cleaned
-        col_list = [x.lower() for x in data.columns]
+        col_list = [x.lower() for x in df.columns]
         if 'spend' in col_list:
             paid_or_organic = 'Paid'
         return paid_or_organic
@@ -363,6 +454,23 @@ class UtilityFunctions():
     
     def unpickle_data(self,filename,folder ="Pickled Files"):
         return pickle.load(open(folder + '/' + filename, "rb"))
+    
+    def write_json(self,object,file_name,file_type):
+        if file_type == 'DataFrame':
+            object.to_json(file_name+'.json',orient='split')
+        elif file_type == 'List' or file_type == 'Dictionary':
+            with open(f"{file_name}.json","w") as outfile:
+                json.dump(object,outfile)
+        else:
+            logger.error('JSON write error, file_type error')
+    
+    def read_json(self,file_name, file_type):
+        if file_type == 'DataFrame':
+            return pd.read_json(f'{file_name}.json',orient='split')
+        elif file_type == 'List' or file_type == 'Dictionary':
+            return json.load(open(f'{file_name}.json'))
+        else:
+            logger.error('JSON read error, file_type error')
 
     def remove_vvm_stage(self,creative_name):
         creative_name = re.sub(r'Level 2 - ','', creative_name)
@@ -395,9 +503,6 @@ class UtilityFunctions():
         d['Video Length'] = round(x['Video Length'].iloc[0], 2)
 
         return pd.Series(d, index=list(d.keys()))
-
-    
-
 class Logger:
 
     def __init__(self,name_of_log):
@@ -421,15 +526,14 @@ class SlackNotifier:
     """A class that notifies slack given a webhook
         """
 
-    def __init__(self, slack_webhook_url: str, link_1 = '', link_1_name='No Url',
+    def __init__(self, slack_webhook_url: str, title = "Update" ,link_1 = '', link_1_name='No Url',
                     link_2 ='', link_2_name = 'No Url', link_3 = '', link_3_name = 'No Url',
                     link_4='', link_4_name='No Url'):
     
-        self.slack_webhook_url = slack_webhook_url
+        self.slack_webhook_url, self.title = slack_webhook_url, title
         self.link_1,self.link_2,self.link_3,self.link_4 = link_1,link_2,link_3,link_4
         self.link_1_name,self.link_2_name,self.link_3_name,self.link_4_name = link_1_name,link_2_name,link_3_name,link_4_name
-
-    
+        
     def send_slack_message(self, message:str):
         payload = {
         "blocks":
@@ -438,7 +542,7 @@ class SlackNotifier:
                   "type": "header",
                   "text": {
                       "type": "plain_text",
-                      "text": "Indeed Update",
+                      "text": f"{self.title}",
                         }
             },
 
