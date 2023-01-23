@@ -1,3 +1,4 @@
+#%%
 import requests
 import json
 import pandas as pd
@@ -15,7 +16,7 @@ import pickle
 import gspread_dataframe as gd
 import os
 import sqlalchemy as sa
-
+#%%
 emoji_pattern = re.compile("["
                            u"\U0001F600-\U0001F64F"  # emoticons
                            u"\U0001F300-\U0001F5FF"  # symbols & pictographs
@@ -23,23 +24,23 @@ emoji_pattern = re.compile("["
                            u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
                            "]+", flags=re.UNICODE)
 
-logger = logging.getLogger('UtilityFunctions')
-if logger.hasHandlers():
-    logger.handlers = []
-if os.path.isdir('logs') == False:
-    os.mkdir('logs')
-logger.setLevel(logging.INFO)
-logger.addHandler(logging.StreamHandler(sys.stdout))
-formatter = logging.Formatter('%(levelname)s %(asctime)s - %(message)s')
+# logger = logging.getLogger('UtilityFunctions')
+# if logger.hasHandlers():
+#     logger.handlers = []
+# if os.path.isdir('logs') == False:
+#     os.mkdir('logs')
+# logger.setLevel(logging.INFO)
+# logger.addHandler(logging.StreamHandler(sys.stdout))
+# formatter = logging.Formatter('%(levelname)s %(asctime)s - %(message)s')
 
-file_handler = logging.FileHandler(f'./logs/UtilityFunctions.log')
-file_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
-
+# file_handler = logging.FileHandler(f'./logs/UtilityFunctions.log')
+# file_handler.setFormatter(formatter)
+# logger.addHandler(file_handler)
+#%%
 class UtilityFunctions():
 
-    def __init__(self, gspread_filepath='',db_user='',db_password='',db_host='',
-                        db_port='',db_name=''):
+    def __init__(self, gspread_filepath=None,db_user=None,db_password=None,db_host=None,
+                        db_port=None,db_name=None):
         """Initialise a gspread email account from reading from a json file contaning authorisation details
             and provide login details for a postgreSQL table
             This means you can only connect to one google account and one database per instance 
@@ -50,13 +51,30 @@ class UtilityFunctions():
             gspread_filepath : str
 
             """
-        if gspread_filepath != '':
+        if gspread_filepath != None:
             self.sa = gspread.service_account(filename=gspread_filepath)              
-        if db_user != '':
+        if db_user != None:
             self.db_user, self.db_password, self.db_host, self.db_port, self.db_name = \
             db_user, db_password, db_host, db_port, db_name
             postgres_str = f'postgresql://{self.db_user}:{self.db_password}@{self.db_host}:{self.db_port}/{self.db_name}'
             self.postgresql_engine = sa.create_engine(postgres_str)
+        #if root_path != None:
+        if os.path.isdir('logs') == False:
+            os.mkdir('logs')
+        logger = logging.getLogger('UtilLog')
+        if logger.hasHandlers():
+            logger.handlers = []
+        # if os.path.isdir(f'{root_path}/logs') == False:
+        #     os.mkdir(f'{root_path}/logs')
+        logger.setLevel(logging.INFO)
+        logger.addHandler(logging.StreamHandler(sys.stdout))
+        formatter = logging.Formatter('%(levelname)s %(asctime)s - %(message)s')
+        #file_handler = logging.FileHandler(f'{root_path}/logs/UtilLog.log')
+        file_handler = logging.FileHandler(f'./logs/UtilLog.log')
+        file_handler.setFormatter(formatter)
+        logger.addHandler(file_handler)
+        self.logger = logger
+        
     
     def prepare_string_matching(self,string, is_url=False):
         """Prepare strings for matching say in a merge function by removing unnecessary 
@@ -176,7 +194,7 @@ class UtilityFunctions():
         else:
             df_1['MatchedExact?'] = df_1['MatchString'].apply(lambda x: True if x in df_2_unique_exact else False)
         
-        logger.info(f'Rows count change after df_1_match merge {df_1_match.shape[0] - df_1_match_rows}')
+        self.logger.info(f'Rows count change after df_1_match merge {df_1_match.shape[0] - df_1_match_rows}')
         # Find the unique instances of cleaned captions to be passed to the fuzzy matching function
         df_1_no_match_unique = df_1_no_match[df_1_fuzzy_col_clean].unique().tolist()
         df_2_fuzzy_unique = df_2[df_2_fuzzy_col_clean].unique().tolist()
@@ -203,7 +221,7 @@ class UtilityFunctions():
             df_1_no_match['MatchedFuzzy?'] = df_1_no_match['_merge'].apply(lambda x: True if x == 'both' else False)
         
 
-        logger.info(f'Rows Lost after no match merge {df_1_no_match_num_rows - df_1_no_match.shape[0]}')
+        self.logger.info(f'Rows Lost after no match merge {df_1_no_match_num_rows - df_1_no_match.shape[0]}')
 
         df_1 = pd.concat([df_1_match, df_1_no_match], ignore_index=True)
 
@@ -211,22 +229,22 @@ class UtilityFunctions():
 
         df_2_no_match = df_2[~df_2['MatchString'].isin(df_1['MatchString'].unique().tolist())]
 
-        logger.info(f'df_1 row numbers change = {df_1_num_rows - df_1.shape[0]}')
+        self.logger.info(f'df_1 row numbers change = {df_1_num_rows - df_1.shape[0]}')
 
-        logger.info(f"Num unique exact col values in df_1: {df_1[df_1_exact_col].nunique()},\
+        self.logger.info(f"Num unique exact col values in df_1: {df_1[df_1_exact_col].nunique()},\
                 Num unique fuzzy col values in df_1: {df_1[df_1_fuzzy_col].nunique()}")
-        logger.info(f"Num unique exact col values in df_2: {df_2[df_2_exact_col].nunique()},\
+        self.logger.info(f"Num unique exact col values in df_2: {df_2[df_2_exact_col].nunique()},\
                 Num unique fuzzy col values in df_2: {df_2[df_2_fuzzy_col].nunique()}")
 
-        logger.info(f"Num Matched df_1 exact col ={df_1['MatchedExact?'].sum()}")
-        logger.info(f"Num Matched df_1 fuzzy col ={df_1['MatchedFuzzy?'].sum()}")
-        logger.info(f"Num df_2 exact that didn't match= {df_2_no_match[df_2_exact_col].nunique()}")
+        self.logger.info(f"Num Matched df_1 exact col ={df_1['MatchedExact?'].sum()}")
+        self.logger.info(f"Num Matched df_1 fuzzy col ={df_1['MatchedFuzzy?'].sum()}")
+        self.logger.info(f"Num df_2 exact that didn't match= {df_2_no_match[df_2_exact_col].nunique()}")
 
         matched_df_1_nunique = df_1[df_1[matched_col_name]==True].drop_duplicates(subset=cols_to_merge).shape[0]
-        logger.info(f"Number of df_1 that have matched = {matched_df_1_nunique}")
+        self.logger.info(f"Number of df_1 that have matched = {matched_df_1_nunique}")
         num_df_2_to_match = df_2.drop_duplicates(subset=cols_to_merge).shape[0]
-        logger.info(f"Number of df_2 that need to match {num_df_2_to_match}")
-        logger.info(f"Percentage of df_2 that were matched = {round((matched_df_1_nunique * 100)/num_df_2_to_match,2)}")
+        self.logger.info(f"Number of df_2 that need to match {num_df_2_to_match}")
+        self.logger.info(f"Percentage of df_2 that were matched = {round((matched_df_1_nunique * 100)/num_df_2_to_match,2)}")
 
         return df_1, df_2, df_2_no_match
 
@@ -259,7 +277,7 @@ class UtilityFunctions():
         if pickle_name != 'NoStore':
             if os.path.isfile(f'Pickled Files/best_match_dict_{pickle_name}'):
                 stored_best_dict = self.unpickle_data(f'best_match_dict_{pickle_name}')
-                logger.info(f"loaded dict of len :{len(stored_best_dict)}")
+                self.logger.info(f"loaded dict of len :{len(stored_best_dict)}")
 
         for string_1 in tqdm(list_1):
             temp_match_dict = {}
@@ -282,7 +300,7 @@ class UtilityFunctions():
                     score = 0
                 temp_match_dict[string_2] = score
             # end = time.time()
-            # logger.info(end - start)
+            # self.logger.info(end - start)
             
             #if there were no matches above the threshold then return a match for that 
             #string in list_1 equal to "none"
@@ -327,18 +345,18 @@ class UtilityFunctions():
             now = time.time()
             df.to_sql(table_name, con=self.postgresql_engine, index=False, if_exists=if_exists)
             time_taken = round(time.time() - now,2)
-            logger.info(f"Time Taken to write {table_name} = {time_taken}secs")
-            logger.info(f"Sent Data to {table_name}")
+            self.logger.info(f"Time Taken to write {table_name} = {time_taken}secs")
+            self.logger.info(f"Sent Data to {table_name}")
         except ConnectionError as error_message:
-            logger.info(f"Connection error {error_message}")
+            self.logger.info(f"Connection error {error_message}")
             time.sleep(10) # wait for 10 seconds then try again
             try:
                 now = time.time()
                 df.to_sql(table_name, con=self.postgresql_engine, index=False, if_exists=if_exists)
                 time_taken = round(time.time() - now,2)
-                logger.info(f"Time Taken to write {table_name} = {time_taken}secs")
+                self.logger.info(f"Time Taken to write {table_name} = {time_taken}secs")
             except Exception as error_message:
-                logger.error(f'Connection failed again {error_message}',exc_info=True)
+                self.logger.error(f'Connection failed again {error_message}',exc_info=True)
                 return f'{table_name} error: ' + error_message
         return error_message
     
@@ -365,13 +383,13 @@ class UtilityFunctions():
         today_datetime = datetime.today()
         today_date = today_datetime.date() 
         if today_datetime.hour < 15: #Before 3 o'clock in the afternoon
-            logger.info("It may be better to run the API later on in the day to make sure the USA data has had time to refresh")
+            self.logger.info("It may be better to run the API later on in the day to make sure the USA data has had time to refresh")
         #Check Tracer data has actually updated
         if self.table_exists(output_table_name):
             old_df = self.read_from_postgresql(output_table_name)
 
             if old_df['DateUpdated'].max().date() == today_date:
-                logger.info("It looks like this has already been run today")
+                self.logger.info("It looks like this has already been run today")
             else:
                 cutoff_date = today_date - timedelta(days=num_days_to_store)
                 #create temporary date column that you can change the date format, that you then delete so it doesn't affect original date format
@@ -394,16 +412,16 @@ class UtilityFunctions():
             now = time.time()
             df = pd.read_sql_query(f"SELECT * FROM {table_name}", conn)
             time_taken = round(time.time() - now,2)
-            logger.info(f"Time Taken to read {table_name} = {time_taken}secs")
+            self.logger.info(f"Time Taken to read {table_name} = {time_taken}secs")
 
         except Exception as error_message:
-            logger.error(f"Read {table_name} error: {error_message}",exc_info=True)
+            self.logger.error(f"Read {table_name} error: {error_message}",exc_info=True)
             time.sleep(10)
         
             now = time.time()
             df = pd.read_sql_query(f"SELECT * FROM {table_name}", conn)
             time_taken = round(time.time() - now,2)
-            logger.info(f"Time Taken to read {table_name} = {time_taken}secs")
+            self.logger.info(f"Time Taken to read {table_name} = {time_taken}secs")
 
         conn.close()
         return df
@@ -420,9 +438,9 @@ class UtilityFunctions():
             now = time.time()
             gd.set_with_dataframe(sheet, df)
             time_taken = round(time.time() - now,2)
-            logger.info(f"Time Taken to write to google sheet {sheet_name} = {time_taken}secs")
+            self.logger.info(f"Time Taken to write to google sheet {sheet_name} = {time_taken}secs")
         except Exception as error_message:
-            logger.error(error_message,exc_info=True)
+            self.logger.error(error_message,exc_info=True)
             time.sleep(10)
             gd.set_with_dataframe(sheet, df)
 
@@ -430,7 +448,7 @@ class UtilityFunctions():
         try:
             spreadsheet = self.sa.open(workbook_name)
         except Exception as error_message:
-            logger.info(error_message)
+            self.logger.info(error_message)
             time.sleep(10)
             spreadsheet = self.sa.open(workbook_name)
         worksheet = spreadsheet.worksheet(sheet_name)
@@ -462,7 +480,7 @@ class UtilityFunctions():
             with open(f"{file_name}.json","w") as outfile:
                 json.dump(object,outfile)
         else:
-            logger.error('JSON write error, file_type error')
+            self.logger.error('JSON write error, file_type error')
     
     def read_json(self,file_name, file_type):
         if file_type == 'DataFrame':
@@ -470,7 +488,7 @@ class UtilityFunctions():
         elif file_type == 'List' or file_type == 'Dictionary':
             return json.load(open(f'{file_name}.json'))
         else:
-            logger.error('JSON read error, file_type error')
+            self.logger.error('JSON read error, file_type error')
 
     def remove_vvm_stage(self,creative_name):
         creative_name = re.sub(r'Level 2 - ','', creative_name)
