@@ -1,4 +1,3 @@
-#%%
 import requests
 import json
 import pandas as pd
@@ -16,7 +15,7 @@ import pickle
 import gspread_dataframe as gd
 import os
 import sqlalchemy as sa
-#%%
+
 emoji_pattern = re.compile("["
                            u"\U0001F600-\U0001F64F"  # emoticons
                            u"\U0001F300-\U0001F5FF"  # symbols & pictographs
@@ -24,19 +23,19 @@ emoji_pattern = re.compile("["
                            u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
                            "]+", flags=re.UNICODE)
 
-# logger = logging.getLogger('UtilityFunctions')
-# if logger.hasHandlers():
-#     logger.handlers = []
-# if os.path.isdir('logs') == False:
-#     os.mkdir('logs')
-# logger.setLevel(logging.INFO)
-# logger.addHandler(logging.StreamHandler(sys.stdout))
-# formatter = logging.Formatter('%(levelname)s %(asctime)s - %(message)s')
+logger = logging.getLogger('UtilityFunctions')
+if logger.hasHandlers():
+    logger.handlers = []
+if os.path.isdir('logs') == False:
+    os.mkdir('logs')
+logger.setLevel(logging.INFO)
+logger.addHandler(logging.StreamHandler(sys.stdout))
+formatter = logging.Formatter('%(levelname)s %(asctime)s - %(message)s')
 
-# file_handler = logging.FileHandler(f'./logs/UtilityFunctions.log')
-# file_handler.setFormatter(formatter)
-# logger.addHandler(file_handler)
-#%%
+file_handler = logging.FileHandler(f'./logs/UtilityFunctions.log')
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
+
 class UtilityFunctions():
 
     def __init__(self, gspread_filepath=None,db_user=None,db_password=None,db_host=None,
@@ -74,7 +73,6 @@ class UtilityFunctions():
         file_handler.setFormatter(formatter)
         logger.addHandler(file_handler)
         self.logger = logger
-        
     
     def prepare_string_matching(self,string, is_url=False):
         """Prepare strings for matching say in a merge function by removing unnecessary 
@@ -104,7 +102,7 @@ class UtilityFunctions():
 
     def match_ads(self,df_1, df_2, df_1_exact_col, df_2_exact_col,
                 df_1_fuzzy_col=None, df_2_fuzzy_col=None, is_exact_col_link=True, 
-                matched_col_name='Boosted', merge=False,cols_to_merge =['Platform'],pickle_name='NoStore'):
+                matched_col_name='boosted', merge=False,cols_to_merge =['platform'],pickle_name='NoStore'):
 
         """Match row items in df_2 onto row items in df_1 based on two sets of columns, first the dataframes will be tried to match
             using the first set of columns using an exact match
@@ -153,48 +151,48 @@ class UtilityFunctions():
             df_2_fuzzy_col = df_2_exact_col
 
         #create new columns for the columns to match on, the text in the column will get cleaned later
-        df_1_fuzzy_col_clean = df_1_fuzzy_col + ' Clean'
-        df_2_fuzzy_col_clean = df_2_fuzzy_col + ' Clean'
-        df_1_exact_col_clean = df_1_exact_col + ' Clean'
-        df_2_exact_col_clean = df_2_exact_col + ' Clean'
+        df_1_fuzzy_col_clean = df_1_fuzzy_col + '_clean'
+        df_2_fuzzy_col_clean = df_2_fuzzy_col + '_clean'
+        df_1_exact_col_clean = df_1_exact_col + '_clean'
+        df_2_exact_col_clean = df_2_exact_col + '_clean'
 
         df_1[df_1_fuzzy_col] = df_1[df_1_fuzzy_col].astype(str)
         df_2[df_2_fuzzy_col] = df_2[df_2_fuzzy_col].astype(str)
         df_1[df_1_exact_col] = df_1[df_1_exact_col].astype(str)
         df_2[df_2_exact_col] = df_2[df_2_exact_col].astype(str)
 
-        df_1['Message'] = df_1['Message'].replace('None','NoValuePresent') # this stops multiple none values in df_2 being written onto ever y null value in df_1
+        df_1['message'] = df_1['message'].replace('None','NoValuePresent') # this stops multiple none values in df_2 being written onto ever y null value in df_1
 
         # prepare strings in a raw form with no spaces or punctuation in order to increase chance of matching
-        df_1['MatchString'] = df_1[df_1_exact_col].apply(lambda x: self.prepare_string_matching(x, is_url=is_exact_col_link))
-        df_2['MatchString'] = df_2[df_2_exact_col].apply(lambda x: self.prepare_string_matching(x, is_url=is_exact_col_link))
+        df_1['match_string'] = df_1[df_1_exact_col].apply(lambda x: self.prepare_string_matching(x, is_url=is_exact_col_link))
+        df_2['match_string'] = df_2[df_2_exact_col].apply(lambda x: self.prepare_string_matching(x, is_url=is_exact_col_link))
         df_1[df_1_fuzzy_col_clean] = df_1[df_1_fuzzy_col].apply(lambda x: self.prepare_string_matching(x))
         df_2[df_2_fuzzy_col_clean] = df_2[df_2_fuzzy_col].apply(lambda x: self.prepare_string_matching(x))
 
         #find out the number of unique values of the first cleaned column to match by
-        df_2_unique_exact = df_2['MatchString'].unique().tolist()
-        df_1_unique_exact = df_1['MatchString'].unique().tolist()
+        df_2_unique_exact = df_2['match_string'].unique().tolist()
+        df_1_unique_exact = df_1['match_string'].unique().tolist()
 
         #find out whether there is an exact match on the first cleaned column by using the list of unique values from df_2
-        df_1['MatchedExact?'] = df_1['MatchString'].apply(lambda x: True if x in df_2_unique_exact else False)
+        df_1['matched_exact?'] = df_1['match_string'].apply(lambda x: True if x in df_2_unique_exact else False)
         df_1[matched_col_name] = False
-        df_1['MatchedFuzzy?'] = False
+        df_1['matched_fuzzy?'] = False
         # Split Dataframes up into rows that had a URL match and one where the rows didn't match
         # Then the ones that didn't match will try and be matched with the cleaned caption
-        df_1_match = df_1[df_1['MatchedExact?'] == True]
-        df_1_no_match = df_1[df_1['MatchedExact?'] == False]
+        df_1_match = df_1[df_1['matched_exact?'] == True]
+        df_1_no_match = df_1[df_1['matched_exact?'] == False]
 
         df_1_match_rows = df_1_match.shape[0] #this is used to find out the change in the number of rows of the left df after the merge
-        cols_to_merge.append('MatchString') #from the cols_to_merge specified as an input argument add the matchstring
+        cols_to_merge.append('match_string') #from the cols_to_merge specified as an input argument add the matchstring
         if merge:
             df_1_match = pd.merge(df_1_match, df_2.drop(df_2_fuzzy_col_clean, axis=1),
                                 left_on=cols_to_merge, right_on=cols_to_merge, how='left',indicator=True)
             #Indicate whether a post has matched using the exact column (the first merge) if the result of the indcator is "both"
-            df_1_match['MatchedExact?'] = df_1_match['_merge'].apply(lambda x: True if x == 'both' else False)
+            df_1_match['matched_exact?'] = df_1_match['_merge'].apply(lambda x: True if x == 'both' else False)
         else:
-            df_1['MatchedExact?'] = df_1['MatchString'].apply(lambda x: True if x in df_2_unique_exact else False)
+            df_1['matched_exact?'] = df_1['match_string'].apply(lambda x: True if x in df_2_unique_exact else False)
         
-        self.logger.info(f'Rows count change after df_1_match merge {df_1_match.shape[0] - df_1_match_rows}')
+        logger.info(f'Rows count change after df_1_match merge {df_1_match.shape[0] - df_1_match_rows}')
         # Find the unique instances of cleaned captions to be passed to the fuzzy matching function
         df_1_no_match_unique = df_1_no_match[df_1_fuzzy_col_clean].unique().tolist()
         df_2_fuzzy_unique = df_2[df_2_fuzzy_col_clean].unique().tolist()
@@ -205,12 +203,12 @@ class UtilityFunctions():
 
         # create a column that is the closest match in df_2 for every caption in df_1
         # This will be used to merge df_2 onto the remainder of none matching df_1
-        df_1_no_match['MatchString'] = df_1_no_match[df_1_fuzzy_col_clean].map(best_match_dict)
+        df_1_no_match['match_string'] = df_1_no_match[df_1_fuzzy_col_clean].map(best_match_dict)
 
-        df_1_no_match['MatchString'].fillna(False, inplace=True)
+        df_1_no_match['match_string'].fillna(False, inplace=True)
         #Idnetify whether a post has matched using the fuzzy matching function by whether there is a value there
-        df_1_no_match['MatchedFuzzy?'] = df_1_no_match['MatchString'].apply(lambda x: False if ((x == 'None') or (x == '')) else True)
-        df_2['MatchString'] = df_2.apply(lambda x: x['MatchString'] if x['MatchString'] in df_1_unique_exact else x[df_2_fuzzy_col_clean], axis=1)
+        df_1_no_match['matched_fuzzy?'] = df_1_no_match['match_string'].apply(lambda x: False if ((x == 'None') or (x == '')) else True)
+        df_2['match_string'] = df_2.apply(lambda x: x['match_string'] if x['match_string'] in df_1_unique_exact else x[df_2_fuzzy_col_clean], axis=1)
 
         #Now try and merge the rows that didn't match on the exact column
         df_1_no_match_num_rows = df_1_no_match.shape[0]
@@ -218,33 +216,33 @@ class UtilityFunctions():
             df_1_no_match = pd.merge(df_1_no_match, df_2.drop(df_2_fuzzy_col, axis=1), left_on=cols_to_merge,
                                     right_on=cols_to_merge, how='left',indicator=True)
         
-            df_1_no_match['MatchedFuzzy?'] = df_1_no_match['_merge'].apply(lambda x: True if x == 'both' else False)
+            df_1_no_match['matched_fuzzy?'] = df_1_no_match['_merge'].apply(lambda x: True if x == 'both' else False)
         
 
-        self.logger.info(f'Rows Lost after no match merge {df_1_no_match_num_rows - df_1_no_match.shape[0]}')
+        logger.info(f'Rows Lost after no match merge {df_1_no_match_num_rows - df_1_no_match.shape[0]}')
 
         df_1 = pd.concat([df_1_match, df_1_no_match], ignore_index=True)
 
-        df_1[matched_col_name] = df_1.apply(lambda x: True if ((x['MatchedExact?'] == True) or (x['MatchedFuzzy?'] == True)) else False, axis=1)
+        df_1[matched_col_name] = df_1.apply(lambda x: True if ((x['matched_exact?'] == True) or (x['matched_fuzzy?'] == True)) else False, axis=1)
 
-        df_2_no_match = df_2[~df_2['MatchString'].isin(df_1['MatchString'].unique().tolist())]
+        df_2_no_match = df_2[~df_2['match_string'].isin(df_1['match_string'].unique().tolist())]
 
-        self.logger.info(f'df_1 row numbers change = {df_1_num_rows - df_1.shape[0]}')
+        logger.info(f'df_1 row numbers change = {df_1_num_rows - df_1.shape[0]}')
 
-        self.logger.info(f"Num unique exact col values in df_1: {df_1[df_1_exact_col].nunique()},\
+        logger.info(f"Num unique exact col values in df_1: {df_1[df_1_exact_col].nunique()},\
                 Num unique fuzzy col values in df_1: {df_1[df_1_fuzzy_col].nunique()}")
-        self.logger.info(f"Num unique exact col values in df_2: {df_2[df_2_exact_col].nunique()},\
+        logger.info(f"Num unique exact col values in df_2: {df_2[df_2_exact_col].nunique()},\
                 Num unique fuzzy col values in df_2: {df_2[df_2_fuzzy_col].nunique()}")
 
-        self.logger.info(f"Num Matched df_1 exact col ={df_1['MatchedExact?'].sum()}")
-        self.logger.info(f"Num Matched df_1 fuzzy col ={df_1['MatchedFuzzy?'].sum()}")
-        self.logger.info(f"Num df_2 exact that didn't match= {df_2_no_match[df_2_exact_col].nunique()}")
+        logger.info(f"Num Matched df_1 exact col ={df_1['matched_exact?'].sum()}")
+        logger.info(f"Num Matched df_1 fuzzy col ={df_1['matched_fuzzy?'].sum()}")
+        logger.info(f"Num df_2 exact that didn't match= {df_2_no_match[df_2_exact_col].nunique()}")
 
         matched_df_1_nunique = df_1[df_1[matched_col_name]==True].drop_duplicates(subset=cols_to_merge).shape[0]
-        self.logger.info(f"Number of df_1 that have matched = {matched_df_1_nunique}")
+        logger.info(f"Number of df_1 that have matched = {matched_df_1_nunique}")
         num_df_2_to_match = df_2.drop_duplicates(subset=cols_to_merge).shape[0]
-        self.logger.info(f"Number of df_2 that need to match {num_df_2_to_match}")
-        self.logger.info(f"Percentage of df_2 that were matched = {round((matched_df_1_nunique * 100)/num_df_2_to_match,2)}")
+        logger.info(f"Number of df_2 that need to match {num_df_2_to_match}")
+        logger.info(f"Percentage of df_2 that were matched = {round((matched_df_1_nunique * 100)/num_df_2_to_match,2)}")
 
         return df_1, df_2, df_2_no_match
 
@@ -277,7 +275,7 @@ class UtilityFunctions():
         if pickle_name != 'NoStore':
             if os.path.isfile(f'Pickled Files/best_match_dict_{pickle_name}'):
                 stored_best_dict = self.unpickle_data(f'best_match_dict_{pickle_name}')
-                self.logger.info(f"loaded dict of len :{len(stored_best_dict)}")
+                logger.info(f"loaded dict of len :{len(stored_best_dict)}")
 
         for string_1 in tqdm(list_1):
             temp_match_dict = {}
@@ -300,7 +298,7 @@ class UtilityFunctions():
                     score = 0
                 temp_match_dict[string_2] = score
             # end = time.time()
-            # self.logger.info(end - start)
+            # logger.info(end - start)
             
             #if there were no matches above the threshold then return a match for that 
             #string in list_1 equal to "none"
@@ -345,18 +343,18 @@ class UtilityFunctions():
             now = time.time()
             df.to_sql(table_name, con=self.postgresql_engine, index=False, if_exists=if_exists)
             time_taken = round(time.time() - now,2)
-            self.logger.info(f"Time Taken to write {table_name} = {time_taken}secs")
-            self.logger.info(f"Sent Data to {table_name}")
+            logger.info(f"Time Taken to write {table_name} = {time_taken}secs")
+            logger.info(f"Sent Data to {table_name}")
         except ConnectionError as error_message:
-            self.logger.info(f"Connection error {error_message}")
+            logger.info(f"Connection error {error_message}")
             time.sleep(10) # wait for 10 seconds then try again
             try:
                 now = time.time()
                 df.to_sql(table_name, con=self.postgresql_engine, index=False, if_exists=if_exists)
                 time_taken = round(time.time() - now,2)
-                self.logger.info(f"Time Taken to write {table_name} = {time_taken}secs")
+                logger.info(f"Time Taken to write {table_name} = {time_taken}secs")
             except Exception as error_message:
-                self.logger.error(f'Connection failed again {error_message}',exc_info=True)
+                logger.error(f'Connection failed again {error_message}',exc_info=True)
                 return f'{table_name} error: ' + error_message
         return error_message
     
@@ -365,7 +363,8 @@ class UtilityFunctions():
         all_table_names = sa.inspect(self.postgresql_engine).get_table_names()
         return (table_name in all_table_names)
     
-    def store_daily_organic_data(self,df,output_table_name,num_days_to_store=30,date_column_name='Date'):
+    def store_daily_organic_data(self,df,output_table_name,num_days_to_store=30,date_column_name='date',
+                                    check_created_col=True,created_col='created',refresh_lag=1):
         """Takes in an organic data table with each row item reflecting an organic post with the metric totals
             updating and increasing in the same row item each day rather than creating a new row item each day.
             Returns an organic table which has a row item  
@@ -379,28 +378,41 @@ class UtilityFunctions():
                 num_days_to_store : integer
                     The number of days to look back
                 date_column_name : str
-                    The name of the column which contains the date that the post was originally posted"""
+                    The name of the column which contains the date that the post was originally posted
+                check_created_col : bool
+                    If true then we should check whether the created column in Tracer is up to date, because 
+                    there is no point sending a days worth of data if the row items have not been refreshed
+                created_col : str
+                    The name of the column in the dataset which indicates the date that it was last updated
+            Returns
+            ----------------
+                df : DataFrame
+                    Outputs a table to the 'output_table_name', appends if already exists or creates from scratch if not"""
         today_datetime = datetime.today()
         today_date = today_datetime.date() 
         if today_datetime.hour < 15: #Before 3 o'clock in the afternoon
-            self.logger.info("It may be better to run the API later on in the day to make sure the USA data has had time to refresh")
+            logger.info("It may be better to run the API later on in the day to make sure the USA data has had time to refresh")
         #Check Tracer data has actually updated
         if self.table_exists(output_table_name):
+            
             old_df = self.read_from_postgresql(output_table_name)
-
-            if old_df['DateUpdated'].max().date() == today_date:
-                self.logger.info("It looks like this has already been run today")
+            if old_df['date_updated'].max().date() == today_date:
+                logger.info(f"It looks data has already pushed to {output_table_name} today")
             else:
+                if (df[created_col].max().date() < today_date - timedelta(days=refresh_lag)) and (check_created_col):
+                    error_message = "It looks like the input df has not been updated yesterday. Therefore there is no fresh data to add on."
+                    logger.info(error_message)
+                    raise Exception(error_message)
                 cutoff_date = today_date - timedelta(days=num_days_to_store)
                 #create temporary date column that you can change the date format, that you then delete so it doesn't affect original date format
-                df[date_column_name + 'temp'] = pd.to_datetime(df[date_column_name]).dt.date
-                df = df[df[date_column_name + 'temp']>=(cutoff_date)]
-                df['DateUpdated'] = today_datetime
-                df = df.drop(columns=[date_column_name + 'temp']) #drop temporary date column used for filtering dates
+                df['datetemp'] = pd.to_datetime(df[date_column_name]).dt.date
+                df = df[df['datetemp']>=(cutoff_date)]#filter data only after the cutoff date
+                df['date_updated'] = today_datetime
+                df = df.drop(columns=['datetemp']) #drop temporary date column used for filtering dates
                 self.write_to_postgresql(df,output_table_name,if_exists='append')
-        else:
-            df['DateUpdated'] = today_datetime
-            self.write_to_postgresql(df,output_table_name)
+        else: #if the table doesn't exist create it with the whole dataset for the first time
+            df['date_updated'] = today_datetime
+            self.write_to_postgresql(df,output_table_name,if_exists='replace')
 
 
     def read_from_postgresql(self,table_name):
@@ -412,16 +424,16 @@ class UtilityFunctions():
             now = time.time()
             df = pd.read_sql_query(f"SELECT * FROM {table_name}", conn)
             time_taken = round(time.time() - now,2)
-            self.logger.info(f"Time Taken to read {table_name} = {time_taken}secs")
+            logger.info(f"Time Taken to read {table_name} = {time_taken}secs")
 
         except Exception as error_message:
-            self.logger.error(f"Read {table_name} error: {error_message}",exc_info=True)
+            logger.error(f"Read {table_name} error: {error_message}",exc_info=True)
             time.sleep(10)
         
             now = time.time()
             df = pd.read_sql_query(f"SELECT * FROM {table_name}", conn)
             time_taken = round(time.time() - now,2)
-            self.logger.info(f"Time Taken to read {table_name} = {time_taken}secs")
+            logger.info(f"Time Taken to read {table_name} = {time_taken}secs")
 
         conn.close()
         return df
@@ -438,9 +450,9 @@ class UtilityFunctions():
             now = time.time()
             gd.set_with_dataframe(sheet, df)
             time_taken = round(time.time() - now,2)
-            self.logger.info(f"Time Taken to write to google sheet {sheet_name} = {time_taken}secs")
+            logger.info(f"Time Taken to write to google sheet {sheet_name} = {time_taken}secs")
         except Exception as error_message:
-            self.logger.error(error_message,exc_info=True)
+            logger.error(error_message,exc_info=True)
             time.sleep(10)
             gd.set_with_dataframe(sheet, df)
 
@@ -448,7 +460,7 @@ class UtilityFunctions():
         try:
             spreadsheet = self.sa.open(workbook_name)
         except Exception as error_message:
-            self.logger.info(error_message)
+            logger.info(error_message)
             time.sleep(10)
             spreadsheet = self.sa.open(workbook_name)
         worksheet = spreadsheet.worksheet(sheet_name)
@@ -480,7 +492,7 @@ class UtilityFunctions():
             with open(f"{file_name}.json","w") as outfile:
                 json.dump(object,outfile)
         else:
-            self.logger.error('JSON write error, file_type error')
+            logger.error('JSON write error, file_type error')
     
     def read_json(self,file_name, file_type):
         if file_type == 'DataFrame':
@@ -488,7 +500,7 @@ class UtilityFunctions():
         elif file_type == 'List' or file_type == 'Dictionary':
             return json.load(open(f'{file_name}.json'))
         else:
-            self.logger.error('JSON read error, file_type error')
+            logger.error('JSON read error, file_type error')
 
     def remove_vvm_stage(self,creative_name):
         creative_name = re.sub(r'Level 2 - ','', creative_name)
@@ -498,13 +510,19 @@ class UtilityFunctions():
         return creative_name
 
     def calc_tiktok_vtr_rates(self,df):
-        df['Engagements'] = df['Likes'] + df['Comments'] + df['Shares']
+        df['Engagements'] = df['likes'] + df['comments'] + df['shares']
         df['EngagementRate'] = round(
-            df['Engagements'] * 100 / df['Impressions'], 2)
-        df['25%VTR'] = round(df['Video Views P 25'] * 100 / df['Impressions'], 2)
-        df['50%VTR'] = round(df['Video Views P 50'] * 100 / df['sImpressions'], 2)
-        df['75%VTR'] = round(df['Video Views P 75'] * 100 / df['Impressions'], 2)
-        df['100%VTR'] = round(df['Video Completions'] * 100 / df['Impressions'], 2)
+            df['Engagements'] * 100 / df['impressions'], 2)
+        df['25%VTR'] = round(df['Video Views P 25'] * 100 / df['impressions'], 2)
+        df['50%VTR'] = round(df['Video Views P 50'] * 100 / df['impressions'], 2)
+        df['75%VTR'] = round(df['Video Views P 75'] * 100 / df['impressions'], 2)
+        df['100%VTR'] = round(df['Video Completions'] * 100 / df['impressions'], 2)
+        return df
+    
+    def columnnames_to_lowercase(self,df):
+        df.columns = df.columns.str.lower()
+        df.columns = df.columns.str.replace(' ','_')
+        df.columns = df.columns.str.strip()
         return df
 
 
@@ -512,8 +530,8 @@ class UtilityFunctions():
         d = {}
 
         d['Engagements'] = x['Engagements'].sum()
-        d['Impressions'] = x['Impressions'].sum()
-        d['EngagementRate'] = round(d['Engagements'] * 100 / d['Impressions'], 2)
+        d['impressions'] = x['impressions'].sum()
+        d['EngagementRate'] = round(d['Engagements'] * 100 / d['impressions'], 2)
         d['25%VTR'] = round(x['25%VTR'].mean(), 2)
         d['50%VTR'] = round(x['50%VTR'].mean(), 2)
         d['75%VTR'] = round(x['75%VTR'].mean(), 2)
@@ -621,5 +639,3 @@ class SlackNotifier:
             requests.post(self.slack_webhook_url, data=json.dumps(payload))
         except Exception as e:
             logger.error(f"Failed To Send Slack messafe {e}",exc_info=True)
-
-    
