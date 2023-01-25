@@ -394,7 +394,7 @@ class UtilityFunctions():
             logger.info("It may be better to run the API later on in the day to make sure the USA data has had time to refresh")
         #Check Tracer data has actually updated
         if self.table_exists(output_table_name):
-            
+
             old_df = self.read_from_postgresql(output_table_name)
             if old_df['date_updated'].max().date() == today_date:
                 logger.info(f"It looks data has already pushed to {output_table_name} today")
@@ -415,7 +415,8 @@ class UtilityFunctions():
             self.write_to_postgresql(df,output_table_name,if_exists='replace')
 
 
-    def read_from_postgresql(self,table_name):
+    def read_from_postgresql(self,table_name,clean_date=False,date_col='date',
+                                dayfirst=False,yearfirst=False,format=None,errors='raise'):
         """Reads a table from a PostgreSQL database table using a pscopg2 connection.
             If fails it waits 10 seconds and tries again"""
         conn = pg.connect(dbname=self.db_name, host=self.db_host,
@@ -436,6 +437,9 @@ class UtilityFunctions():
             logger.info(f"Time Taken to read {table_name} = {time_taken}secs")
 
         conn.close()
+        if clean_date:
+            df[date_col] = pd.to_datetime(df[date_col],dayfirst=dayfirst,yearfirst=yearfirst,
+                                        format=format,errors=errors)
         return df
 
     def write_to_gsheet(self,workbook_name, sheet_name, df, if_exists='replace', sheet_prefix=''):
@@ -456,7 +460,8 @@ class UtilityFunctions():
             time.sleep(10)
             gd.set_with_dataframe(sheet, df)
 
-    def read_from_gsheet(self,workbook_name, sheet_name):
+    def read_from_gsheet(self,workbook_name, sheet_name,clean_date=False,date_col='date',
+                                dayfirst=False,yearfirst=False,format=None,errors='raise'):
         try:
             spreadsheet = self.sa.open(workbook_name)
         except Exception as error_message:
@@ -465,6 +470,9 @@ class UtilityFunctions():
             spreadsheet = self.sa.open(workbook_name)
         worksheet = spreadsheet.worksheet(sheet_name)
         df = pd.DataFrame(worksheet.get_all_records())
+        if clean_date:
+            df[date_col] = pd.to_datetime(df[date_col],dayfirst=dayfirst,yearfirst=yearfirst,
+                                        format=format,errors=errors)
         return df
     
     def identify_paid_or_organic(self,df):
