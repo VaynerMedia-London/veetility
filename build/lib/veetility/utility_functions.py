@@ -415,8 +415,8 @@ class UtilityFunctions():
             self.write_to_postgresql(df,output_table_name,if_exists='replace')
 
 
-    def read_from_postgresql(self,table_name,clean_date=False,date_col='date',
-                                dayfirst=False,yearfirst=False,format=None,errors='raise'):
+    def read_from_postgresql(self,table_name,clean_date=True,date_col='date',
+                                dayfirst='EnterValue',yearfirst='EnterValue',format=None,errors='raise'):
         """Reads a table from a PostgreSQL database table using a pscopg2 connection.
             If fails it waits 10 seconds and tries again"""
         conn = pg.connect(dbname=self.db_name, host=self.db_host,
@@ -460,8 +460,8 @@ class UtilityFunctions():
             time.sleep(10)
             gd.set_with_dataframe(sheet, df)
 
-    def read_from_gsheet(self,workbook_name, sheet_name,clean_date=False,date_col='date',
-                                dayfirst=False,yearfirst=False,format=None,errors='raise'):
+    def read_from_gsheet(self,workbook_name, sheet_name,clean_date=True,date_col='date',
+                            dayfirst='EnterValue',yearfirst='EnterValue',format=None,errors='raise'):
         try:
             spreadsheet = self.sa.open(workbook_name)
         except Exception as error_message:
