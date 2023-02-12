@@ -67,7 +67,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#welcome-to-mkdocs" class="md-skip">
+        <a href="#getting-started" class="md-skip">
           Skip to content
         </a>
       
@@ -187,15 +187,49 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
-    Commands
+  <a href="#library-installation" class="md-nav__link">
+    Library Installation
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#project-layout" class="md-nav__link">
-    Project layout
+  <a href="#initialisation-of-the-utilityfunctions-class" class="md-nav__link">
+    Initialisation of the UtilityFunctions class
+  </a>
+  
+    <nav class="md-nav" aria-label="Initialisation of the UtilityFunctions class">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#google-sheets-authentication" class="md-nav__link">
+    Google Sheets Authentication
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postgresql-connection-parameters" class="md-nav__link">
+    PostgreSQL connection parameters
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup-in-code" class="md-nav__link">
+    Setup in code
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-in-code" class="md-nav__link">
+    Usage in code
   </a>
   
 </li>
@@ -218,21 +252,6 @@
     <li class="md-nav__item">
       <a href="tutorials/" class="md-nav__link">
         Tutorials
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="getting_started/" class="md-nav__link">
-        Getting Started
       </a>
     </li>
   
@@ -283,21 +302,6 @@
   
 
     
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="explanation/" class="md-nav__link">
-        Explanation
-      </a>
-    </li>
-  
-
-    
   </ul>
 </nav>
                   </div>
@@ -325,15 +329,49 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
-    Commands
+  <a href="#library-installation" class="md-nav__link">
+    Library Installation
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#project-layout" class="md-nav__link">
-    Project layout
+  <a href="#initialisation-of-the-utilityfunctions-class" class="md-nav__link">
+    Initialisation of the UtilityFunctions class
+  </a>
+  
+    <nav class="md-nav" aria-label="Initialisation of the UtilityFunctions class">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#google-sheets-authentication" class="md-nav__link">
+    Google Sheets Authentication
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postgresql-connection-parameters" class="md-nav__link">
+    PostgreSQL connection parameters
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup-in-code" class="md-nav__link">
+    Setup in code
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-in-code" class="md-nav__link">
+    Usage in code
   </a>
   
 </li>
@@ -354,20 +392,55 @@
 
 
 
-<h1 id="welcome-to-mkdocs">Welcome to MkDocs</h1>
-<p>For full documentation visit <a href="https://www.mkdocs.org">mkdocs.org</a>.</p>
-<h2 id="commands">Commands</h2>
-<ul>
-<li><code>mkdocs new [dir-name]</code> - Create a new project.</li>
-<li><code>mkdocs serve</code> - Start the live-reloading docs server.</li>
-<li><code>mkdocs build</code> - Build the documentation site.</li>
-<li><code>mkdocs -h</code> - Print help message and exit.</li>
-</ul>
-<h2 id="project-layout">Project layout</h2>
-<pre><code>mkdocs.yml    # The configuration file.
-docs/
-    index.md  # The documentation homepage.
-    ...       # Other markdown pages, images and other files.
+<h1 id="getting-started">Getting Started</h1>
+<p>A library to help create python pipelines for Vayner X companies</p>
+<p>This is primarily for working with Social Media Organic and Paid Advertisement Data but also contains
+generic functions for writing to postgreSQL and snowflake databases, creating notifications in Slack
+Channels and writing to Google Sheets</p>
+<h2 id="library-installation">Library Installation</h2>
+<pre><code>pip install veetility
+</code></pre>
+<p>To upgrade the library after an update</p>
+<pre><code>pip install veetility --upgrade
+</code></pre>
+<h2 id="initialisation-of-the-utilityfunctions-class">Initialisation of the UtilityFunctions class</h2>
+<p>An instance of the "UtilityFunctions" class can be initiated with the ability to read/write with 
+google sheets and also to read/write to tables in a postgreSQL database. However none of these
+are mandatory.</p>
+<h3 id="google-sheets-authentication">Google Sheets Authentication</h3>
+<p>In order to use the functions that read/write from google sheets then a dictionary
+needs to be passed to the "gspread_auth_dict" argument. 
+This dictionary can be obtained from a google API credentials JSON file.</p>
+<p>The instructions for creating this JSON file can be found from the <a href="https://docs.gspread.org/en/latest/oauth2.html">gspread documentation</a></p>
+<p>Then copy the JSON information in curly brackets as a python dictionary into the gspread.service_account_from_dict() authentication method. The "client_email" parameter in the JSON material is the email address of the google sheet
+client we have created. <strong>This email address must be given read or write access to any google sheet you want to 
+interact with.</strong></p>
+<h3 id="postgresql-connection-parameters">PostgreSQL connection parameters</h3>
+<p>The following correction parameters need to be passed in during initialisation of the class instance</p>
+<ol>
+<li>db_name e.g. "vayner_external_XXXXXXXXXXX"</li>
+<li>db_host e.g. "dashboard-vayner-XXXXXXXXXXXXXXXXXXXX.rds.amazonaws.com"</li>
+<li>db_port e.g. "5432" (this is the default for postgreSQL)</li>
+<li>db_user e.g. "tom.jones"</li>
+<li>db_password e.g. "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"</li>
+</ol>
+<h2 id="setup-in-code">Setup in code</h2>
+<p>It is advisable to put the parameters into a config.py file (cf) which can then be imported into
+the main script</p>
+<pre><code>import config as cf
+from veetility import utility_functions
+
+util = utility_functions.UtilityFunctions(cf.google_sheet_auth_dict,cf.db_user, 
+                                          cf.db_password,cf.db_host,
+                                          cf.db_port, cf.db_name)
+</code></pre>
+<h2 id="usage-in-code">Usage in code</h2>
+<p>Once an instance of the class UtilityFunctions has been created, e.g. "util" then functions (methods) 
+of the class can be used e.g. "write_to_gsheet()".</p>
+<p>This can write a pandas.DataFrame to any google sheet the "client_email" has been given "editor" access to.
+First pass in the name of the Google Sheet workbook, then the tab of the workbook, then the pandas.DataFrame</p>
+<pre><code>util.write_to_gsheet(&quot;Indeed Data Error Tracking&quot;,&quot;PaidNoBoostedMatch&quot;, 
+                        paid_no_boosted_match)
 </code></pre>
 
 
