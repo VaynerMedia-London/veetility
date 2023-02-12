@@ -1,7 +1,7 @@
 site_name: Veetility Docs
 
 theme:
-  name: "mkdocs"
+  name: "material"
 
 plugins:
   - mkdocstrings
