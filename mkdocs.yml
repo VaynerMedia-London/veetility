@@ -8,9 +8,7 @@ plugins:
 
 nav:
   - Veetility Docs: index.md
-  - tutorials.md
-  - Getting Started: getting_started.md
+  - Tutorials: tutorials.md
   - UtilityFunctions Methods: UtilityFunctions.md
   - SlackNotifier Methods: SlackNotifier.md
-  - Logger Methods: Logger.md
-  - explanation.md
+  - Logger Methods: Logger.mds

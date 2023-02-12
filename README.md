@@ -1,6 +1,12 @@
 # Getting Started
 A library to help create python pipelines for processing Tracer Data
 
+[Full Online Documentation](https://vaynermedia-london.github.io/veetility/)
+
+This is primarily for working with Social Media Organic and Paid Advertisement Data but also contains
+generic functions for writing to postgreSQL and snowflake databases, creating notifications in Slack
+Channels and writing to Google Sheets
+
 ## Library Installation
 ```
 pip install veetility
