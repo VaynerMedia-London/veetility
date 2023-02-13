@@ -1,9 +1,8 @@
 # Getting Started
-A library to help create python pipelines for Vayner X companies
+A library to help create python pipelines for Vayner X companies by providing easy to use functions for performing common data pipeline tasks
 
 This is primarily for working with Social Media Organic and Paid Advertisement Data but also contains
-generic functions for writing to postgreSQL and snowflake databases, creating notifications in Slack
-Channels and writing to Google Sheets
+generic functions for writing to postgreSQL and snowflake databases, creating notifications in Slack Channels and writing to Google Sheets
 
 ## Library Installation
 ```
@@ -25,8 +24,7 @@ This dictionary can be obtained from a google API credentials JSON file.
 
 The instructions for creating this JSON file can be found from the [gspread documentation](https://docs.gspread.org/en/latest/oauth2.html)
 
-Then copy the JSON information in curly brackets as a python dictionary into the gspread.service_account_from_dict() authentication method. The "client_email" parameter in the JSON material is the email address of the google sheet
-client we have created. **This email address must be given read or write access to any google sheet you want to 
+Then copy the JSON information in curly brackets as a python dictionary into the gspread.service_account_from_dict() authentication method. The "client_email" parameter in the JSON material is the email address of the google sheet client we have created. **This email address must be given read or write access to any google sheet you want to 
 interact with.**
 
 ### PostgreSQL connection parameters

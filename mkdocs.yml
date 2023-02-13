@@ -7,8 +7,9 @@ plugins:
   - mkdocstrings
 
 nav:
-  - Veetility Docs: index.md
-  - Tutorials: tutorials.md
+  - Getting Started: index.md
+  - Other Vayner Libraries: OtherVaynerLibraries.md
   - UtilityFunctions Methods: UtilityFunctions.md
   - SlackNotifier Methods: SlackNotifier.md
   - Logger Methods: Logger.md
+  - Tutorials: tutorials.md
