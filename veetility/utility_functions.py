@@ -319,8 +319,8 @@ class UtilityFunctions():
             time_taken = round(time.time() - now,2)
             logger.info(f"Time Taken to write {table_name} = {time_taken}secs")
             logger.info(f"Sent Data to {table_name}")
-        except ConnectionError as error_message:
-            logger.info(f"Connection error {error_message}")
+        except Exception as e:
+            logger.info(f"Connection error {e}")
             time.sleep(10) # wait for 10 seconds then try again
             try:
                 now = time.time()
