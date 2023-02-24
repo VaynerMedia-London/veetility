@@ -76,29 +76,37 @@ class UtilityFunctions():
         logger.addHandler(file_handler)
         self.logger = logger
     
-    def prepare_string_matching(self,string, is_url=False):
-        """Prepare and clean strings for matching 
-        
-        This can for example be used in a merge function by removing unnecessary 
-        detail, whitespaces and converting to lower case.
-        Remove emojis as sometimes they can not come through properly in Tracer data.
+    def prepare_string_matching(string, is_url=False):
+        """Prepare strings for matching say in a merge function by removing unnecessary 
+            detail, whitespaces and converting to lower case
+            Remove URLs and emojis as sometimes they cannot come through properly in Tracer data
+            Replace non-ASCII characters with their closest ASCII equivalents
 
-        Args:
-            string (str): The string to be cleaned
-            is_url (bool): If True then remove characters after the '?' which are utm parameters.
-                        These can be present in some urls we recieve
-        
-        Returns:
-            string (str): The cleaned string containing no spaces, punctuation or utm parameters
+            Parameters
+            -----------------
+            string : str 
+                The string to be cleaned
+            is_url : bool 
+                If True then remove URLs and characters after the '?' which are utm parameters
+                These can be present in some URLs we receive and not others
+            Returns 
+            ----------------
+            string : str
+                A cleaned string stripped of whitespace, punctuation, emojis, non-ASCII characters, and URLs.
         """
         string = string.lower()
         if is_url:
-            # get rid of everything after they start to be utm parameters
-            string = string.split('?')[0]
-        string = emoji_pattern.sub(r'', string)
-        string = string.replace(' ', '',)
-        string = re.sub(r'[^\w\s]', '', string)
-        return string
+            # Remove URLs and characters after the '?'
+            string = string.split('?')[0] # get rid of everything after they start to be utm parameters
+
+        else: #this is commonly for a post message
+            string = string + ' ' # add a space to the end of the string so that the regex below works            
+            string = re.sub(r'(https?://\S+)\s', '', string) # remove URLs up to the first whitespace
+
+        string = emoji_pattern.sub(r'', string) # remove emojis
+        string = unidecode(string)  # replace non-ASCII characters with their closest ASCII equivalents
+        string = re.sub(r'[^\w\s]', '', string) # remove punctuation
+        return string.replace(' ', '')
 
     def match_ads(self,df_1, df_2, df_1_exact_col, df_2_exact_col,
                 df_1_fuzzy_col=None, df_2_fuzzy_col=None, is_exact_col_link=True, 
@@ -592,6 +600,32 @@ class UtilityFunctions():
         df.columns = df.columns.str.strip()
         return df
 
+
+def merge_w_match_perc(self,df_1,df_2,left_on,right_on,how='left'):
+        """Merges two dataframes and prints out the number of matches and the percentage of matches out of the total number of rows.
+        
+        Args:
+            df_1 (pd.DataFrame): The first dataframe to merge
+            df_2 (pd.DataFrame): The second dataframe to merge
+            left_on (str): The column name to merge on in the first dataframe
+            right_on (str): The column name to merge on in the second dataframe
+            how (str, optional): The type of merge to perform. Defaults to 'left'.
+        
+        Returns:
+            output_df (pd.DataFrame): A pandas dataframe that contains the merged data from the input dataframes."""
+        df_1_rows = df_1.shape[0]
+        if '_merge' in df_1.columns:
+            df_1 = df_1.drop('_merge',axis=1)
+
+        output_df = pd.merge(df_1,df_2,left_on=left_on,right_on=right_on,how=how,indicator=True)
+        num_rows = output_df.shape[0]
+        num_matches = output_df._merge.value_counts()['both']
+        match_perc = round(num_matches / num_rows * 100,1)
+        rows_diff = df_1_rows - num_rows
+        print(f"df_1 has {df_1_rows} rows")
+        print(f'{num_matches} matches out of {num_rows} rows ({match_perc}%)')
+        print(f'{rows_diff} ')
+        return output_df
 
     # def group_by_asset(self,x):
     #     d = {}
