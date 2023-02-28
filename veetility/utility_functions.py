@@ -351,8 +351,8 @@ class UtilityFunctions():
         all_table_names = sa.inspect(self.postgresql_engine).get_table_names()
         return (table_name in all_table_names)
 
-    def store_daily_organic_data(self,df,output_table_name,num_days_to_store=30,date_col_name='date',
-                                    dayfirst="EnterValue",yearfirst="EnterValue", format=None, errors='raise',
+    def store_daily_organic_data(self,df,output_table_name,num_days_to_store=30,date_col_name=None,
+                                    dayfirst=None,yearfirst=None, format=None, errors='raise',
                                     check_created_col=True,created_col='created',refresh_lag=1,
                                     cumulative_metric_cols=['impressions','reach','video_views',
                                     'comments','shares'],unique_id_cols=None,
@@ -399,6 +399,20 @@ class UtilityFunctions():
         
         Returns:
             None: the function writes the data to a postgresql table """
+        
+        #It is crucial that the date column is formatted correctly, therefore we check parameters for pd.to_datetime parsing are entered
+        date_param_error_list = []
+        if date_col_name == None:
+            date_param_error_list.append("date_col_name")
+        if dayfirst == None:
+            date_param_error_list.append("dayfirst")
+        if yearfirst == None:
+            date_param_error_list.append("yearfirst")
+        if len(date_param_error_list) > 0:
+            error_message = f"The following date parameters are missing: {date_param_error_list}"
+            logger.error(error_message)
+            return error_message
+
         today_datetime = datetime.today()
         today_date = today_datetime.date()
         if require_run_after_hour and (today_datetime.hour < run_after_hour): 
@@ -484,7 +498,8 @@ class UtilityFunctions():
         df[metric_list] = df_metrics
         return df
 
-    def read_from_postgresql(self, table_name, clean_date=True, date_col='EnterValue', dayfirst='EnterValue', yearfirst='EnterValue', format=None, errors='raise'):
+    def read_from_postgresql(self, table_name, clean_date=True, date_col=None, dayfirst=None, yearfirst=None, 
+                             format=None, errors='raise'):
         """Reads a table from a PostgreSQL database table using a pscopg2 connection.
         If fails it waits 10 seconds and tries again.
         
@@ -500,6 +515,17 @@ class UtilityFunctions():
         Returns:
             df (pandas.DataFrame): The table data in a pandas dataframe.
         """
+        date_param_error_list = []
+        if clean_date == True:
+            if date_col == None:
+                date_param_error_list.append('date_col')
+            if dayfirst == None:
+                date_param_error_list.append('dayfirst')
+            if yearfirst == None:
+                date_param_error_list.append('yearfirst')
+            if len(date_param_error_list) > 0:
+                raise Exception(f"The following parameters are required to clean the date column: {date_param_error_list}")
+            
         # Connect to the PostgreSQL database
         conn = pg.connect(dbname=self.db_name, host=self.db_host,
                     port=self.db_port, user=self.db_user, password=self.db_password)
