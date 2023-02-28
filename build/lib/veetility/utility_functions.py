@@ -351,34 +351,64 @@ class UtilityFunctions():
         all_table_names = sa.inspect(self.postgresql_engine).get_table_names()
         return (table_name in all_table_names)
 
-    
-    def store_daily_organic_data(self,df,output_table_name,num_days_to_store=30,date_column_name='date',
-                                    check_created_col=True,created_col='created',refresh_lag=1):
-        """Takes in an organic data table with each row item reflecting an organic post with the metric totals
-        updating and increasing in the same row item each day rather than creating a new row item each day.
-        Returns an organic table which has a row item  
-            
-        Args:
-            df (DataFrame): The Dataframe source of organic data
-            output_table (str): The name of the output table to write the data to
-            num_days_to_store (int): The number of days to look back
-            date_column_name (str): The name of the column which contains the date that the post was originally posted
-            check_created_col (bool): If true then we should check whether the created column in Tracer is up to date, because 
-                there is no point sending a days worth of data if the row items have not been refreshed
-            created_col (str): The name of the column in the dataset which indicates the date that it was last updated
-       
-        Returns:
-            df (DataFrame): Outputs a table to the 'output_table_name', appends if already exists or creates from scratch if not"""
+    def store_daily_organic_data(self,df,output_table_name,num_days_to_store=30,date_col_name='date',
+                                    dayfirst="EnterValue",yearfirst="EnterValue", format=None, errors='raise',
+                                    check_created_col=True,created_col='created',refresh_lag=1,
+                                    cumulative_metric_cols=['impressions','reach','video_views',
+                                    'comments','shares'],unique_id_cols=None,
+                                    require_run_after_hour=False, run_after_hour=15):
+        """Converts a  post level organic dataframe to a daily level dataframe and stores it in a PostGreSQL table.
+        
+        Most organic data is stored at the post level and this function converts it to a daily level dataframe
+        and stores it in a PostGreSQL table. It also converts the cumulative metrics to daily difference metrics.
+        The date column is parsed through with the correct format, dayfirst and yearfirst values needing to be
+        specified.
+        If the table already exists then it checks the date_updated column to see if the data has already been
+        updated today. If it has then it doesn't update the table. If it hasn't then it updates the table.
+        If the table doesn't exist then it creates it.
+        If the require_run_after_hour is set to True then it will only run if the current time is after the
+        run_after_hour time which is in 24 hour format but only the hour is used.
+        If check_created_col is set to True then it will only run if the created column is less than the
+        refresh_lag days ago. This is to ensure that the data is up to date before it is stored. This "created" 
+        columns appears in databases from tracer and tells us when Tracer last updated the row items. Tracer is 
+        a day behind hence the refresh_lag of 1 day.
+        The date_row_added column is added to the dataframe and is the date that the row was added to the
+        data output_table.
+        The date_first_tracked column is added to the dataframe and is the date that a unique post as defined
+        by the unique_id_cols was first tracked
+        The date_diff column is added to the dataframe and is the number of days difference between when the post
+        was first tracked and when that particular row item was added to the data output_table.
 
+
+        Args:
+            df (DataFrame): The dataframe to be converted to a daily level dataframe and stored in a PostGreSQL table
+            output_table_name (str): The name of the table to store the data in
+            num_days_to_store (int, optional): The number of days worth of data per post to store in the table. Defaults to 30.
+            date_col_name (str, optional): The name of the date column in the dataframe that will be formatted. Defaults to 'date'.
+            dayfirst (str, optional): Whether the day is the first value in the date column. Defaults to "EnterValue".
+            yearfirst (str, optional): Whether the year is the first value in the date column. Defaults to "EnterValue".
+            format (str, optional): The format of the date column. Defaults to None.
+            errors (str, optional): How to handle errors in the date column. Defaults to 'raise'.
+            check_created_col (bool, optional): Whether to check the created column to ensure the data is up to date. Defaults to True.
+            created_col (str, optional): The name of the created column. Defaults to 'created'.
+            refresh_lag (int, optional): The number of days to check the created column is less than. Defaults to 1.
+            cumulative_metric_cols (list, optional): The list of cumulative metrics to convert to daily difference metrics. Defaults to ['impressions','reach','video_views','reactions','comments','shares'].
+            unique_id_cols (list, optional): The list of columns that uniquely identify a post. Defaults to None.
+            require_run_after_hour (bool, optional): Whether to only run the function if the current time is after the run_after_hour time. Defaults to False.
+            run_after_hour (int, optional): The hour of the day to run the function after in 24 hour format. Defaults to 15.
+        
+        Returns:
+            None: the function writes the data to a postgresql table """
         today_datetime = datetime.today()
-        today_date = today_datetime.date() 
-        if today_datetime.hour < 15: #Before 3 o'clock in the afternoon
-            logger.info("It may be better to run the API later on in the day to make sure the USA data has had time to refresh")
+        today_date = today_datetime.date()
+        if require_run_after_hour and (today_datetime.hour < run_after_hour): 
+            logger.info("Require run after hour is set to True and it is before the run after hour time")
+            return
         #Check Tracer data has actually updated
         if self.table_exists(output_table_name):
-
-            old_df = self.read_from_postgresql(output_table_name)
-            if old_df['date_updated'].max().date() == today_date:
+            old_df = self.read_from_postgresql(output_table_name,clean_date=True,date_col=date_col_name,
+                                               dayfirst=dayfirst,yearfirst=yearfirst, format=format, errors=errors)
+            if old_df['date_row_added'].max().date() == today_date:
                 logger.info(f"It looks data has already pushed to {output_table_name} today")
             else:
                 if (df[created_col].max().date() < today_date - timedelta(days=refresh_lag)) and (check_created_col):
@@ -386,16 +416,73 @@ class UtilityFunctions():
                     logger.info(error_message)
                     raise Exception(error_message)
                 cutoff_date = today_date - timedelta(days=num_days_to_store)
-                #create temporary date column that you can change the date format, that you then delete so it doesn't affect original date format
-                df['datetemp'] = pd.to_datetime(df[date_column_name]).dt.date
-                df = df[df['datetemp']>=(cutoff_date)]#filter data only after the cutoff date
-                df['date_updated'] = today_datetime
-                df = df.drop(columns=['datetemp']) #drop temporary date column used for filtering dates
+                
+                df[date_col_name] = pd.to_datetime(df[date_col_name], dayfirst=dayfirst, yearfirst=yearfirst,
+                                        format=format, errors=errors)
+                df = df[df[date_col_name].dt.date >=(cutoff_date)]#filter data only after the cutoff date
+                df['date_row_added'] = today_datetime
+                df['date_diff'] = (df['date_row_added'] - df[date_col_name]).dt.days
+                df['date_first_tracked'] = df.groupby(unique_id_cols)['date_row_added'].transform('min')
+                df = pd.concat([df,old_df])
+                for metric in cumulative_metric_cols: 
+                    df['cum_'+metric] = df[metric]#set the cumulative metrics to the same value as the daily metrics
+                
+                df = self.convert_cumulative_to_daily(df,cumulative_metric_cols,unique_id_cols,'date_row_added')
+                
                 self.write_to_postgresql(df,output_table_name,if_exists='append')
-        else: #if the table doesn't exist create it with the whole dataset for the first time
-            df['date_updated'] = today_datetime
-            self.write_to_postgresql(df,output_table_name,if_exists='replace')
 
+        else: #if the table doesn't exist create it with the whole dataset for the first time
+            df[date_col_name] = pd.to_datetime(df[date_col_name], dayfirst=dayfirst, yearfirst=yearfirst,
+                                        format=format, errors=errors)
+            df['date_row_added'] = today_datetime
+            df['date_first_tracked'] = today_datetime
+            df['date_diff'] = (df['date_row_added'] - df[date_col_name]).dt.days
+            self.write_to_postgresql(df,output_table_name,if_exists='replace')
+    
+    def convert_cumulative_to_daily(self,df,metric_list = ['impressions','comments','clicks',
+                                    'link_clicks','likes','saved','shares','video_views'],
+                                    unique_identifier_cols='url',date_row_added_col='date_row_added'):
+        """Convert cumulative metrics to daily metrics for a given dataframe.
+
+        Args:
+            df (DataFrame): The dataframe to convert the cumulative metrics to daily metrics
+            metric_list (list, optional): The list of metrics to convert. Defaults to ['impressions','comments','clicks',
+                                    'link_clicks','likes','saved','shares','video_views'].
+            unique_identifier_cols (list, optional): The list of columns that uniquely identify a post. Defaults to 'url'.
+            date_row_added_col (str, optional): The name of the column that contains the date the row was added to the dataframe. Defaults to 'date_row_added'.
+        Returns:
+            df (DataFrame): The dataframe with the cumulative metrics converted to daily metrics"""
+        
+        #rename the metric list to create by appending 'cum_' to the start of each metric
+        cum_metric_list = ['cum_'+metric for metric in metric_list]
+        #Check if the cumulative metrics have been calculated before
+        if any(['cum_' in x for x in df.columns]):
+            conversion_run_before = True
+            previous_cum_metrics = [x for x in df.columns if 'cum_' in x]
+            if previous_cum_metrics != cum_metric_list:
+                raise Exception("The cumulative metrics in the dataframe do not match the cumulative metrics in the metric list\
+                                 input parameter")
+        else:
+            conversion_run_before = False
+
+        if conversion_run_before == False:
+            # If the cumulative metrics have not been calculated before then 
+            # duplicate the metrics from the dataframe as by default the metrics are cumulative
+            for metric in metric_list:
+                #set the cumulative metrics to the same value as the daily metrics
+                df['cum_'+metric] = df[metric]
+                cum_metric_list.append('cum_'+metric)
+        if isinstance(unique_identifier_cols,list) == False:
+            unique_identifier_cols = [unique_identifier_cols]
+        # Sort the dataframe by the unique identifier columns and the date the row was added
+        df = df.sort_values(by= unique_identifier_cols+[date_row_added_col])
+        # Calculate the daily metrics by subtracting the previous day's cumulative metric from the current day's cumulative metric
+        df[metric_list] = (df.groupby(unique_identifier_cols)[cum_metric_list].transform(lambda x:x.sub(x.shift().fillna(0))))
+        df_metrics = df[metric_list]
+        # Set negative values to zero, cumulative totals can decrease, potentially due to people accidently liking posts
+        df_metrics[df_metrics <0] = 0
+        df[metric_list] = df_metrics
+        return df
 
     def read_from_postgresql(self, table_name, clean_date=True, date_col='EnterValue', dayfirst='EnterValue', yearfirst='EnterValue', format=None, errors='raise'):
         """Reads a table from a PostgreSQL database table using a pscopg2 connection.
@@ -601,31 +688,31 @@ class UtilityFunctions():
         return df
 
 
-def merge_w_match_perc(self,df_1,df_2,left_on,right_on,how='left'):
-        """Merges two dataframes and prints out the number of matches and the percentage of matches out of the total number of rows.
-        
-        Args:
-            df_1 (pd.DataFrame): The first dataframe to merge
-            df_2 (pd.DataFrame): The second dataframe to merge
-            left_on (str): The column name to merge on in the first dataframe
-            right_on (str): The column name to merge on in the second dataframe
-            how (str, optional): The type of merge to perform. Defaults to 'left'.
-        
-        Returns:
-            output_df (pd.DataFrame): A pandas dataframe that contains the merged data from the input dataframes."""
-        df_1_rows = df_1.shape[0]
-        if '_merge' in df_1.columns:
-            df_1 = df_1.drop('_merge',axis=1)
+    def merge_w_match_perc(self,df_1,df_2,left_on,right_on,how='left'):
+            """Merges two dataframes and prints out the number of matches and the percentage of matches out of the total number of rows.
+            
+            Args:
+                df_1 (pd.DataFrame): The first dataframe to merge
+                df_2 (pd.DataFrame): The second dataframe to merge
+                left_on (str): The column name to merge on in the first dataframe
+                right_on (str): The column name to merge on in the second dataframe
+                how (str, optional): The type of merge to perform. Defaults to 'left'.
+            
+            Returns:
+                output_df (pd.DataFrame): A pandas dataframe that contains the merged data from the input dataframes."""
+            df_1_rows = df_1.shape[0]
+            if '_merge' in df_1.columns:
+                df_1 = df_1.drop('_merge',axis=1)
 
-        output_df = pd.merge(df_1,df_2,left_on=left_on,right_on=right_on,how=how,indicator=True)
-        num_rows = output_df.shape[0]
-        num_matches = output_df._merge.value_counts()['both']
-        match_perc = round(num_matches / num_rows * 100,1)
-        rows_diff = df_1_rows - num_rows
-        print(f"df_1 has {df_1_rows} rows")
-        print(f'{num_matches} matches out of {num_rows} rows ({match_perc}%)')
-        print(f'{rows_diff} ')
-        return output_df
+            output_df = pd.merge(df_1,df_2,left_on=left_on,right_on=right_on,how=how,indicator=True)
+            num_rows = output_df.shape[0]
+            num_matches = output_df._merge.value_counts()['both']
+            match_perc = round(num_matches / num_rows * 100,1)
+            rows_diff = df_1_rows - num_rows
+            print(f"df_1 has {df_1_rows} rows")
+            print(f'{num_matches} matches out of {num_rows} rows ({match_perc}%)')
+            print(f'{rows_diff} ')
+            return output_df
 
     # def group_by_asset(self,x):
     #     d = {}

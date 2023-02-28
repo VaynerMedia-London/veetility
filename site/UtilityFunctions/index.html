@@ -15,7 +15,7 @@
         <link rel="next" href="../SlackNotifier/">
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.12">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
     
     
       
@@ -23,7 +23,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.0d440cfe.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.558e4712.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.2505c338.min.css">
@@ -188,7 +188,7 @@
   
     <li class="md-nav__item md-nav__item--active">
       
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
       
       
         
@@ -247,6 +247,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#veetility.utility_functions.UtilityFunctions.convert_cumulative_to_daily" class="md-nav__link">
+    convert_cumulative_to_daily()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#veetility.utility_functions.UtilityFunctions.identify_paid_or_organic" class="md-nav__link">
     identify_paid_or_organic()
   </a>
@@ -256,6 +263,13 @@
         <li class="md-nav__item">
   <a href="#veetility.utility_functions.UtilityFunctions.match_ads" class="md-nav__link">
     match_ads()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#veetility.utility_functions.UtilityFunctions.merge_w_match_perc" class="md-nav__link">
+    merge_w_match_perc()
   </a>
   
 </li>
@@ -465,6 +479,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#veetility.utility_functions.UtilityFunctions.convert_cumulative_to_daily" class="md-nav__link">
+    convert_cumulative_to_daily()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#veetility.utility_functions.UtilityFunctions.identify_paid_or_organic" class="md-nav__link">
     identify_paid_or_organic()
   </a>
@@ -474,6 +495,13 @@
         <li class="md-nav__item">
   <a href="#veetility.utility_functions.UtilityFunctions.match_ads" class="md-nav__link">
     match_ads()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#veetility.utility_functions.UtilityFunctions.merge_w_match_perc" class="md-nav__link">
+    merge_w_match_perc()
   </a>
   
 </li>
@@ -1166,7 +1194,121 @@
 <span class="normal">598</span>
 <span class="normal">599</span>
 <span class="normal">600</span>
-<span class="normal">601</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">UtilityFunctions</span><span class="p">():</span>
+<span class="normal">601</span>
+<span class="normal">602</span>
+<span class="normal">603</span>
+<span class="normal">604</span>
+<span class="normal">605</span>
+<span class="normal">606</span>
+<span class="normal">607</span>
+<span class="normal">608</span>
+<span class="normal">609</span>
+<span class="normal">610</span>
+<span class="normal">611</span>
+<span class="normal">612</span>
+<span class="normal">613</span>
+<span class="normal">614</span>
+<span class="normal">615</span>
+<span class="normal">616</span>
+<span class="normal">617</span>
+<span class="normal">618</span>
+<span class="normal">619</span>
+<span class="normal">620</span>
+<span class="normal">621</span>
+<span class="normal">622</span>
+<span class="normal">623</span>
+<span class="normal">624</span>
+<span class="normal">625</span>
+<span class="normal">626</span>
+<span class="normal">627</span>
+<span class="normal">628</span>
+<span class="normal">629</span>
+<span class="normal">630</span>
+<span class="normal">631</span>
+<span class="normal">632</span>
+<span class="normal">633</span>
+<span class="normal">634</span>
+<span class="normal">635</span>
+<span class="normal">636</span>
+<span class="normal">637</span>
+<span class="normal">638</span>
+<span class="normal">639</span>
+<span class="normal">640</span>
+<span class="normal">641</span>
+<span class="normal">642</span>
+<span class="normal">643</span>
+<span class="normal">644</span>
+<span class="normal">645</span>
+<span class="normal">646</span>
+<span class="normal">647</span>
+<span class="normal">648</span>
+<span class="normal">649</span>
+<span class="normal">650</span>
+<span class="normal">651</span>
+<span class="normal">652</span>
+<span class="normal">653</span>
+<span class="normal">654</span>
+<span class="normal">655</span>
+<span class="normal">656</span>
+<span class="normal">657</span>
+<span class="normal">658</span>
+<span class="normal">659</span>
+<span class="normal">660</span>
+<span class="normal">661</span>
+<span class="normal">662</span>
+<span class="normal">663</span>
+<span class="normal">664</span>
+<span class="normal">665</span>
+<span class="normal">666</span>
+<span class="normal">667</span>
+<span class="normal">668</span>
+<span class="normal">669</span>
+<span class="normal">670</span>
+<span class="normal">671</span>
+<span class="normal">672</span>
+<span class="normal">673</span>
+<span class="normal">674</span>
+<span class="normal">675</span>
+<span class="normal">676</span>
+<span class="normal">677</span>
+<span class="normal">678</span>
+<span class="normal">679</span>
+<span class="normal">680</span>
+<span class="normal">681</span>
+<span class="normal">682</span>
+<span class="normal">683</span>
+<span class="normal">684</span>
+<span class="normal">685</span>
+<span class="normal">686</span>
+<span class="normal">687</span>
+<span class="normal">688</span>
+<span class="normal">689</span>
+<span class="normal">690</span>
+<span class="normal">691</span>
+<span class="normal">692</span>
+<span class="normal">693</span>
+<span class="normal">694</span>
+<span class="normal">695</span>
+<span class="normal">696</span>
+<span class="normal">697</span>
+<span class="normal">698</span>
+<span class="normal">699</span>
+<span class="normal">700</span>
+<span class="normal">701</span>
+<span class="normal">702</span>
+<span class="normal">703</span>
+<span class="normal">704</span>
+<span class="normal">705</span>
+<span class="normal">706</span>
+<span class="normal">707</span>
+<span class="normal">708</span>
+<span class="normal">709</span>
+<span class="normal">710</span>
+<span class="normal">711</span>
+<span class="normal">712</span>
+<span class="normal">713</span>
+<span class="normal">714</span>
+<span class="normal">715</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">UtilityFunctions</span><span class="p">():</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gspread_auth_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">db_user</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">db_password</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">db_host</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                         <span class="n">db_port</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">db_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -1481,34 +1623,64 @@
         <span class="n">all_table_names</span> <span class="o">=</span> <span class="n">sa</span><span class="o">.</span><span class="n">inspect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">postgresql_engine</span><span class="p">)</span><span class="o">.</span><span class="n">get_table_names</span><span class="p">()</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">table_name</span> <span class="ow">in</span> <span class="n">all_table_names</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">store_daily_organic_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">,</span><span class="n">output_table_name</span><span class="p">,</span><span class="n">num_days_to_store</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">date_col_name</span><span class="o">=</span><span class="s1">&#39;date&#39;</span><span class="p">,</span>
+                                    <span class="n">dayfirst</span><span class="o">=</span><span class="s2">&quot;EnterValue&quot;</span><span class="p">,</span><span class="n">yearfirst</span><span class="o">=</span><span class="s2">&quot;EnterValue&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">,</span>
+                                    <span class="n">check_created_col</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">created_col</span><span class="o">=</span><span class="s1">&#39;created&#39;</span><span class="p">,</span><span class="n">refresh_lag</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                    <span class="n">cumulative_metric_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">,</span><span class="s1">&#39;reach&#39;</span><span class="p">,</span><span class="s1">&#39;video_views&#39;</span><span class="p">,</span>
+                                    <span class="s1">&#39;comments&#39;</span><span class="p">,</span><span class="s1">&#39;shares&#39;</span><span class="p">],</span><span class="n">unique_id_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                    <span class="n">require_run_after_hour</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">run_after_hour</span><span class="o">=</span><span class="mi">15</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts a  post level organic dataframe to a daily level dataframe and stores it in a PostGreSQL table.</span>
 
-    <span class="k">def</span> <span class="nf">store_daily_organic_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">,</span><span class="n">output_table_name</span><span class="p">,</span><span class="n">num_days_to_store</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">date_column_name</span><span class="o">=</span><span class="s1">&#39;date&#39;</span><span class="p">,</span>
-                                    <span class="n">check_created_col</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">created_col</span><span class="o">=</span><span class="s1">&#39;created&#39;</span><span class="p">,</span><span class="n">refresh_lag</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Takes in an organic data table with each row item reflecting an organic post with the metric totals</span>
-<span class="sd">        updating and increasing in the same row item each day rather than creating a new row item each day.</span>
-<span class="sd">        Returns an organic table which has a row item  </span>
+<span class="sd">        Most organic data is stored at the post level and this function converts it to a daily level dataframe</span>
+<span class="sd">        and stores it in a PostGreSQL table. It also converts the cumulative metrics to daily difference metrics.</span>
+<span class="sd">        The date column is parsed through with the correct format, dayfirst and yearfirst values needing to be</span>
+<span class="sd">        specified.</span>
+<span class="sd">        If the table already exists then it checks the date_updated column to see if the data has already been</span>
+<span class="sd">        updated today. If it has then it doesn&#39;t update the table. If it hasn&#39;t then it updates the table.</span>
+<span class="sd">        If the table doesn&#39;t exist then it creates it.</span>
+<span class="sd">        If the require_run_after_hour is set to True then it will only run if the current time is after the</span>
+<span class="sd">        run_after_hour time which is in 24 hour format but only the hour is used.</span>
+<span class="sd">        If check_created_col is set to True then it will only run if the created column is less than the</span>
+<span class="sd">        refresh_lag days ago. This is to ensure that the data is up to date before it is stored. This &quot;created&quot; </span>
+<span class="sd">        columns appears in databases from tracer and tells us when Tracer last updated the row items. Tracer is </span>
+<span class="sd">        a day behind hence the refresh_lag of 1 day.</span>
+<span class="sd">        The date_row_added column is added to the dataframe and is the date that the row was added to the</span>
+<span class="sd">        data output_table.</span>
+<span class="sd">        The date_first_tracked column is added to the dataframe and is the date that a unique post as defined</span>
+<span class="sd">        by the unique_id_cols was first tracked</span>
+<span class="sd">        The date_diff column is added to the dataframe and is the number of days difference between when the post</span>
+<span class="sd">        was first tracked and when that particular row item was added to the data output_table.</span>
+
 
 <span class="sd">        Args:</span>
-<span class="sd">            df (DataFrame): The Dataframe source of organic data</span>
-<span class="sd">            output_table (str): The name of the output table to write the data to</span>
-<span class="sd">            num_days_to_store (int): The number of days to look back</span>
-<span class="sd">            date_column_name (str): The name of the column which contains the date that the post was originally posted</span>
-<span class="sd">            check_created_col (bool): If true then we should check whether the created column in Tracer is up to date, because </span>
-<span class="sd">                there is no point sending a days worth of data if the row items have not been refreshed</span>
-<span class="sd">            created_col (str): The name of the column in the dataset which indicates the date that it was last updated</span>
+<span class="sd">            df (DataFrame): The dataframe to be converted to a daily level dataframe and stored in a PostGreSQL table</span>
+<span class="sd">            output_table_name (str): The name of the table to store the data in</span>
+<span class="sd">            num_days_to_store (int, optional): The number of days worth of data per post to store in the table. Defaults to 30.</span>
+<span class="sd">            date_col_name (str, optional): The name of the date column in the dataframe that will be formatted. Defaults to &#39;date&#39;.</span>
+<span class="sd">            dayfirst (str, optional): Whether the day is the first value in the date column. Defaults to &quot;EnterValue&quot;.</span>
+<span class="sd">            yearfirst (str, optional): Whether the year is the first value in the date column. Defaults to &quot;EnterValue&quot;.</span>
+<span class="sd">            format (str, optional): The format of the date column. Defaults to None.</span>
+<span class="sd">            errors (str, optional): How to handle errors in the date column. Defaults to &#39;raise&#39;.</span>
+<span class="sd">            check_created_col (bool, optional): Whether to check the created column to ensure the data is up to date. Defaults to True.</span>
+<span class="sd">            created_col (str, optional): The name of the created column. Defaults to &#39;created&#39;.</span>
+<span class="sd">            refresh_lag (int, optional): The number of days to check the created column is less than. Defaults to 1.</span>
+<span class="sd">            cumulative_metric_cols (list, optional): The list of cumulative metrics to convert to daily difference metrics. Defaults to [&#39;impressions&#39;,&#39;reach&#39;,&#39;video_views&#39;,&#39;reactions&#39;,&#39;comments&#39;,&#39;shares&#39;].</span>
+<span class="sd">            unique_id_cols (list, optional): The list of columns that uniquely identify a post. Defaults to None.</span>
+<span class="sd">            require_run_after_hour (bool, optional): Whether to only run the function if the current time is after the run_after_hour time. Defaults to False.</span>
+<span class="sd">            run_after_hour (int, optional): The hour of the day to run the function after in 24 hour format. Defaults to 15.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            df (DataFrame): Outputs a table to the &#39;output_table_name&#39;, appends if already exists or creates from scratch if not&quot;&quot;&quot;</span>
-
+<span class="sd">            None: the function writes the data to a postgresql table &quot;&quot;&quot;</span>
         <span class="n">today_datetime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
-        <span class="n">today_date</span> <span class="o">=</span> <span class="n">today_datetime</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> 
-        <span class="k">if</span> <span class="n">today_datetime</span><span class="o">.</span><span class="n">hour</span> <span class="o">&lt;</span> <span class="mi">15</span><span class="p">:</span> <span class="c1">#Before 3 o&#39;clock in the afternoon</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;It may be better to run the API later on in the day to make sure the USA data has had time to refresh&quot;</span><span class="p">)</span>
+        <span class="n">today_date</span> <span class="o">=</span> <span class="n">today_datetime</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">require_run_after_hour</span> <span class="ow">and</span> <span class="p">(</span><span class="n">today_datetime</span><span class="o">.</span><span class="n">hour</span> <span class="o">&lt;</span> <span class="n">run_after_hour</span><span class="p">):</span> 
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Require run after hour is set to True and it is before the run after hour time&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
         <span class="c1">#Check Tracer data has actually updated</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_exists</span><span class="p">(</span><span class="n">output_table_name</span><span class="p">):</span>
-
-            <span class="n">old_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_from_postgresql</span><span class="p">(</span><span class="n">output_table_name</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">old_df</span><span class="p">[</span><span class="s1">&#39;date_updated&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">==</span> <span class="n">today_date</span><span class="p">:</span>
+            <span class="n">old_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_from_postgresql</span><span class="p">(</span><span class="n">output_table_name</span><span class="p">,</span><span class="n">clean_date</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">date_col</span><span class="o">=</span><span class="n">date_col_name</span><span class="p">,</span>
+                                               <span class="n">dayfirst</span><span class="o">=</span><span class="n">dayfirst</span><span class="p">,</span><span class="n">yearfirst</span><span class="o">=</span><span class="n">yearfirst</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="n">errors</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">old_df</span><span class="p">[</span><span class="s1">&#39;date_row_added&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">==</span> <span class="n">today_date</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;It looks data has already pushed to </span><span class="si">{</span><span class="n">output_table_name</span><span class="si">}</span><span class="s2"> today&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">created_col</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">today_date</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">refresh_lag</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="n">check_created_col</span><span class="p">):</span>
@@ -1516,16 +1688,73 @@
                     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
                     <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
                 <span class="n">cutoff_date</span> <span class="o">=</span> <span class="n">today_date</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">num_days_to_store</span><span class="p">)</span>
-                <span class="c1">#create temporary date column that you can change the date format, that you then delete so it doesn&#39;t affect original date format</span>
-                <span class="n">df</span><span class="p">[</span><span class="s1">&#39;datetemp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">date_column_name</span><span class="p">])</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span>
-                <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;datetemp&#39;</span><span class="p">]</span><span class="o">&gt;=</span><span class="p">(</span><span class="n">cutoff_date</span><span class="p">)]</span><span class="c1">#filter data only after the cutoff date</span>
-                <span class="n">df</span><span class="p">[</span><span class="s1">&#39;date_updated&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">today_datetime</span>
-                <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;datetemp&#39;</span><span class="p">])</span> <span class="c1">#drop temporary date column used for filtering dates</span>
+
+                <span class="n">df</span><span class="p">[</span><span class="n">date_col_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">date_col_name</span><span class="p">],</span> <span class="n">dayfirst</span><span class="o">=</span><span class="n">dayfirst</span><span class="p">,</span> <span class="n">yearfirst</span><span class="o">=</span><span class="n">yearfirst</span><span class="p">,</span>
+                                        <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="n">errors</span><span class="p">)</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">date_col_name</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span> <span class="o">&gt;=</span><span class="p">(</span><span class="n">cutoff_date</span><span class="p">)]</span><span class="c1">#filter data only after the cutoff date</span>
+                <span class="n">df</span><span class="p">[</span><span class="s1">&#39;date_row_added&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">today_datetime</span>
+                <span class="n">df</span><span class="p">[</span><span class="s1">&#39;date_diff&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;date_row_added&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">df</span><span class="p">[</span><span class="n">date_col_name</span><span class="p">])</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">days</span>
+                <span class="n">df</span><span class="p">[</span><span class="s1">&#39;date_first_tracked&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">unique_id_cols</span><span class="p">)[</span><span class="s1">&#39;date_row_added&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="s1">&#39;min&#39;</span><span class="p">)</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="p">,</span><span class="n">old_df</span><span class="p">])</span>
+                <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">cumulative_metric_cols</span><span class="p">:</span> 
+                    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;cum_&#39;</span><span class="o">+</span><span class="n">metric</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span><span class="c1">#set the cumulative metrics to the same value as the daily metrics</span>
+
+                <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_cumulative_to_daily</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">cumulative_metric_cols</span><span class="p">,</span><span class="n">unique_id_cols</span><span class="p">,</span><span class="s1">&#39;date_row_added&#39;</span><span class="p">)</span>
+
                 <span class="bp">self</span><span class="o">.</span><span class="n">write_to_postgresql</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">output_table_name</span><span class="p">,</span><span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;append&#39;</span><span class="p">)</span>
+
         <span class="k">else</span><span class="p">:</span> <span class="c1">#if the table doesn&#39;t exist create it with the whole dataset for the first time</span>
-            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;date_updated&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">today_datetime</span>
+            <span class="n">df</span><span class="p">[</span><span class="n">date_col_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">date_col_name</span><span class="p">],</span> <span class="n">dayfirst</span><span class="o">=</span><span class="n">dayfirst</span><span class="p">,</span> <span class="n">yearfirst</span><span class="o">=</span><span class="n">yearfirst</span><span class="p">,</span>
+                                        <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="n">errors</span><span class="p">)</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;date_row_added&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">today_datetime</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;date_first_tracked&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">today_datetime</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;date_diff&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;date_row_added&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">df</span><span class="p">[</span><span class="n">date_col_name</span><span class="p">])</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">days</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">write_to_postgresql</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">output_table_name</span><span class="p">,</span><span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">convert_cumulative_to_daily</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">,</span><span class="n">metric_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">,</span><span class="s1">&#39;comments&#39;</span><span class="p">,</span><span class="s1">&#39;clicks&#39;</span><span class="p">,</span>
+                                    <span class="s1">&#39;link_clicks&#39;</span><span class="p">,</span><span class="s1">&#39;likes&#39;</span><span class="p">,</span><span class="s1">&#39;saved&#39;</span><span class="p">,</span><span class="s1">&#39;shares&#39;</span><span class="p">,</span><span class="s1">&#39;video_views&#39;</span><span class="p">],</span>
+                                    <span class="n">unique_identifier_cols</span><span class="o">=</span><span class="s1">&#39;url&#39;</span><span class="p">,</span><span class="n">date_row_added_col</span><span class="o">=</span><span class="s1">&#39;date_row_added&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert cumulative metrics to daily metrics for a given dataframe.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (DataFrame): The dataframe to convert the cumulative metrics to daily metrics</span>
+<span class="sd">            metric_list (list, optional): The list of metrics to convert. Defaults to [&#39;impressions&#39;,&#39;comments&#39;,&#39;clicks&#39;,</span>
+<span class="sd">                                    &#39;link_clicks&#39;,&#39;likes&#39;,&#39;saved&#39;,&#39;shares&#39;,&#39;video_views&#39;].</span>
+<span class="sd">            unique_identifier_cols (list, optional): The list of columns that uniquely identify a post. Defaults to &#39;url&#39;.</span>
+<span class="sd">            date_row_added_col (str, optional): The name of the column that contains the date the row was added to the dataframe. Defaults to &#39;date_row_added&#39;.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            df (DataFrame): The dataframe with the cumulative metrics converted to daily metrics&quot;&quot;&quot;</span>
+
+        <span class="c1">#rename the metric list to create by appending &#39;cum_&#39; to the start of each metric</span>
+        <span class="n">cum_metric_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;cum_&#39;</span><span class="o">+</span><span class="n">metric</span> <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">metric_list</span><span class="p">]</span>
+        <span class="c1">#Check if the cumulative metrics have been calculated before</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="s1">&#39;cum_&#39;</span> <span class="ow">in</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">]):</span>
+            <span class="n">conversion_run_before</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">previous_cum_metrics</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s1">&#39;cum_&#39;</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">previous_cum_metrics</span> <span class="o">!=</span> <span class="n">cum_metric_list</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;The cumulative metrics in the dataframe do not match the cumulative metrics in the metric list</span><span class="se">\</span>
+<span class="s2">                                 input parameter&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">conversion_run_before</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">conversion_run_before</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="c1"># If the cumulative metrics have not been calculated before then </span>
+            <span class="c1"># duplicate the metrics from the dataframe as by default the metrics are cumulative</span>
+            <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">metric_list</span><span class="p">:</span>
+                <span class="c1">#set the cumulative metrics to the same value as the daily metrics</span>
+                <span class="n">df</span><span class="p">[</span><span class="s1">&#39;cum_&#39;</span><span class="o">+</span><span class="n">metric</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span>
+                <span class="n">cum_metric_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;cum_&#39;</span><span class="o">+</span><span class="n">metric</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">unique_identifier_cols</span><span class="p">,</span><span class="nb">list</span><span class="p">)</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">unique_identifier_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">unique_identifier_cols</span><span class="p">]</span>
+        <span class="c1"># Sort the dataframe by the unique identifier columns and the date the row was added</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span> <span class="n">unique_identifier_cols</span><span class="o">+</span><span class="p">[</span><span class="n">date_row_added_col</span><span class="p">])</span>
+        <span class="c1"># Calculate the daily metrics by subtracting the previous day&#39;s cumulative metric from the current day&#39;s cumulative metric</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">metric_list</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">unique_identifier_cols</span><span class="p">)[</span><span class="n">cum_metric_list</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shift</span><span class="p">()</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">))))</span>
+        <span class="n">df_metrics</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">metric_list</span><span class="p">]</span>
+        <span class="c1"># Set negative values to zero, cumulative totals can decrease, potentially due to people accidently liking posts</span>
+        <span class="n">df_metrics</span><span class="p">[</span><span class="n">df_metrics</span> <span class="o">&lt;</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">metric_list</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_metrics</span>
+        <span class="k">return</span> <span class="n">df</span>
 
     <span class="k">def</span> <span class="nf">read_from_postgresql</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">,</span> <span class="n">clean_date</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">date_col</span><span class="o">=</span><span class="s1">&#39;EnterValue&#39;</span><span class="p">,</span> <span class="n">dayfirst</span><span class="o">=</span><span class="s1">&#39;EnterValue&#39;</span><span class="p">,</span> <span class="n">yearfirst</span><span class="o">=</span><span class="s1">&#39;EnterValue&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reads a table from a PostgreSQL database table using a pscopg2 connection.</span>
@@ -1729,6 +1958,33 @@
         <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="s1">&#39;_&#39;</span><span class="p">)</span>
         <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">df</span>
+
+
+    <span class="k">def</span> <span class="nf">merge_w_match_perc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df_1</span><span class="p">,</span><span class="n">df_2</span><span class="p">,</span><span class="n">left_on</span><span class="p">,</span><span class="n">right_on</span><span class="p">,</span><span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Merges two dataframes and prints out the number of matches and the percentage of matches out of the total number of rows.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                df_1 (pd.DataFrame): The first dataframe to merge</span>
+<span class="sd">                df_2 (pd.DataFrame): The second dataframe to merge</span>
+<span class="sd">                left_on (str): The column name to merge on in the first dataframe</span>
+<span class="sd">                right_on (str): The column name to merge on in the second dataframe</span>
+<span class="sd">                how (str, optional): The type of merge to perform. Defaults to &#39;left&#39;.</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                output_df (pd.DataFrame): A pandas dataframe that contains the merged data from the input dataframes.&quot;&quot;&quot;</span>
+            <span class="n">df_1_rows</span> <span class="o">=</span> <span class="n">df_1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s1">&#39;_merge&#39;</span> <span class="ow">in</span> <span class="n">df_1</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="n">df_1</span> <span class="o">=</span> <span class="n">df_1</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;_merge&#39;</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">output_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df_1</span><span class="p">,</span><span class="n">df_2</span><span class="p">,</span><span class="n">left_on</span><span class="o">=</span><span class="n">left_on</span><span class="p">,</span><span class="n">right_on</span><span class="o">=</span><span class="n">right_on</span><span class="p">,</span><span class="n">how</span><span class="o">=</span><span class="n">how</span><span class="p">,</span><span class="n">indicator</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">num_rows</span> <span class="o">=</span> <span class="n">output_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">num_matches</span> <span class="o">=</span> <span class="n">output_df</span><span class="o">.</span><span class="n">_merge</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()[</span><span class="s1">&#39;both&#39;</span><span class="p">]</span>
+            <span class="n">match_perc</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">num_matches</span> <span class="o">/</span> <span class="n">num_rows</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">rows_diff</span> <span class="o">=</span> <span class="n">df_1_rows</span> <span class="o">-</span> <span class="n">num_rows</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;df_1 has </span><span class="si">{</span><span class="n">df_1_rows</span><span class="si">}</span><span class="s2"> rows&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">num_matches</span><span class="si">}</span><span class="s1"> matches out of </span><span class="si">{</span><span class="n">num_rows</span><span class="si">}</span><span class="s1"> rows (</span><span class="si">{</span><span class="n">match_perc</span><span class="si">}</span><span class="s1">%)&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">rows_diff</span><span class="si">}</span><span class="s1"> &#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">output_df</span>
 </code></pre></div></td></tr></table></div>
         </details>
 
@@ -2167,16 +2423,198 @@ having to do searches on a string if we've already found a match in the past</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">596</span>
-<span class="normal">597</span>
-<span class="normal">598</span>
-<span class="normal">599</span>
-<span class="normal">600</span>
-<span class="normal">601</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">columnnames_to_lowercase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">683</span>
+<span class="normal">684</span>
+<span class="normal">685</span>
+<span class="normal">686</span>
+<span class="normal">687</span>
+<span class="normal">688</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">columnnames_to_lowercase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Change the columns in a dataframe into lowercase with spaces replaced by underscores&quot;&quot;&quot;</span>
     <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
     <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="s1">&#39;_&#39;</span><span class="p">)</span>
     <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">df</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="veetility.utility_functions.UtilityFunctions.convert_cumulative_to_daily" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">convert_cumulative_to_daily</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">metric_list</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">,</span> <span class="s1">&#39;comments&#39;</span><span class="p">,</span> <span class="s1">&#39;clicks&#39;</span><span class="p">,</span> <span class="s1">&#39;link_clicks&#39;</span><span class="p">,</span> <span class="s1">&#39;likes&#39;</span><span class="p">,</span> <span class="s1">&#39;saved&#39;</span><span class="p">,</span> <span class="s1">&#39;shares&#39;</span><span class="p">,</span> <span class="s1">&#39;video_views&#39;</span><span class="p">],</span> <span class="n">unique_identifier_cols</span><span class="o">=</span><span class="s1">&#39;url&#39;</span><span class="p">,</span> <span class="n">date_row_added_col</span><span class="o">=</span><span class="s1">&#39;date_row_added&#39;</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Convert cumulative metrics to daily metrics for a given dataframe.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>df</code></td>
+          <td>
+                <code>DataFrame</code>
+          </td>
+          <td><p>The dataframe to convert the cumulative metrics to daily metrics</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>metric_list</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td><p>The list of metrics to convert. Defaults to ['impressions','comments','clicks',
+                    'link_clicks','likes','saved','shares','video_views'].</p></td>
+          <td>
+                <code>[&#39;impressions&#39;, &#39;comments&#39;, &#39;clicks&#39;, &#39;link_clicks&#39;, &#39;likes&#39;, &#39;saved&#39;, &#39;shares&#39;, &#39;video_views&#39;]</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>unique_identifier_cols</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td><p>The list of columns that uniquely identify a post. Defaults to 'url'.</p></td>
+          <td>
+                <code>&#39;url&#39;</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>date_row_added_col</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>The name of the column that contains the date the row was added to the dataframe. Defaults to 'date_row_added'.</p></td>
+          <td>
+                <code>&#39;date_row_added&#39;</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+<td><code>df</code></td>          <td>
+                <code>DataFrame</code>
+          </td>
+          <td><p>The dataframe with the cumulative metrics converted to daily metrics</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>veetility/utility_functions.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span>
+<span class="normal">462</span>
+<span class="normal">463</span>
+<span class="normal">464</span>
+<span class="normal">465</span>
+<span class="normal">466</span>
+<span class="normal">467</span>
+<span class="normal">468</span>
+<span class="normal">469</span>
+<span class="normal">470</span>
+<span class="normal">471</span>
+<span class="normal">472</span>
+<span class="normal">473</span>
+<span class="normal">474</span>
+<span class="normal">475</span>
+<span class="normal">476</span>
+<span class="normal">477</span>
+<span class="normal">478</span>
+<span class="normal">479</span>
+<span class="normal">480</span>
+<span class="normal">481</span>
+<span class="normal">482</span>
+<span class="normal">483</span>
+<span class="normal">484</span>
+<span class="normal">485</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">convert_cumulative_to_daily</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">,</span><span class="n">metric_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">,</span><span class="s1">&#39;comments&#39;</span><span class="p">,</span><span class="s1">&#39;clicks&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;link_clicks&#39;</span><span class="p">,</span><span class="s1">&#39;likes&#39;</span><span class="p">,</span><span class="s1">&#39;saved&#39;</span><span class="p">,</span><span class="s1">&#39;shares&#39;</span><span class="p">,</span><span class="s1">&#39;video_views&#39;</span><span class="p">],</span>
+                                <span class="n">unique_identifier_cols</span><span class="o">=</span><span class="s1">&#39;url&#39;</span><span class="p">,</span><span class="n">date_row_added_col</span><span class="o">=</span><span class="s1">&#39;date_row_added&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert cumulative metrics to daily metrics for a given dataframe.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (DataFrame): The dataframe to convert the cumulative metrics to daily metrics</span>
+<span class="sd">        metric_list (list, optional): The list of metrics to convert. Defaults to [&#39;impressions&#39;,&#39;comments&#39;,&#39;clicks&#39;,</span>
+<span class="sd">                                &#39;link_clicks&#39;,&#39;likes&#39;,&#39;saved&#39;,&#39;shares&#39;,&#39;video_views&#39;].</span>
+<span class="sd">        unique_identifier_cols (list, optional): The list of columns that uniquely identify a post. Defaults to &#39;url&#39;.</span>
+<span class="sd">        date_row_added_col (str, optional): The name of the column that contains the date the row was added to the dataframe. Defaults to &#39;date_row_added&#39;.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        df (DataFrame): The dataframe with the cumulative metrics converted to daily metrics&quot;&quot;&quot;</span>
+
+    <span class="c1">#rename the metric list to create by appending &#39;cum_&#39; to the start of each metric</span>
+    <span class="n">cum_metric_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;cum_&#39;</span><span class="o">+</span><span class="n">metric</span> <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">metric_list</span><span class="p">]</span>
+    <span class="c1">#Check if the cumulative metrics have been calculated before</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="s1">&#39;cum_&#39;</span> <span class="ow">in</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">]):</span>
+        <span class="n">conversion_run_before</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">previous_cum_metrics</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s1">&#39;cum_&#39;</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">previous_cum_metrics</span> <span class="o">!=</span> <span class="n">cum_metric_list</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;The cumulative metrics in the dataframe do not match the cumulative metrics in the metric list</span><span class="se">\</span>
+<span class="s2">                             input parameter&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">conversion_run_before</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="n">conversion_run_before</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="c1"># If the cumulative metrics have not been calculated before then </span>
+        <span class="c1"># duplicate the metrics from the dataframe as by default the metrics are cumulative</span>
+        <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">metric_list</span><span class="p">:</span>
+            <span class="c1">#set the cumulative metrics to the same value as the daily metrics</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;cum_&#39;</span><span class="o">+</span><span class="n">metric</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span>
+            <span class="n">cum_metric_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;cum_&#39;</span><span class="o">+</span><span class="n">metric</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">unique_identifier_cols</span><span class="p">,</span><span class="nb">list</span><span class="p">)</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">unique_identifier_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">unique_identifier_cols</span><span class="p">]</span>
+    <span class="c1"># Sort the dataframe by the unique identifier columns and the date the row was added</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span> <span class="n">unique_identifier_cols</span><span class="o">+</span><span class="p">[</span><span class="n">date_row_added_col</span><span class="p">])</span>
+    <span class="c1"># Calculate the daily metrics by subtracting the previous day&#39;s cumulative metric from the current day&#39;s cumulative metric</span>
+    <span class="n">df</span><span class="p">[</span><span class="n">metric_list</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">unique_identifier_cols</span><span class="p">)[</span><span class="n">cum_metric_list</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shift</span><span class="p">()</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">))))</span>
+    <span class="n">df_metrics</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">metric_list</span><span class="p">]</span>
+    <span class="c1"># Set negative values to zero, cumulative totals can decrease, potentially due to people accidently liking posts</span>
+    <span class="n">df_metrics</span><span class="p">[</span><span class="n">df_metrics</span> <span class="o">&lt;</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">df</span><span class="p">[</span><span class="n">metric_list</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_metrics</span>
     <span class="k">return</span> <span class="n">df</span>
 </code></pre></div></td></tr></table></div>
       </details>
@@ -2200,15 +2638,15 @@ having to do searches on a string if we've already found a match in the past</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">511</span>
-<span class="normal">512</span>
-<span class="normal">513</span>
-<span class="normal">514</span>
-<span class="normal">515</span>
-<span class="normal">516</span>
-<span class="normal">517</span>
-<span class="normal">518</span>
-<span class="normal">519</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">identify_paid_or_organic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">598</span>
+<span class="normal">599</span>
+<span class="normal">600</span>
+<span class="normal">601</span>
+<span class="normal">602</span>
+<span class="normal">603</span>
+<span class="normal">604</span>
+<span class="normal">605</span>
+<span class="normal">606</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">identify_paid_or_organic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Identify whether a given dataframe contains paid data&quot;&quot;&quot;</span>
     <span class="n">paid_or_organic</span> <span class="o">=</span> <span class="s1">&#39;Organic&#39;</span>
     <span class="c1">#make columns to check lower case so can work on</span>
@@ -2660,6 +3098,159 @@ using fuzzy matching</p>
 
 
 
+<h2 id="veetility.utility_functions.UtilityFunctions.merge_w_match_perc" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">merge_w_match_perc</span><span class="p">(</span><span class="n">df_1</span><span class="p">,</span> <span class="n">df_2</span><span class="p">,</span> <span class="n">left_on</span><span class="p">,</span> <span class="n">right_on</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Merges two dataframes and prints out the number of matches and the percentage of matches out of the total number of rows.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>df_1</code></td>
+          <td>
+                <code><span title="pandas">pd</span>.<span title="pandas.DataFrame">DataFrame</span></code>
+          </td>
+          <td><p>The first dataframe to merge</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>df_2</code></td>
+          <td>
+                <code><span title="pandas">pd</span>.<span title="pandas.DataFrame">DataFrame</span></code>
+          </td>
+          <td><p>The second dataframe to merge</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>left_on</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>The column name to merge on in the first dataframe</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>right_on</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>The column name to merge on in the second dataframe</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>how</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>The type of merge to perform. Defaults to 'left'.</p></td>
+          <td>
+                <code>&#39;left&#39;</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+<td><code>output_df</code></td>          <td>
+                <code><span title="pandas">pd</span>.<span title="pandas.DataFrame">DataFrame</span></code>
+          </td>
+          <td><p>A pandas dataframe that contains the merged data from the input dataframes.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>veetility/utility_functions.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">691</span>
+<span class="normal">692</span>
+<span class="normal">693</span>
+<span class="normal">694</span>
+<span class="normal">695</span>
+<span class="normal">696</span>
+<span class="normal">697</span>
+<span class="normal">698</span>
+<span class="normal">699</span>
+<span class="normal">700</span>
+<span class="normal">701</span>
+<span class="normal">702</span>
+<span class="normal">703</span>
+<span class="normal">704</span>
+<span class="normal">705</span>
+<span class="normal">706</span>
+<span class="normal">707</span>
+<span class="normal">708</span>
+<span class="normal">709</span>
+<span class="normal">710</span>
+<span class="normal">711</span>
+<span class="normal">712</span>
+<span class="normal">713</span>
+<span class="normal">714</span>
+<span class="normal">715</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">merge_w_match_perc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df_1</span><span class="p">,</span><span class="n">df_2</span><span class="p">,</span><span class="n">left_on</span><span class="p">,</span><span class="n">right_on</span><span class="p">,</span><span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Merges two dataframes and prints out the number of matches and the percentage of matches out of the total number of rows.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df_1 (pd.DataFrame): The first dataframe to merge</span>
+<span class="sd">            df_2 (pd.DataFrame): The second dataframe to merge</span>
+<span class="sd">            left_on (str): The column name to merge on in the first dataframe</span>
+<span class="sd">            right_on (str): The column name to merge on in the second dataframe</span>
+<span class="sd">            how (str, optional): The type of merge to perform. Defaults to &#39;left&#39;.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            output_df (pd.DataFrame): A pandas dataframe that contains the merged data from the input dataframes.&quot;&quot;&quot;</span>
+        <span class="n">df_1_rows</span> <span class="o">=</span> <span class="n">df_1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;_merge&#39;</span> <span class="ow">in</span> <span class="n">df_1</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df_1</span> <span class="o">=</span> <span class="n">df_1</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;_merge&#39;</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">output_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df_1</span><span class="p">,</span><span class="n">df_2</span><span class="p">,</span><span class="n">left_on</span><span class="o">=</span><span class="n">left_on</span><span class="p">,</span><span class="n">right_on</span><span class="o">=</span><span class="n">right_on</span><span class="p">,</span><span class="n">how</span><span class="o">=</span><span class="n">how</span><span class="p">,</span><span class="n">indicator</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">num_rows</span> <span class="o">=</span> <span class="n">output_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">num_matches</span> <span class="o">=</span> <span class="n">output_df</span><span class="o">.</span><span class="n">_merge</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()[</span><span class="s1">&#39;both&#39;</span><span class="p">]</span>
+        <span class="n">match_perc</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">num_matches</span> <span class="o">/</span> <span class="n">num_rows</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">rows_diff</span> <span class="o">=</span> <span class="n">df_1_rows</span> <span class="o">-</span> <span class="n">num_rows</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;df_1 has </span><span class="si">{</span><span class="n">df_1_rows</span><span class="si">}</span><span class="s2"> rows&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">num_matches</span><span class="si">}</span><span class="s1"> matches out of </span><span class="si">{</span><span class="n">num_rows</span><span class="si">}</span><span class="s1"> rows (</span><span class="si">{</span><span class="n">match_perc</span><span class="si">}</span><span class="s1">%)&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">rows_diff</span><span class="si">}</span><span class="s1"> &#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output_df</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
 <h2 id="veetility.utility_functions.UtilityFunctions.pickle_data" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">pickle_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="s1">&#39;Pickled Files&#39;</span><span class="p">)</span></code>
 
@@ -2716,17 +3307,17 @@ using fuzzy matching</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">521</span>
-<span class="normal">522</span>
-<span class="normal">523</span>
-<span class="normal">524</span>
-<span class="normal">525</span>
-<span class="normal">526</span>
-<span class="normal">527</span>
-<span class="normal">528</span>
-<span class="normal">529</span>
-<span class="normal">530</span>
-<span class="normal">531</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">pickle_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">data</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span><span class="n">folder</span><span class="o">=</span><span class="s2">&quot;Pickled Files&quot;</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">608</span>
+<span class="normal">609</span>
+<span class="normal">610</span>
+<span class="normal">611</span>
+<span class="normal">612</span>
+<span class="normal">613</span>
+<span class="normal">614</span>
+<span class="normal">615</span>
+<span class="normal">616</span>
+<span class="normal">617</span>
+<span class="normal">618</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">pickle_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">data</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span><span class="n">folder</span><span class="o">=</span><span class="s2">&quot;Pickled Files&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Pickle data and save it to a file.</span>
 
 <span class="sd">    Args:</span>
@@ -2972,34 +3563,34 @@ These can be present in some URLs we receive and not others</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">481</span>
-<span class="normal">482</span>
-<span class="normal">483</span>
-<span class="normal">484</span>
-<span class="normal">485</span>
-<span class="normal">486</span>
-<span class="normal">487</span>
-<span class="normal">488</span>
-<span class="normal">489</span>
-<span class="normal">490</span>
-<span class="normal">491</span>
-<span class="normal">492</span>
-<span class="normal">493</span>
-<span class="normal">494</span>
-<span class="normal">495</span>
-<span class="normal">496</span>
-<span class="normal">497</span>
-<span class="normal">498</span>
-<span class="normal">499</span>
-<span class="normal">500</span>
-<span class="normal">501</span>
-<span class="normal">502</span>
-<span class="normal">503</span>
-<span class="normal">504</span>
-<span class="normal">505</span>
-<span class="normal">506</span>
-<span class="normal">507</span>
-<span class="normal">508</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">read_from_gsheet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">workbook_name</span><span class="p">,</span> <span class="n">sheet_name</span><span class="p">,</span><span class="n">clean_date</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">date_col</span><span class="o">=</span><span class="s1">&#39;EnterValue&#39;</span><span class="p">,</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">568</span>
+<span class="normal">569</span>
+<span class="normal">570</span>
+<span class="normal">571</span>
+<span class="normal">572</span>
+<span class="normal">573</span>
+<span class="normal">574</span>
+<span class="normal">575</span>
+<span class="normal">576</span>
+<span class="normal">577</span>
+<span class="normal">578</span>
+<span class="normal">579</span>
+<span class="normal">580</span>
+<span class="normal">581</span>
+<span class="normal">582</span>
+<span class="normal">583</span>
+<span class="normal">584</span>
+<span class="normal">585</span>
+<span class="normal">586</span>
+<span class="normal">587</span>
+<span class="normal">588</span>
+<span class="normal">589</span>
+<span class="normal">590</span>
+<span class="normal">591</span>
+<span class="normal">592</span>
+<span class="normal">593</span>
+<span class="normal">594</span>
+<span class="normal">595</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">read_from_gsheet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">workbook_name</span><span class="p">,</span> <span class="n">sheet_name</span><span class="p">,</span><span class="n">clean_date</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">date_col</span><span class="o">=</span><span class="s1">&#39;EnterValue&#39;</span><span class="p">,</span>
                             <span class="n">dayfirst</span><span class="o">=</span><span class="s1">&#39;EnterValue&#39;</span><span class="p">,</span><span class="n">yearfirst</span><span class="o">=</span><span class="s1">&#39;EnterValue&#39;</span><span class="p">,</span><span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">errors</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read data from a google sheet and return it as a dataframe.</span>
 
@@ -3152,50 +3743,50 @@ If fails it waits 10 seconds and tries again.</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">400</span>
-<span class="normal">401</span>
-<span class="normal">402</span>
-<span class="normal">403</span>
-<span class="normal">404</span>
-<span class="normal">405</span>
-<span class="normal">406</span>
-<span class="normal">407</span>
-<span class="normal">408</span>
-<span class="normal">409</span>
-<span class="normal">410</span>
-<span class="normal">411</span>
-<span class="normal">412</span>
-<span class="normal">413</span>
-<span class="normal">414</span>
-<span class="normal">415</span>
-<span class="normal">416</span>
-<span class="normal">417</span>
-<span class="normal">418</span>
-<span class="normal">419</span>
-<span class="normal">420</span>
-<span class="normal">421</span>
-<span class="normal">422</span>
-<span class="normal">423</span>
-<span class="normal">424</span>
-<span class="normal">425</span>
-<span class="normal">426</span>
-<span class="normal">427</span>
-<span class="normal">428</span>
-<span class="normal">429</span>
-<span class="normal">430</span>
-<span class="normal">431</span>
-<span class="normal">432</span>
-<span class="normal">433</span>
-<span class="normal">434</span>
-<span class="normal">435</span>
-<span class="normal">436</span>
-<span class="normal">437</span>
-<span class="normal">438</span>
-<span class="normal">439</span>
-<span class="normal">440</span>
-<span class="normal">441</span>
-<span class="normal">442</span>
-<span class="normal">443</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">read_from_postgresql</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">,</span> <span class="n">clean_date</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">date_col</span><span class="o">=</span><span class="s1">&#39;EnterValue&#39;</span><span class="p">,</span> <span class="n">dayfirst</span><span class="o">=</span><span class="s1">&#39;EnterValue&#39;</span><span class="p">,</span> <span class="n">yearfirst</span><span class="o">=</span><span class="s1">&#39;EnterValue&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">487</span>
+<span class="normal">488</span>
+<span class="normal">489</span>
+<span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span>
+<span class="normal">493</span>
+<span class="normal">494</span>
+<span class="normal">495</span>
+<span class="normal">496</span>
+<span class="normal">497</span>
+<span class="normal">498</span>
+<span class="normal">499</span>
+<span class="normal">500</span>
+<span class="normal">501</span>
+<span class="normal">502</span>
+<span class="normal">503</span>
+<span class="normal">504</span>
+<span class="normal">505</span>
+<span class="normal">506</span>
+<span class="normal">507</span>
+<span class="normal">508</span>
+<span class="normal">509</span>
+<span class="normal">510</span>
+<span class="normal">511</span>
+<span class="normal">512</span>
+<span class="normal">513</span>
+<span class="normal">514</span>
+<span class="normal">515</span>
+<span class="normal">516</span>
+<span class="normal">517</span>
+<span class="normal">518</span>
+<span class="normal">519</span>
+<span class="normal">520</span>
+<span class="normal">521</span>
+<span class="normal">522</span>
+<span class="normal">523</span>
+<span class="normal">524</span>
+<span class="normal">525</span>
+<span class="normal">526</span>
+<span class="normal">527</span>
+<span class="normal">528</span>
+<span class="normal">529</span>
+<span class="normal">530</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">read_from_postgresql</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">,</span> <span class="n">clean_date</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">date_col</span><span class="o">=</span><span class="s1">&#39;EnterValue&#39;</span><span class="p">,</span> <span class="n">dayfirst</span><span class="o">=</span><span class="s1">&#39;EnterValue&#39;</span><span class="p">,</span> <span class="n">yearfirst</span><span class="o">=</span><span class="s1">&#39;EnterValue&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reads a table from a PostgreSQL database table using a pscopg2 connection.</span>
 <span class="sd">    If fails it waits 10 seconds and tries again.</span>
 
@@ -3312,21 +3903,21 @@ If fails it waits 10 seconds and tries again.</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">562</span>
-<span class="normal">563</span>
-<span class="normal">564</span>
-<span class="normal">565</span>
-<span class="normal">566</span>
-<span class="normal">567</span>
-<span class="normal">568</span>
-<span class="normal">569</span>
-<span class="normal">570</span>
-<span class="normal">571</span>
-<span class="normal">572</span>
-<span class="normal">573</span>
-<span class="normal">574</span>
-<span class="normal">575</span>
-<span class="normal">576</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">read_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">file_name</span><span class="p">,</span> <span class="n">file_type</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">649</span>
+<span class="normal">650</span>
+<span class="normal">651</span>
+<span class="normal">652</span>
+<span class="normal">653</span>
+<span class="normal">654</span>
+<span class="normal">655</span>
+<span class="normal">656</span>
+<span class="normal">657</span>
+<span class="normal">658</span>
+<span class="normal">659</span>
+<span class="normal">660</span>
+<span class="normal">661</span>
+<span class="normal">662</span>
+<span class="normal">663</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">read_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">file_name</span><span class="p">,</span> <span class="n">file_type</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read a json file and return a Python object.</span>
 
 <span class="sd">    Args:</span>
@@ -3352,16 +3943,33 @@ If fails it waits 10 seconds and tries again.</p>
 
 
 <h2 id="veetility.utility_functions.UtilityFunctions.store_daily_organic_data" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">store_daily_organic_data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">output_table_name</span><span class="p">,</span> <span class="n">num_days_to_store</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">date_column_name</span><span class="o">=</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="n">check_created_col</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">created_col</span><span class="o">=</span><span class="s1">&#39;created&#39;</span><span class="p">,</span> <span class="n">refresh_lag</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">store_daily_organic_data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">output_table_name</span><span class="p">,</span> <span class="n">num_days_to_store</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">date_col_name</span><span class="o">=</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="n">dayfirst</span><span class="o">=</span><span class="s1">&#39;EnterValue&#39;</span><span class="p">,</span> <span class="n">yearfirst</span><span class="o">=</span><span class="s1">&#39;EnterValue&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">,</span> <span class="n">check_created_col</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">created_col</span><span class="o">=</span><span class="s1">&#39;created&#39;</span><span class="p">,</span> <span class="n">refresh_lag</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cumulative_metric_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">,</span> <span class="s1">&#39;reach&#39;</span><span class="p">,</span> <span class="s1">&#39;video_views&#39;</span><span class="p">,</span> <span class="s1">&#39;comments&#39;</span><span class="p">,</span> <span class="s1">&#39;shares&#39;</span><span class="p">],</span> <span class="n">unique_id_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">require_run_after_hour</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">run_after_hour</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span></code>
 
 </h2>
 
 
   <div class="doc doc-contents ">
   
-      <p>Takes in an organic data table with each row item reflecting an organic post with the metric totals
-updating and increasing in the same row item each day rather than creating a new row item each day.
-Returns an organic table which has a row item  </p>
+      <p>Converts a  post level organic dataframe to a daily level dataframe and stores it in a PostGreSQL table.</p>
+<p>Most organic data is stored at the post level and this function converts it to a daily level dataframe
+and stores it in a PostGreSQL table. It also converts the cumulative metrics to daily difference metrics.
+The date column is parsed through with the correct format, dayfirst and yearfirst values needing to be
+specified.
+If the table already exists then it checks the date_updated column to see if the data has already been
+updated today. If it has then it doesn't update the table. If it hasn't then it updates the table.
+If the table doesn't exist then it creates it.
+If the require_run_after_hour is set to True then it will only run if the current time is after the
+run_after_hour time which is in 24 hour format but only the hour is used.
+If check_created_col is set to True then it will only run if the created column is less than the
+refresh_lag days ago. This is to ensure that the data is up to date before it is stored. This "created" 
+columns appears in databases from tracer and tells us when Tracer last updated the row items. Tracer is 
+a day behind hence the refresh_lag of 1 day.
+The date_row_added column is added to the dataframe and is the date that the row was added to the
+data output_table.
+The date_first_tracked column is added to the dataframe and is the date that a unique post as defined
+by the unique_id_cols was first tracked
+The date_diff column is added to the dataframe and is the number of days difference between when the post
+was first tracked and when that particular row item was added to the data output_table.</p>
 
   <p><strong>Parameters:</strong></p>
   <table>
@@ -3379,17 +3987,17 @@ Returns an organic table which has a row item  </p>
           <td>
                 <code>DataFrame</code>
           </td>
-          <td><p>The Dataframe source of organic data</p></td>
+          <td><p>The dataframe to be converted to a daily level dataframe and stored in a PostGreSQL table</p></td>
           <td>
               <em>required</em>
           </td>
         </tr>
         <tr>
-          <td><code>output_table</code></td>
+          <td><code>output_table_name</code></td>
           <td>
                 <code>str</code>
           </td>
-          <td><p>The name of the output table to write the data to</p></td>
+          <td><p>The name of the table to store the data in</p></td>
           <td>
               <em>required</em>
           </td>
@@ -3399,19 +4007,59 @@ Returns an organic table which has a row item  </p>
           <td>
                 <code>int</code>
           </td>
-          <td><p>The number of days to look back</p></td>
+          <td><p>The number of days worth of data per post to store in the table. Defaults to 30.</p></td>
           <td>
                 <code>30</code>
           </td>
         </tr>
         <tr>
-          <td><code>date_column_name</code></td>
+          <td><code>date_col_name</code></td>
           <td>
                 <code>str</code>
           </td>
-          <td><p>The name of the column which contains the date that the post was originally posted</p></td>
+          <td><p>The name of the date column in the dataframe that will be formatted. Defaults to 'date'.</p></td>
           <td>
                 <code>&#39;date&#39;</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>dayfirst</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>Whether the day is the first value in the date column. Defaults to "EnterValue".</p></td>
+          <td>
+                <code>&#39;EnterValue&#39;</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>yearfirst</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>Whether the year is the first value in the date column. Defaults to "EnterValue".</p></td>
+          <td>
+                <code>&#39;EnterValue&#39;</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>format</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>The format of the date column. Defaults to None.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>errors</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>How to handle errors in the date column. Defaults to 'raise'.</p></td>
+          <td>
+                <code>&#39;raise&#39;</code>
           </td>
         </tr>
         <tr>
@@ -3419,8 +4067,7 @@ Returns an organic table which has a row item  </p>
           <td>
                 <code>bool</code>
           </td>
-          <td><p>If true then we should check whether the created column in Tracer is up to date, because 
-there is no point sending a days worth of data if the row items have not been refreshed</p></td>
+          <td><p>Whether to check the created column to ensure the data is up to date. Defaults to True.</p></td>
           <td>
                 <code>True</code>
           </td>
@@ -3430,9 +4077,59 @@ there is no point sending a days worth of data if the row items have not been re
           <td>
                 <code>str</code>
           </td>
-          <td><p>The name of the column in the dataset which indicates the date that it was last updated</p></td>
+          <td><p>The name of the created column. Defaults to 'created'.</p></td>
           <td>
                 <code>&#39;created&#39;</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>refresh_lag</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>The number of days to check the created column is less than. Defaults to 1.</p></td>
+          <td>
+                <code>1</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>cumulative_metric_cols</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td><p>The list of cumulative metrics to convert to daily difference metrics. Defaults to ['impressions','reach','video_views','reactions','comments','shares'].</p></td>
+          <td>
+                <code>[&#39;impressions&#39;, &#39;reach&#39;, &#39;video_views&#39;, &#39;comments&#39;, &#39;shares&#39;]</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>unique_id_cols</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td><p>The list of columns that uniquely identify a post. Defaults to None.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>require_run_after_hour</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>Whether to only run the function if the current time is after the run_after_hour time. Defaults to False.</p></td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>run_after_hour</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>The hour of the day to run the function after in 24 hour format. Defaults to 15.</p></td>
+          <td>
+                <code>15</code>
           </td>
         </tr>
     </tbody>
@@ -3448,17 +4145,17 @@ there is no point sending a days worth of data if the row items have not been re
     </thead>
     <tbody>
         <tr>
-<td><code>df</code></td>          <td>
-                <code>DataFrame</code>
+<td><code>None</code></td>          <td>
           </td>
-          <td><p>Outputs a table to the 'output_table_name', appends if already exists or creates from scratch if not</p></td>
+          <td><p>the function writes the data to a postgresql table</p></td>
         </tr>
     </tbody>
   </table>
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">355</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">354</span>
+<span class="normal">355</span>
 <span class="normal">356</span>
 <span class="normal">357</span>
 <span class="normal">358</span>
@@ -3500,33 +4197,107 @@ there is no point sending a days worth of data if the row items have not been re
 <span class="normal">394</span>
 <span class="normal">395</span>
 <span class="normal">396</span>
-<span class="normal">397</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">store_daily_organic_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">,</span><span class="n">output_table_name</span><span class="p">,</span><span class="n">num_days_to_store</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">date_column_name</span><span class="o">=</span><span class="s1">&#39;date&#39;</span><span class="p">,</span>
-                                <span class="n">check_created_col</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">created_col</span><span class="o">=</span><span class="s1">&#39;created&#39;</span><span class="p">,</span><span class="n">refresh_lag</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Takes in an organic data table with each row item reflecting an organic post with the metric totals</span>
-<span class="sd">    updating and increasing in the same row item each day rather than creating a new row item each day.</span>
-<span class="sd">    Returns an organic table which has a row item  </span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">store_daily_organic_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">,</span><span class="n">output_table_name</span><span class="p">,</span><span class="n">num_days_to_store</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">date_col_name</span><span class="o">=</span><span class="s1">&#39;date&#39;</span><span class="p">,</span>
+                                <span class="n">dayfirst</span><span class="o">=</span><span class="s2">&quot;EnterValue&quot;</span><span class="p">,</span><span class="n">yearfirst</span><span class="o">=</span><span class="s2">&quot;EnterValue&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">,</span>
+                                <span class="n">check_created_col</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">created_col</span><span class="o">=</span><span class="s1">&#39;created&#39;</span><span class="p">,</span><span class="n">refresh_lag</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                <span class="n">cumulative_metric_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">,</span><span class="s1">&#39;reach&#39;</span><span class="p">,</span><span class="s1">&#39;video_views&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;comments&#39;</span><span class="p">,</span><span class="s1">&#39;shares&#39;</span><span class="p">],</span><span class="n">unique_id_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                <span class="n">require_run_after_hour</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">run_after_hour</span><span class="o">=</span><span class="mi">15</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a  post level organic dataframe to a daily level dataframe and stores it in a PostGreSQL table.</span>
+
+<span class="sd">    Most organic data is stored at the post level and this function converts it to a daily level dataframe</span>
+<span class="sd">    and stores it in a PostGreSQL table. It also converts the cumulative metrics to daily difference metrics.</span>
+<span class="sd">    The date column is parsed through with the correct format, dayfirst and yearfirst values needing to be</span>
+<span class="sd">    specified.</span>
+<span class="sd">    If the table already exists then it checks the date_updated column to see if the data has already been</span>
+<span class="sd">    updated today. If it has then it doesn&#39;t update the table. If it hasn&#39;t then it updates the table.</span>
+<span class="sd">    If the table doesn&#39;t exist then it creates it.</span>
+<span class="sd">    If the require_run_after_hour is set to True then it will only run if the current time is after the</span>
+<span class="sd">    run_after_hour time which is in 24 hour format but only the hour is used.</span>
+<span class="sd">    If check_created_col is set to True then it will only run if the created column is less than the</span>
+<span class="sd">    refresh_lag days ago. This is to ensure that the data is up to date before it is stored. This &quot;created&quot; </span>
+<span class="sd">    columns appears in databases from tracer and tells us when Tracer last updated the row items. Tracer is </span>
+<span class="sd">    a day behind hence the refresh_lag of 1 day.</span>
+<span class="sd">    The date_row_added column is added to the dataframe and is the date that the row was added to the</span>
+<span class="sd">    data output_table.</span>
+<span class="sd">    The date_first_tracked column is added to the dataframe and is the date that a unique post as defined</span>
+<span class="sd">    by the unique_id_cols was first tracked</span>
+<span class="sd">    The date_diff column is added to the dataframe and is the number of days difference between when the post</span>
+<span class="sd">    was first tracked and when that particular row item was added to the data output_table.</span>
+
 
 <span class="sd">    Args:</span>
-<span class="sd">        df (DataFrame): The Dataframe source of organic data</span>
-<span class="sd">        output_table (str): The name of the output table to write the data to</span>
-<span class="sd">        num_days_to_store (int): The number of days to look back</span>
-<span class="sd">        date_column_name (str): The name of the column which contains the date that the post was originally posted</span>
-<span class="sd">        check_created_col (bool): If true then we should check whether the created column in Tracer is up to date, because </span>
-<span class="sd">            there is no point sending a days worth of data if the row items have not been refreshed</span>
-<span class="sd">        created_col (str): The name of the column in the dataset which indicates the date that it was last updated</span>
+<span class="sd">        df (DataFrame): The dataframe to be converted to a daily level dataframe and stored in a PostGreSQL table</span>
+<span class="sd">        output_table_name (str): The name of the table to store the data in</span>
+<span class="sd">        num_days_to_store (int, optional): The number of days worth of data per post to store in the table. Defaults to 30.</span>
+<span class="sd">        date_col_name (str, optional): The name of the date column in the dataframe that will be formatted. Defaults to &#39;date&#39;.</span>
+<span class="sd">        dayfirst (str, optional): Whether the day is the first value in the date column. Defaults to &quot;EnterValue&quot;.</span>
+<span class="sd">        yearfirst (str, optional): Whether the year is the first value in the date column. Defaults to &quot;EnterValue&quot;.</span>
+<span class="sd">        format (str, optional): The format of the date column. Defaults to None.</span>
+<span class="sd">        errors (str, optional): How to handle errors in the date column. Defaults to &#39;raise&#39;.</span>
+<span class="sd">        check_created_col (bool, optional): Whether to check the created column to ensure the data is up to date. Defaults to True.</span>
+<span class="sd">        created_col (str, optional): The name of the created column. Defaults to &#39;created&#39;.</span>
+<span class="sd">        refresh_lag (int, optional): The number of days to check the created column is less than. Defaults to 1.</span>
+<span class="sd">        cumulative_metric_cols (list, optional): The list of cumulative metrics to convert to daily difference metrics. Defaults to [&#39;impressions&#39;,&#39;reach&#39;,&#39;video_views&#39;,&#39;reactions&#39;,&#39;comments&#39;,&#39;shares&#39;].</span>
+<span class="sd">        unique_id_cols (list, optional): The list of columns that uniquely identify a post. Defaults to None.</span>
+<span class="sd">        require_run_after_hour (bool, optional): Whether to only run the function if the current time is after the run_after_hour time. Defaults to False.</span>
+<span class="sd">        run_after_hour (int, optional): The hour of the day to run the function after in 24 hour format. Defaults to 15.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        df (DataFrame): Outputs a table to the &#39;output_table_name&#39;, appends if already exists or creates from scratch if not&quot;&quot;&quot;</span>
-
+<span class="sd">        None: the function writes the data to a postgresql table &quot;&quot;&quot;</span>
     <span class="n">today_datetime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
-    <span class="n">today_date</span> <span class="o">=</span> <span class="n">today_datetime</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> 
-    <span class="k">if</span> <span class="n">today_datetime</span><span class="o">.</span><span class="n">hour</span> <span class="o">&lt;</span> <span class="mi">15</span><span class="p">:</span> <span class="c1">#Before 3 o&#39;clock in the afternoon</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;It may be better to run the API later on in the day to make sure the USA data has had time to refresh&quot;</span><span class="p">)</span>
+    <span class="n">today_date</span> <span class="o">=</span> <span class="n">today_datetime</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">require_run_after_hour</span> <span class="ow">and</span> <span class="p">(</span><span class="n">today_datetime</span><span class="o">.</span><span class="n">hour</span> <span class="o">&lt;</span> <span class="n">run_after_hour</span><span class="p">):</span> 
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Require run after hour is set to True and it is before the run after hour time&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
     <span class="c1">#Check Tracer data has actually updated</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_exists</span><span class="p">(</span><span class="n">output_table_name</span><span class="p">):</span>
-
-        <span class="n">old_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_from_postgresql</span><span class="p">(</span><span class="n">output_table_name</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">old_df</span><span class="p">[</span><span class="s1">&#39;date_updated&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">==</span> <span class="n">today_date</span><span class="p">:</span>
+        <span class="n">old_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_from_postgresql</span><span class="p">(</span><span class="n">output_table_name</span><span class="p">,</span><span class="n">clean_date</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">date_col</span><span class="o">=</span><span class="n">date_col_name</span><span class="p">,</span>
+                                           <span class="n">dayfirst</span><span class="o">=</span><span class="n">dayfirst</span><span class="p">,</span><span class="n">yearfirst</span><span class="o">=</span><span class="n">yearfirst</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="n">errors</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">old_df</span><span class="p">[</span><span class="s1">&#39;date_row_added&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">==</span> <span class="n">today_date</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;It looks data has already pushed to </span><span class="si">{</span><span class="n">output_table_name</span><span class="si">}</span><span class="s2"> today&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">created_col</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">today_date</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">refresh_lag</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="n">check_created_col</span><span class="p">):</span>
@@ -3534,14 +4305,27 @@ there is no point sending a days worth of data if the row items have not been re
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
             <span class="n">cutoff_date</span> <span class="o">=</span> <span class="n">today_date</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">num_days_to_store</span><span class="p">)</span>
-            <span class="c1">#create temporary date column that you can change the date format, that you then delete so it doesn&#39;t affect original date format</span>
-            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;datetemp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">date_column_name</span><span class="p">])</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;datetemp&#39;</span><span class="p">]</span><span class="o">&gt;=</span><span class="p">(</span><span class="n">cutoff_date</span><span class="p">)]</span><span class="c1">#filter data only after the cutoff date</span>
-            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;date_updated&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">today_datetime</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;datetemp&#39;</span><span class="p">])</span> <span class="c1">#drop temporary date column used for filtering dates</span>
+
+            <span class="n">df</span><span class="p">[</span><span class="n">date_col_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">date_col_name</span><span class="p">],</span> <span class="n">dayfirst</span><span class="o">=</span><span class="n">dayfirst</span><span class="p">,</span> <span class="n">yearfirst</span><span class="o">=</span><span class="n">yearfirst</span><span class="p">,</span>
+                                    <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="n">errors</span><span class="p">)</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">date_col_name</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span> <span class="o">&gt;=</span><span class="p">(</span><span class="n">cutoff_date</span><span class="p">)]</span><span class="c1">#filter data only after the cutoff date</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;date_row_added&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">today_datetime</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;date_diff&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;date_row_added&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">df</span><span class="p">[</span><span class="n">date_col_name</span><span class="p">])</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">days</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;date_first_tracked&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">unique_id_cols</span><span class="p">)[</span><span class="s1">&#39;date_row_added&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="s1">&#39;min&#39;</span><span class="p">)</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="p">,</span><span class="n">old_df</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">cumulative_metric_cols</span><span class="p">:</span> 
+                <span class="n">df</span><span class="p">[</span><span class="s1">&#39;cum_&#39;</span><span class="o">+</span><span class="n">metric</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span><span class="c1">#set the cumulative metrics to the same value as the daily metrics</span>
+
+            <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_cumulative_to_daily</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">cumulative_metric_cols</span><span class="p">,</span><span class="n">unique_id_cols</span><span class="p">,</span><span class="s1">&#39;date_row_added&#39;</span><span class="p">)</span>
+
             <span class="bp">self</span><span class="o">.</span><span class="n">write_to_postgresql</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">output_table_name</span><span class="p">,</span><span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;append&#39;</span><span class="p">)</span>
+
     <span class="k">else</span><span class="p">:</span> <span class="c1">#if the table doesn&#39;t exist create it with the whole dataset for the first time</span>
-        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;date_updated&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">today_datetime</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">date_col_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">date_col_name</span><span class="p">],</span> <span class="n">dayfirst</span><span class="o">=</span><span class="n">dayfirst</span><span class="p">,</span> <span class="n">yearfirst</span><span class="o">=</span><span class="n">yearfirst</span><span class="p">,</span>
+                                    <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="n">errors</span><span class="p">)</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;date_row_added&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">today_datetime</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;date_first_tracked&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">today_datetime</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;date_diff&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;date_row_added&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">df</span><span class="p">[</span><span class="n">date_col_name</span><span class="p">])</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">days</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">write_to_postgresql</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">output_table_name</span><span class="p">,</span><span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
       </details>
@@ -3698,16 +4482,16 @@ there is no point sending a days worth of data if the row items have not been re
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">534</span>
-<span class="normal">535</span>
-<span class="normal">536</span>
-<span class="normal">537</span>
-<span class="normal">538</span>
-<span class="normal">539</span>
-<span class="normal">540</span>
-<span class="normal">541</span>
-<span class="normal">542</span>
-<span class="normal">543</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">unpickle_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">filename</span><span class="p">,</span><span class="n">folder</span> <span class="o">=</span><span class="s2">&quot;Pickled Files&quot;</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">621</span>
+<span class="normal">622</span>
+<span class="normal">623</span>
+<span class="normal">624</span>
+<span class="normal">625</span>
+<span class="normal">626</span>
+<span class="normal">627</span>
+<span class="normal">628</span>
+<span class="normal">629</span>
+<span class="normal">630</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">unpickle_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">filename</span><span class="p">,</span><span class="n">folder</span> <span class="o">=</span><span class="s2">&quot;Pickled Files&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Load pickled data from a file.</span>
 
 <span class="sd">    Args:</span>
@@ -3783,21 +4567,21 @@ there is no point sending a days worth of data if the row items have not been re
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">546</span>
-<span class="normal">547</span>
-<span class="normal">548</span>
-<span class="normal">549</span>
-<span class="normal">550</span>
-<span class="normal">551</span>
-<span class="normal">552</span>
-<span class="normal">553</span>
-<span class="normal">554</span>
-<span class="normal">555</span>
-<span class="normal">556</span>
-<span class="normal">557</span>
-<span class="normal">558</span>
-<span class="normal">559</span>
-<span class="normal">560</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">write_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">object</span><span class="p">,</span><span class="n">file_name</span><span class="p">,</span><span class="n">file_type</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">633</span>
+<span class="normal">634</span>
+<span class="normal">635</span>
+<span class="normal">636</span>
+<span class="normal">637</span>
+<span class="normal">638</span>
+<span class="normal">639</span>
+<span class="normal">640</span>
+<span class="normal">641</span>
+<span class="normal">642</span>
+<span class="normal">643</span>
+<span class="normal">644</span>
+<span class="normal">645</span>
+<span class="normal">646</span>
+<span class="normal">647</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">write_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">object</span><span class="p">,</span><span class="n">file_name</span><span class="p">,</span><span class="n">file_type</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Write a Python object to a json file.</span>
 
 <span class="sd">    Args:</span>
@@ -3915,38 +4699,38 @@ there is no point sending a days worth of data if the row items have not been re
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">446</span>
-<span class="normal">447</span>
-<span class="normal">448</span>
-<span class="normal">449</span>
-<span class="normal">450</span>
-<span class="normal">451</span>
-<span class="normal">452</span>
-<span class="normal">453</span>
-<span class="normal">454</span>
-<span class="normal">455</span>
-<span class="normal">456</span>
-<span class="normal">457</span>
-<span class="normal">458</span>
-<span class="normal">459</span>
-<span class="normal">460</span>
-<span class="normal">461</span>
-<span class="normal">462</span>
-<span class="normal">463</span>
-<span class="normal">464</span>
-<span class="normal">465</span>
-<span class="normal">466</span>
-<span class="normal">467</span>
-<span class="normal">468</span>
-<span class="normal">469</span>
-<span class="normal">470</span>
-<span class="normal">471</span>
-<span class="normal">472</span>
-<span class="normal">473</span>
-<span class="normal">474</span>
-<span class="normal">475</span>
-<span class="normal">476</span>
-<span class="normal">477</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">write_to_gsheet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">workbook_name</span><span class="p">,</span> <span class="n">sheet_name</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">,</span> <span class="n">sheet_prefix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">533</span>
+<span class="normal">534</span>
+<span class="normal">535</span>
+<span class="normal">536</span>
+<span class="normal">537</span>
+<span class="normal">538</span>
+<span class="normal">539</span>
+<span class="normal">540</span>
+<span class="normal">541</span>
+<span class="normal">542</span>
+<span class="normal">543</span>
+<span class="normal">544</span>
+<span class="normal">545</span>
+<span class="normal">546</span>
+<span class="normal">547</span>
+<span class="normal">548</span>
+<span class="normal">549</span>
+<span class="normal">550</span>
+<span class="normal">551</span>
+<span class="normal">552</span>
+<span class="normal">553</span>
+<span class="normal">554</span>
+<span class="normal">555</span>
+<span class="normal">556</span>
+<span class="normal">557</span>
+<span class="normal">558</span>
+<span class="normal">559</span>
+<span class="normal">560</span>
+<span class="normal">561</span>
+<span class="normal">562</span>
+<span class="normal">563</span>
+<span class="normal">564</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">write_to_gsheet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">workbook_name</span><span class="p">,</span> <span class="n">sheet_name</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">,</span> <span class="n">sheet_prefix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Write a dataframe to a google sheet</span>
 
 <span class="sd">    Args:</span>
@@ -4176,10 +4960,10 @@ If writing fails it waits 10 seconds then trys again</p>
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.db81ec45.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.4b2c34cd.min.js"></script>
+      <script src="../assets/javascripts/bundle.51d95adb.min.js"></script>
       
     
   </body>
