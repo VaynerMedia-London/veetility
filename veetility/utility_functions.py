@@ -601,31 +601,31 @@ class UtilityFunctions():
         return df
 
 
-def merge_w_match_perc(self,df_1,df_2,left_on,right_on,how='left'):
-        """Merges two dataframes and prints out the number of matches and the percentage of matches out of the total number of rows.
-        
-        Args:
-            df_1 (pd.DataFrame): The first dataframe to merge
-            df_2 (pd.DataFrame): The second dataframe to merge
-            left_on (str): The column name to merge on in the first dataframe
-            right_on (str): The column name to merge on in the second dataframe
-            how (str, optional): The type of merge to perform. Defaults to 'left'.
-        
-        Returns:
-            output_df (pd.DataFrame): A pandas dataframe that contains the merged data from the input dataframes."""
-        df_1_rows = df_1.shape[0]
-        if '_merge' in df_1.columns:
-            df_1 = df_1.drop('_merge',axis=1)
+    def merge_w_match_perc(self,df_1,df_2,left_on,right_on,how='left'):
+            """Merges two dataframes and prints out the number of matches and the percentage of matches out of the total number of rows.
+            
+            Args:
+                df_1 (pd.DataFrame): The first dataframe to merge
+                df_2 (pd.DataFrame): The second dataframe to merge
+                left_on (str): The column name to merge on in the first dataframe
+                right_on (str): The column name to merge on in the second dataframe
+                how (str, optional): The type of merge to perform. Defaults to 'left'.
+            
+            Returns:
+                output_df (pd.DataFrame): A pandas dataframe that contains the merged data from the input dataframes."""
+            df_1_rows = df_1.shape[0]
+            if '_merge' in df_1.columns:
+                df_1 = df_1.drop('_merge',axis=1)
 
-        output_df = pd.merge(df_1,df_2,left_on=left_on,right_on=right_on,how=how,indicator=True)
-        num_rows = output_df.shape[0]
-        num_matches = output_df._merge.value_counts()['both']
-        match_perc = round(num_matches / num_rows * 100,1)
-        rows_diff = df_1_rows - num_rows
-        print(f"df_1 has {df_1_rows} rows")
-        print(f'{num_matches} matches out of {num_rows} rows ({match_perc}%)')
-        print(f'{rows_diff} ')
-        return output_df
+            output_df = pd.merge(df_1,df_2,left_on=left_on,right_on=right_on,how=how,indicator=True)
+            num_rows = output_df.shape[0]
+            num_matches = output_df._merge.value_counts()['both']
+            match_perc = round(num_matches / num_rows * 100,1)
+            rows_diff = df_1_rows - num_rows
+            print(f"df_1 has {df_1_rows} rows")
+            print(f'{num_matches} matches out of {num_rows} rows ({match_perc}%)')
+            print(f'{rows_diff} ')
+            return output_df
 
     # def group_by_asset(self,x):
     #     d = {}
