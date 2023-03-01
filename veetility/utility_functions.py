@@ -76,7 +76,7 @@ class UtilityFunctions():
         logger.addHandler(file_handler)
         self.logger = logger
     
-    def prepare_string_matching(string, is_url=False):
+    def prepare_string_matching(self,string, is_url=False):
         """Prepare strings for matching say in a merge function by removing unnecessary 
             detail, whitespaces and converting to lower case
             Remove URLs and emojis as sometimes they cannot come through properly in Tracer data
@@ -362,16 +362,16 @@ class UtilityFunctions():
         Most organic data is stored at the post level and this function converts it to a daily level dataframe
         and stores it in a PostGreSQL table. It also converts the cumulative metrics to daily difference metrics.
         The date column is parsed through with the correct format, dayfirst and yearfirst values needing to be
-        specified.
+        specified.\n
         If the table already exists then it checks the date_updated column to see if the data has already been
         updated today. If it has then it doesn't update the table. If it hasn't then it updates the table.
-        If the table doesn't exist then it creates it.
+        If the table doesn't exist then it creates it.\n
         If the require_run_after_hour is set to True then it will only run if the current time is after the
         run_after_hour time which is in 24 hour format but only the hour is used.
         If check_created_col is set to True then it will only run if the created column is less than the
         refresh_lag days ago. This is to ensure that the data is up to date before it is stored. This "created" 
         columns appears in databases from tracer and tells us when Tracer last updated the row items. Tracer is 
-        a day behind hence the refresh_lag of 1 day.
+        a day behind hence the refresh_lag of 1 day.\n
         The date_row_added column is added to the dataframe and is the date that the row was added to the
         data output_table.
         The date_first_tracked column is added to the dataframe and is the date that a unique post as defined
@@ -384,9 +384,9 @@ class UtilityFunctions():
             df (DataFrame): The dataframe to be converted to a daily level dataframe and stored in a PostGreSQL table
             output_table_name (str): The name of the table to store the data in
             num_days_to_store (int, optional): The number of days worth of data per post to store in the table. Defaults to 30.
-            date_col_name (str, optional): The name of the date column in the dataframe that will be formatted. Defaults to 'date'.
-            dayfirst (str, optional): Whether the day is the first value in the date column. Defaults to "EnterValue".
-            yearfirst (str, optional): Whether the year is the first value in the date column. Defaults to "EnterValue".
+            date_col_name (str, optional): The name of the date column in the dataframe that will be formatted.
+            dayfirst (str, optional): Whether the day is the first value in the date column. 
+            yearfirst (str, optional): Whether the year is the first value in the date column.
             format (str, optional): The format of the date column. Defaults to None.
             errors (str, optional): How to handle errors in the date column. Defaults to 'raise'.
             check_created_col (bool, optional): Whether to check the created column to ensure the data is up to date. Defaults to True.
@@ -506,9 +506,9 @@ class UtilityFunctions():
         Args:
             table_name (str): The name of the table to read from.
             clean_date (bool, optional): Whether or not to clean the date column. Defaults to True.
-            date_col (str, optional): The column name of the date column to clean. Defaults to 'EnterValue'.
-            dayfirst (str, optional): The day first format for date parsing. Defaults to 'EnterValue'.
-            yearfirst (str, optional): The year first format for date parsing. Defaults to 'EnterValue'.
+            date_col (str, optional): The column name of the date column to clean. 
+            dayfirst (str, optional): The day first format for date parsing. 
+            yearfirst (str, optional): The year first format for date parsing.
             format (str, optional): The format for date parsing. Defaults to None.
             errors (str, optional): The behavior for date parsing errors. Defaults to 'raise'.
 

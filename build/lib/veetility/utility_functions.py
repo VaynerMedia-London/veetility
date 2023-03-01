@@ -351,8 +351,8 @@ class UtilityFunctions():
         all_table_names = sa.inspect(self.postgresql_engine).get_table_names()
         return (table_name in all_table_names)
 
-    def store_daily_organic_data(self,df,output_table_name,num_days_to_store=30,date_col_name='date',
-                                    dayfirst="EnterValue",yearfirst="EnterValue", format=None, errors='raise',
+    def store_daily_organic_data(self,df,output_table_name,num_days_to_store=30,date_col_name=None,
+                                    dayfirst=None,yearfirst=None, format=None, errors='raise',
                                     check_created_col=True,created_col='created',refresh_lag=1,
                                     cumulative_metric_cols=['impressions','reach','video_views',
                                     'comments','shares'],unique_id_cols=None,
@@ -362,16 +362,16 @@ class UtilityFunctions():
         Most organic data is stored at the post level and this function converts it to a daily level dataframe
         and stores it in a PostGreSQL table. It also converts the cumulative metrics to daily difference metrics.
         The date column is parsed through with the correct format, dayfirst and yearfirst values needing to be
-        specified.
+        specified.\n
         If the table already exists then it checks the date_updated column to see if the data has already been
         updated today. If it has then it doesn't update the table. If it hasn't then it updates the table.
-        If the table doesn't exist then it creates it.
+        If the table doesn't exist then it creates it.\n
         If the require_run_after_hour is set to True then it will only run if the current time is after the
         run_after_hour time which is in 24 hour format but only the hour is used.
         If check_created_col is set to True then it will only run if the created column is less than the
         refresh_lag days ago. This is to ensure that the data is up to date before it is stored. This "created" 
         columns appears in databases from tracer and tells us when Tracer last updated the row items. Tracer is 
-        a day behind hence the refresh_lag of 1 day.
+        a day behind hence the refresh_lag of 1 day.\n
         The date_row_added column is added to the dataframe and is the date that the row was added to the
         data output_table.
         The date_first_tracked column is added to the dataframe and is the date that a unique post as defined
@@ -384,9 +384,9 @@ class UtilityFunctions():
             df (DataFrame): The dataframe to be converted to a daily level dataframe and stored in a PostGreSQL table
             output_table_name (str): The name of the table to store the data in
             num_days_to_store (int, optional): The number of days worth of data per post to store in the table. Defaults to 30.
-            date_col_name (str, optional): The name of the date column in the dataframe that will be formatted. Defaults to 'date'.
-            dayfirst (str, optional): Whether the day is the first value in the date column. Defaults to "EnterValue".
-            yearfirst (str, optional): Whether the year is the first value in the date column. Defaults to "EnterValue".
+            date_col_name (str, optional): The name of the date column in the dataframe that will be formatted.
+            dayfirst (str, optional): Whether the day is the first value in the date column. 
+            yearfirst (str, optional): Whether the year is the first value in the date column.
             format (str, optional): The format of the date column. Defaults to None.
             errors (str, optional): How to handle errors in the date column. Defaults to 'raise'.
             check_created_col (bool, optional): Whether to check the created column to ensure the data is up to date. Defaults to True.
@@ -399,6 +399,20 @@ class UtilityFunctions():
         
         Returns:
             None: the function writes the data to a postgresql table """
+        
+        #It is crucial that the date column is formatted correctly, therefore we check parameters for pd.to_datetime parsing are entered
+        date_param_error_list = []
+        if date_col_name == None:
+            date_param_error_list.append("date_col_name")
+        if dayfirst == None:
+            date_param_error_list.append("dayfirst")
+        if yearfirst == None:
+            date_param_error_list.append("yearfirst")
+        if len(date_param_error_list) > 0:
+            error_message = f"The following date parameters are missing: {date_param_error_list}"
+            logger.error(error_message)
+            return error_message
+
         today_datetime = datetime.today()
         today_date = today_datetime.date()
         if require_run_after_hour and (today_datetime.hour < run_after_hour): 
@@ -484,22 +498,34 @@ class UtilityFunctions():
         df[metric_list] = df_metrics
         return df
 
-    def read_from_postgresql(self, table_name, clean_date=True, date_col='EnterValue', dayfirst='EnterValue', yearfirst='EnterValue', format=None, errors='raise'):
+    def read_from_postgresql(self, table_name, clean_date=True, date_col=None, dayfirst=None, yearfirst=None, 
+                             format=None, errors='raise'):
         """Reads a table from a PostgreSQL database table using a pscopg2 connection.
         If fails it waits 10 seconds and tries again.
         
         Args:
             table_name (str): The name of the table to read from.
             clean_date (bool, optional): Whether or not to clean the date column. Defaults to True.
-            date_col (str, optional): The column name of the date column to clean. Defaults to 'EnterValue'.
-            dayfirst (str, optional): The day first format for date parsing. Defaults to 'EnterValue'.
-            yearfirst (str, optional): The year first format for date parsing. Defaults to 'EnterValue'.
+            date_col (str, optional): The column name of the date column to clean. 
+            dayfirst (str, optional): The day first format for date parsing. 
+            yearfirst (str, optional): The year first format for date parsing.
             format (str, optional): The format for date parsing. Defaults to None.
             errors (str, optional): The behavior for date parsing errors. Defaults to 'raise'.
 
         Returns:
             df (pandas.DataFrame): The table data in a pandas dataframe.
         """
+        date_param_error_list = []
+        if clean_date == True:
+            if date_col == None:
+                date_param_error_list.append('date_col')
+            if dayfirst == None:
+                date_param_error_list.append('dayfirst')
+            if yearfirst == None:
+                date_param_error_list.append('yearfirst')
+            if len(date_param_error_list) > 0:
+                raise Exception(f"The following parameters are required to clean the date column: {date_param_error_list}")
+            
         # Connect to the PostgreSQL database
         conn = pg.connect(dbname=self.db_name, host=self.db_host,
                     port=self.db_port, user=self.db_user, password=self.db_password)
