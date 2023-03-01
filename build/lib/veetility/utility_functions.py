@@ -51,7 +51,9 @@ class UtilityFunctions():
             db_password (str): The postgreSQL database password
             db_host (str): The postgreSQL database host url
             db_port (str): The postgreSQL database port number as a string, usually 5432
-            db_name (str): The postgreSQL database name"""
+            db_name (str): The postgreSQL database name
+        Returns:
+            None"""
         if gspread_auth_dict != None:
             self.sa = gspread.service_account_from_dict(gspread_auth_dict)         
         if db_user != None:
@@ -76,24 +78,21 @@ class UtilityFunctions():
         logger.addHandler(file_handler)
         self.logger = logger
     
-    def prepare_string_matching(string, is_url=False):
-        """Prepare strings for matching say in a merge function by removing unnecessary 
-            detail, whitespaces and converting to lower case
+    def prepare_string_matching(self, string, is_url=False):
+        """Removing unnecessary detail, whitespaces and converting to lower case.
+        
+        Prepare strings for matching say in a merge function by removing unnecessary 
+            detail, whitespaces and converting to lower case.
+
             Remove URLs and emojis as sometimes they cannot come through properly in Tracer data
             Replace non-ASCII characters with their closest ASCII equivalents
 
-            Parameters
-            -----------------
-            string : str 
-                The string to be cleaned
-            is_url : bool 
-                If True then remove URLs and characters after the '?' which are utm parameters
-                These can be present in some URLs we receive and not others
-            Returns 
-            ----------------
-            string : str
-                A cleaned string stripped of whitespace, punctuation, emojis, non-ASCII characters, and URLs.
-        """
+            Args:
+                string (str): The string to be prepared
+                is_url (bool): If the string is a URL then remove everything after the '?' as this is usually utm parameters
+            Returns:
+                string (str): The prepared string"""
+        
         string = string.lower()
         if is_url:
             # Remove URLs and characters after the '?'
@@ -111,8 +110,9 @@ class UtilityFunctions():
     def match_ads(self,df_1, df_2, df_1_exact_col, df_2_exact_col,
                 df_1_fuzzy_col=None, df_2_fuzzy_col=None, is_exact_col_link=True, 
                 matched_col_name='boosted', merge=False,cols_to_merge =['platform'],pickle_name='NoStore'):
-
-        """Match row items in df_2 onto row items in df_1 based on two sets of columns, first the dataframes will be tried to match using the first set of columns using an exact match
+        """Matching tracker data to organic data
+        
+        Match row items in df_2 onto row items in df_1 based on two sets of columns, first the dataframes will be tried to match using the first set of columns using an exact match
         
         Then for the row items that haven't matched then use the second set of columns and try to match them 
         using fuzzy matching
@@ -238,7 +238,9 @@ class UtilityFunctions():
         return df_1, df_2, df_2_no_match
 
     def best_fuzzy_match(self,list_1, list_2, threshold, pickle_name):
-        """Takes in two lists of strings and every string in list_1 is fuzzy matched onto every item in list_2
+        """Applying a fuzzy match to two lists of strings and returning a dictionary of the best matches
+        
+        Takes in two lists of strings and every string in list_1 is fuzzy matched onto every item in list_2
         The fuzzy match of a string in list_1 with a string in list_2 with the highest score will count as the 
         match as long as it is above the threshold. The match is then stored as a key value pair in a dictionary
 
@@ -357,7 +359,7 @@ class UtilityFunctions():
                                     cumulative_metric_cols=['impressions','reach','video_views',
                                     'comments','shares'],unique_id_cols=None,
                                     require_run_after_hour=False, run_after_hour=15):
-        """Converts a  post level organic dataframe to a daily level dataframe and stores it in a PostGreSQL table.
+        """Converts a post level organic dataframe to a daily level dataframe and stores it in a PostGreSQL table.
         
         Most organic data is stored at the post level and this function converts it to a daily level dataframe
         and stores it in a PostGreSQL table. It also converts the cumulative metrics to daily difference metrics.
