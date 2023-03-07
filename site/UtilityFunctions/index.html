@@ -15,7 +15,7 @@
         <link rel="next" href="../SlackNotifier/">
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.15">
     
     
       
@@ -23,10 +23,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.558e4712.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.113286f1.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.2505c338.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a0c5b2b5.min.css">
       
       
 
@@ -188,7 +188,7 @@
   
     <li class="md-nav__item md-nav__item--active">
       
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
         
@@ -285,26 +285,6 @@
   <a href="#veetility.utility_functions.UtilityFunctions.prepare_string_matching" class="md-nav__link">
     prepare_string_matching()
   </a>
-  
-    <nav class="md-nav" aria-label="prepare_string_matching()">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#veetility.utility_functions.UtilityFunctions.prepare_string_matching--parameters" class="md-nav__link">
-    Parameters
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#veetility.utility_functions.UtilityFunctions.prepare_string_matching--returns" class="md-nav__link">
-    Returns
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -518,26 +498,6 @@
     prepare_string_matching()
   </a>
   
-    <nav class="md-nav" aria-label="prepare_string_matching()">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#veetility.utility_functions.UtilityFunctions.prepare_string_matching--parameters" class="md-nav__link">
-    Parameters
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#veetility.utility_functions.UtilityFunctions.prepare_string_matching--returns" class="md-nav__link">
-    Returns
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -616,7 +576,6 @@
               <article class="md-content__inner md-typeset">
                 
                   
-
 
 
 <h1 id="utilityfunctions-class-methods">"UtilityFunctions" Class Methods</h1>
@@ -1349,7 +1308,9 @@
 <span class="sd">            db_password (str): The postgreSQL database password</span>
 <span class="sd">            db_host (str): The postgreSQL database host url</span>
 <span class="sd">            db_port (str): The postgreSQL database port number as a string, usually 5432</span>
-<span class="sd">            db_name (str): The postgreSQL database name&quot;&quot;&quot;</span>
+<span class="sd">            db_name (str): The postgreSQL database name</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            None&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">gspread_auth_dict</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sa</span> <span class="o">=</span> <span class="n">gspread</span><span class="o">.</span><span class="n">service_account_from_dict</span><span class="p">(</span><span class="n">gspread_auth_dict</span><span class="p">)</span>         
         <span class="k">if</span> <span class="n">db_user</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
@@ -1380,18 +1341,12 @@
 <span class="sd">            Remove URLs and emojis as sometimes they cannot come through properly in Tracer data</span>
 <span class="sd">            Replace non-ASCII characters with their closest ASCII equivalents</span>
 
-<span class="sd">            Parameters</span>
-<span class="sd">            -----------------</span>
-<span class="sd">            string : str </span>
-<span class="sd">                The string to be cleaned</span>
-<span class="sd">            is_url : bool </span>
-<span class="sd">                If True then remove URLs and characters after the &#39;?&#39; which are utm parameters</span>
-<span class="sd">                These can be present in some URLs we receive and not others</span>
-<span class="sd">            Returns </span>
-<span class="sd">            ----------------</span>
-<span class="sd">            string : str</span>
-<span class="sd">                A cleaned string stripped of whitespace, punctuation, emojis, non-ASCII characters, and URLs.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            Args:</span>
+<span class="sd">                string (str): The string to be prepared</span>
+<span class="sd">                is_url (bool): If the string is a URL then remove everything after the &#39;?&#39; as this is usually utm parameters</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                string (str): The prepared string&quot;&quot;&quot;</span>
+
         <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">is_url</span><span class="p">:</span>
             <span class="c1"># Remove URLs and characters after the &#39;?&#39;</span>
@@ -1409,8 +1364,9 @@
     <span class="k">def</span> <span class="nf">match_ads</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df_1</span><span class="p">,</span> <span class="n">df_2</span><span class="p">,</span> <span class="n">df_1_exact_col</span><span class="p">,</span> <span class="n">df_2_exact_col</span><span class="p">,</span>
                 <span class="n">df_1_fuzzy_col</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">df_2_fuzzy_col</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_exact_col_link</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
                 <span class="n">matched_col_name</span><span class="o">=</span><span class="s1">&#39;boosted&#39;</span><span class="p">,</span> <span class="n">merge</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">cols_to_merge</span> <span class="o">=</span><span class="p">[</span><span class="s1">&#39;platform&#39;</span><span class="p">],</span><span class="n">pickle_name</span><span class="o">=</span><span class="s1">&#39;NoStore&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Matching tracker data to organic data</span>
 
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Match row items in df_2 onto row items in df_1 based on two sets of columns, first the dataframes will be tried to match using the first set of columns using an exact match</span>
+<span class="sd">        Match row items in df_2 onto row items in df_1 based on two sets of columns, first the dataframes will be tried to match using the first set of columns using an exact match</span>
 
 <span class="sd">        Then for the row items that haven&#39;t matched then use the second set of columns and try to match them </span>
 <span class="sd">        using fuzzy matching</span>
@@ -1536,7 +1492,9 @@
         <span class="k">return</span> <span class="n">df_1</span><span class="p">,</span> <span class="n">df_2</span><span class="p">,</span> <span class="n">df_2_no_match</span>
 
     <span class="k">def</span> <span class="nf">best_fuzzy_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">list_1</span><span class="p">,</span> <span class="n">list_2</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">pickle_name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Takes in two lists of strings and every string in list_1 is fuzzy matched onto every item in list_2</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Applying a fuzzy match to two lists of strings and returning a dictionary of the best matches</span>
+
+<span class="sd">        Takes in two lists of strings and every string in list_1 is fuzzy matched onto every item in list_2</span>
 <span class="sd">        The fuzzy match of a string in list_1 with a string in list_2 with the highest score will count as the </span>
 <span class="sd">        match as long as it is above the threshold. The match is then stored as a key value pair in a dictionary</span>
 
@@ -1655,7 +1613,7 @@
                                     <span class="n">cumulative_metric_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">,</span><span class="s1">&#39;reach&#39;</span><span class="p">,</span><span class="s1">&#39;video_views&#39;</span><span class="p">,</span>
                                     <span class="s1">&#39;comments&#39;</span><span class="p">,</span><span class="s1">&#39;shares&#39;</span><span class="p">],</span><span class="n">unique_id_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                     <span class="n">require_run_after_hour</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">run_after_hour</span><span class="o">=</span><span class="mi">15</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts a  post level organic dataframe to a daily level dataframe and stores it in a PostGreSQL table.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts a post level organic dataframe to a daily level dataframe and stores it in a PostGreSQL table.</span>
 
 <span class="sd">        Most organic data is stored at the post level and this function converts it to a daily level dataframe</span>
 <span class="sd">        and stores it in a PostGreSQL table. It also converts the cumulative metrics to daily difference metrics.</span>
@@ -2142,6 +2100,23 @@ of the UtilityFunctions class</p>
     </tbody>
   </table>
 
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+          </td>
+          <td><p>None</p></td>
+        </tr>
+    </tbody>
+  </table>
+
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
         <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">42</span>
@@ -2193,7 +2168,9 @@ of the UtilityFunctions class</p>
 <span class="sd">        db_password (str): The postgreSQL database password</span>
 <span class="sd">        db_host (str): The postgreSQL database host url</span>
 <span class="sd">        db_port (str): The postgreSQL database port number as a string, usually 5432</span>
-<span class="sd">        db_name (str): The postgreSQL database name&quot;&quot;&quot;</span>
+<span class="sd">        db_name (str): The postgreSQL database name</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        None&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">gspread_auth_dict</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sa</span> <span class="o">=</span> <span class="n">gspread</span><span class="o">.</span><span class="n">service_account_from_dict</span><span class="p">(</span><span class="n">gspread_auth_dict</span><span class="p">)</span>         
     <span class="k">if</span> <span class="n">db_user</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
@@ -2235,7 +2212,8 @@ of the UtilityFunctions class</p>
 
   <div class="doc doc-contents ">
   
-      <p>Takes in two lists of strings and every string in list_1 is fuzzy matched onto every item in list_2
+      <p>Applying a fuzzy match to two lists of strings and returning a dictionary of the best matches</p>
+<p>Takes in two lists of strings and every string in list_1 is fuzzy matched onto every item in list_2
 The fuzzy match of a string in list_1 with a string in list_2 with the highest score will count as the 
 match as long as it is above the threshold. The match is then stored as a key value pair in a dictionary</p>
 <p>The dictionary of matches will be saved as a pickle file to be used next time the function is run to save
@@ -2725,7 +2703,8 @@ having to do searches on a string if we've already found a match in the past</p>
 
   <div class="doc doc-contents ">
   
-      <p>Match row items in df_2 onto row items in df_1 based on two sets of columns, first the dataframes will be tried to match using the first set of columns using an exact match</p>
+      <p>Matching tracker data to organic data</p>
+<p>Match row items in df_2 onto row items in df_1 based on two sets of columns, first the dataframes will be tried to match using the first set of columns using an exact match</p>
 <p>Then for the row items that haven't matched then use the second set of columns and try to match them 
 using fuzzy matching</p>
 
@@ -3015,8 +2994,9 @@ using fuzzy matching</p>
 <span class="normal">239</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">match_ads</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df_1</span><span class="p">,</span> <span class="n">df_2</span><span class="p">,</span> <span class="n">df_1_exact_col</span><span class="p">,</span> <span class="n">df_2_exact_col</span><span class="p">,</span>
             <span class="n">df_1_fuzzy_col</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">df_2_fuzzy_col</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_exact_col_link</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
             <span class="n">matched_col_name</span><span class="o">=</span><span class="s1">&#39;boosted&#39;</span><span class="p">,</span> <span class="n">merge</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">cols_to_merge</span> <span class="o">=</span><span class="p">[</span><span class="s1">&#39;platform&#39;</span><span class="p">],</span><span class="n">pickle_name</span><span class="o">=</span><span class="s1">&#39;NoStore&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matching tracker data to organic data</span>
 
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Match row items in df_2 onto row items in df_1 based on two sets of columns, first the dataframes will be tried to match using the first set of columns using an exact match</span>
+<span class="sd">    Match row items in df_2 onto row items in df_1 based on two sets of columns, first the dataframes will be tried to match using the first set of columns using an exact match</span>
 
 <span class="sd">    Then for the row items that haven&#39;t matched then use the second set of columns and try to match them </span>
 <span class="sd">    using fuzzy matching</span>
@@ -3398,26 +3378,19 @@ using fuzzy matching</p>
 
   <div class="doc doc-contents ">
   
-      <p>Prepare strings for matching say in a merge function by removing unnecessary 
-detail, whitespaces and converting to lower case
-Remove URLs and emojis as sometimes they cannot come through properly in Tracer data
-Replace non-ASCII characters with their closest ASCII equivalents</p>
-<h4 id="veetility.utility_functions.UtilityFunctions.prepare_string_matching--parameters">Parameters</h4>
+      <p>Removing unnecessary detail, whitespaces and converting to lower case.</p>
+<p>Prepare strings for matching say in a merge function by removing unnecessary 
+    detail, whitespaces and converting to lower case.</p>
+<pre><code>Remove URLs and emojis as sometimes they cannot come through properly in Tracer data
+Replace non-ASCII characters with their closest ASCII equivalents
 
-<details class="string-">
-  <summary>str</summary>
-  <p>The string to be cleaned</p>
-</details>
-<details class="is_url-">
-  <summary>bool</summary>
-  <p>If True then remove URLs and characters after the '?' which are utm parameters
-These can be present in some URLs we receive and not others</p>
-</details>      <h4 id="veetility.utility_functions.UtilityFunctions.prepare_string_matching--returns">Returns</h4>
+Args:
+    string (str): The string to be prepared
+    is_url (bool): If the string is a URL then remove everything after the '?' as this is usually utm parameters
+Returns:
+    string (str): The prepared string
+</code></pre>
 
-<details class="string-">
-  <summary>str</summary>
-  <p>A cleaned string stripped of whitespace, punctuation, emojis, non-ASCII characters, and URLs.</p>
-</details>
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
         <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 80</span>
@@ -3456,18 +3429,12 @@ These can be present in some URLs we receive and not others</p>
 <span class="sd">        Remove URLs and emojis as sometimes they cannot come through properly in Tracer data</span>
 <span class="sd">        Replace non-ASCII characters with their closest ASCII equivalents</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        -----------------</span>
-<span class="sd">        string : str </span>
-<span class="sd">            The string to be cleaned</span>
-<span class="sd">        is_url : bool </span>
-<span class="sd">            If True then remove URLs and characters after the &#39;?&#39; which are utm parameters</span>
-<span class="sd">            These can be present in some URLs we receive and not others</span>
-<span class="sd">        Returns </span>
-<span class="sd">        ----------------</span>
-<span class="sd">        string : str</span>
-<span class="sd">            A cleaned string stripped of whitespace, punctuation, emojis, non-ASCII characters, and URLs.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            string (str): The string to be prepared</span>
+<span class="sd">            is_url (bool): If the string is a URL then remove everything after the &#39;?&#39; as this is usually utm parameters</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            string (str): The prepared string&quot;&quot;&quot;</span>
+
     <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">is_url</span><span class="p">:</span>
         <span class="c1"># Remove URLs and characters after the &#39;?&#39;</span>
@@ -4026,7 +3993,7 @@ If fails it waits 10 seconds and tries again.</p>
 
   <div class="doc doc-contents ">
   
-      <p>Converts a  post level organic dataframe to a daily level dataframe and stores it in a PostGreSQL table.</p>
+      <p>Converts a post level organic dataframe to a daily level dataframe and stores it in a PostGreSQL table.</p>
 <p>Most organic data is stored at the post level and this function converts it to a daily level dataframe
 and stores it in a PostGreSQL table. It also converts the cumulative metrics to daily difference metrics.
 The date column is parsed through with the correct format, dayfirst and yearfirst values needing to be
@@ -4336,7 +4303,7 @@ was first tracked and when that particular row item was added to the data output
                                 <span class="n">cumulative_metric_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">,</span><span class="s1">&#39;reach&#39;</span><span class="p">,</span><span class="s1">&#39;video_views&#39;</span><span class="p">,</span>
                                 <span class="s1">&#39;comments&#39;</span><span class="p">,</span><span class="s1">&#39;shares&#39;</span><span class="p">],</span><span class="n">unique_id_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                 <span class="n">require_run_after_hour</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">run_after_hour</span><span class="o">=</span><span class="mi">15</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a  post level organic dataframe to a daily level dataframe and stores it in a PostGreSQL table.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a post level organic dataframe to a daily level dataframe and stores it in a PostGreSQL table.</span>
 
 <span class="sd">    Most organic data is stored at the post level and this function converts it to a daily level dataframe</span>
 <span class="sd">    and stores it in a PostGreSQL table. It also converts the cumulative metrics to daily difference metrics.</span>
@@ -5064,10 +5031,10 @@ If writing fails it waits 10 seconds then trys again</p>
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.51d95adb.min.js"></script>
+      <script src="../assets/javascripts/bundle.2a6f1dda.min.js"></script>
       
     
   </body>
