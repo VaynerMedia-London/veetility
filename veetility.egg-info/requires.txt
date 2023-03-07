@@ -3,7 +3,7 @@ gspread
 gspread_dataframe
 numpy
 pandas
-psycopg2
+psycopg2-binary
 regex
 requests
 SQLAlchemy

@@ -1,3 +1,4 @@
+#%%
 import requests
 import json
 import pandas as pd
@@ -15,6 +16,8 @@ import pickle
 import gspread_dataframe as gd
 import os
 import sqlalchemy as sa
+from unidecode import unidecode
+#%%
 
 emoji_pattern = re.compile("["
                            u"\U0001F600-\U0001F64F"  # emoticons
@@ -76,7 +79,7 @@ class UtilityFunctions():
         logger.addHandler(file_handler)
         self.logger = logger
     
-    def prepare_string_matching(string, is_url=False):
+    def prepare_string_matching(self,string, is_url=False):
         """Prepare strings for matching say in a merge function by removing unnecessary 
             detail, whitespaces and converting to lower case
             Remove URLs and emojis as sometimes they cannot come through properly in Tracer data
@@ -94,7 +97,7 @@ class UtilityFunctions():
             string : str
                 A cleaned string stripped of whitespace, punctuation, emojis, non-ASCII characters, and URLs.
         """
-        string = string.lower()
+        string = str(string).lower() #convert the input to a string and make it lower case
         if is_url:
             # Remove URLs and characters after the '?'
             string = string.split('?')[0] # get rid of everything after they start to be utm parameters
@@ -108,20 +111,26 @@ class UtilityFunctions():
         string = re.sub(r'[^\w\s]', '', string) # remove punctuation
         return string.replace(' ', '')
 
-    def match_ads(self,df_1, df_2, df_1_exact_col, df_2_exact_col,
+    def match_ads(self,df_1, df_2, df_1_exact_col, df_2_exact_col, extract_shortcode=False,
                 df_1_fuzzy_col=None, df_2_fuzzy_col=None, is_exact_col_link=True, 
-                matched_col_name='boosted', merge=False,cols_to_merge =['platform'],pickle_name='NoStore'):
+                matched_col_name='boosted', merge=False, cols_to_merge =['platform'], 
+                pickle_name='NoStore'):
 
-        """Match row items in df_2 onto row items in df_1 based on two sets of columns, first the dataframes will be tried to match using the first set of columns using an exact match
-        
-        Then for the row items that haven't matched then use the second set of columns and try to match them 
-        using fuzzy matching
+        """Match row items in df_2 onto row items in df_1 based on two sets of columns,using exact and fuzzy matching.
+
+        First try to match the row items in df_1 using the first set of columns, if there is no match then try to match
+        the row items in df_2 using the second set of columns and fuzzy matching.
+        For example the first set of columns might be URLs, which tend to be exact matches, and the second set of columns
+        might be post copy, which can have slight variations, for example the post copy from a tracker sheet might be
+        slightly incorrect due to manual entry, therefore fuzzy matching with a threshold of how similar the strings
+        need to be is used.
         
         Args:
             df_1 (DataFrame): The Dataframe that will be searched to see if any corresponding values in df_2, if merge=True df_2 will be left joined onto df_1
             df_2 (DataFrame): The Dataframe that if merge = True will be left joined onto df_1
             df_1_exact_col (str): The Column name from df_1 that will be first attempted to find exact matches
-            df_2_exact_col (str): The Column name from df_2 that will be first attempted to find exact matchesq
+            df_2_exact_col (str): The Column name from df_2 that will be first attempted to find exact matches
+            extract_shortcode (bool): Boolean Flag, if True then the exact match will be attempted on the shortcodes of the df_2_exact_col which should be a url
             df_1_fuzzy_col (str): The Column name from df_1 that will be attempted to fuzzy match if there was no exact match before.
             df_2_fuzzy_col (str): The Column name from df_2 that will be attempted to fuzzy match if there was no exact match before.
             is_exact_col_link (bool): Boolean Flag, is the set of columns to be exact matched hyperlinks? If so they will be cleaned to remove utm parameters.
@@ -133,109 +142,96 @@ class UtilityFunctions():
         Returns:
             df_1 (DataFrame): The original df_1 with just a column to indicate whether a match has occured if merge = False else df_1 will have df_2 left joined on.
             df_2 (DataFrame): The original df_2 with cleaned columns and 'Match String' column to help quality check why some rows have or haven't matched.
-            df_2_no_match (DataFrame): A dataframe of df_2 row items that haven't found a match in df_1.
-            """
-                
-        df_1_num_rows = df_1.shape[0] #Used later to check we don't lose of rows by merging
-        if df_1_fuzzy_col == None:
+            df_2_no_match (DataFrame): A dataframe of df_2 row items that haven't found a match in df_1."""
+        
+        if df_1_fuzzy_col == None: #If only oen set of columns then first do an exact match then a fuzzy match on just that set of columns
             df_1_fuzzy_col = df_1_exact_col
             df_2_fuzzy_col = df_2_exact_col
 
-        #create new columns for the columns to match on, the text in the column will get cleaned later
-        df_1_fuzzy_col_clean = df_1_fuzzy_col + '_clean'
-        df_2_fuzzy_col_clean = df_2_fuzzy_col + '_clean'
-        df_1_exact_col_clean = df_1_exact_col + '_clean'
-        df_2_exact_col_clean = df_2_exact_col + '_clean'
-
-        df_1[df_1_fuzzy_col] = df_1[df_1_fuzzy_col].astype(str)
-        df_2[df_2_fuzzy_col] = df_2[df_2_fuzzy_col].astype(str)
-        df_1[df_1_exact_col] = df_1[df_1_exact_col].astype(str)
-        df_2[df_2_exact_col] = df_2[df_2_exact_col].astype(str)
-
         df_1['message'] = df_1['message'].replace('None','NoValuePresent') # this stops multiple none values in df_2 being written onto ever y null value in df_1
 
-        # prepare strings in a raw form with no spaces or punctuation in order to increase chance of matching
+        # Prepare strings in a raw form with no spaces or punctuation in order to increase chance of matching
         df_1['match_string'] = df_1[df_1_exact_col].apply(lambda x: self.prepare_string_matching(x, is_url=is_exact_col_link))
         df_2['match_string'] = df_2[df_2_exact_col].apply(lambda x: self.prepare_string_matching(x, is_url=is_exact_col_link))
-        df_1[df_1_fuzzy_col_clean] = df_1[df_1_fuzzy_col].apply(lambda x: self.prepare_string_matching(x))
-        df_2[df_2_fuzzy_col_clean] = df_2[df_2_fuzzy_col].apply(lambda x: self.prepare_string_matching(x))
 
-        #find out the number of unique values of the first cleaned column to match by
-        df_2_unique_exact = df_2['match_string'].unique().tolist()
+        # Find out the number of unique values of the first cleaned column to match by
         df_1_unique_exact = df_1['match_string'].unique().tolist()
+        df_2_unique_exact = df_2['match_string'].unique().tolist()
 
-        #find out whether there is an exact match on the first cleaned column by using the list of unique values from df_2
-        df_1['matched_exact?'] = df_1['match_string'].apply(lambda x: True if x in df_2_unique_exact else False)
+        if extract_shortcode:
+            # Create a dictionary of mappings between urls in df_2 and shortcodes in df_1
+            url_shortcode_dict = self.match_shortcode_to_url(df_1_unique_exact, df_2_unique_exact)
+            df_2['match_string'] = df_2['match_string'].map(url_shortcode_dict)
+
+        cols_to_merge.append('match_string')
+
+        #match_ids are not used to actually match, but just as a way to check whether matches have occured
+        df_1 = self.create_id_from_columns(df_1, cols_to_merge, 'match_id') 
+        df_2 = self.create_id_from_columns(df_2, cols_to_merge, 'match_id')
+        
+        # Find out whether there is an exact match on the first cleaned column by using the list of unique values from df_2
+        #This is done to seperate out the rows that have an exact match from the ones that don't
+        df_1['matched_exact_df1?'] = df_1['match_id'].apply(lambda x: True if x in df_2.match_id.unique().tolist() else False)
+        df_2['matched_exact_df2?'] = df_2['match_id'].apply(lambda x: True if x in df_1.match_id.unique().tolist() else False)
         df_1[matched_col_name] = False
-        df_1['matched_fuzzy?'] = False
+        df_1['matched_fuzzy_df1?'] = False
+
         # Split Dataframes up into rows that had a URL match and one where the rows didn't match
         # Then the ones that didn't match will try and be matched with the cleaned caption
-        df_1_match = df_1[df_1['matched_exact?'] == True]
-        df_1_no_match = df_1[df_1['matched_exact?'] == False]
-
-        df_1_match_rows = df_1_match.shape[0] #this is used to find out the change in the number of rows of the left df after the merge
-        cols_to_merge.append('match_string') #from the cols_to_merge specified as an input argument add the matchstring
+        df_1_match = df_1[df_1['matched_exact_df1?']== True]
+                
+        # Exact column merge match
         if merge:
-            df_1_match = pd.merge(df_1_match, df_2.drop(df_2_fuzzy_col_clean, axis=1),
-                                left_on=cols_to_merge, right_on=cols_to_merge, how='left',indicator=True)
-            #Indicate whether a post has matched using the exact column (the first merge) if the result of the indcator is "both"
-            df_1_match['matched_exact?'] = df_1_match['_merge'].apply(lambda x: True if x == 'both' else False)
-        else:
-            df_1['matched_exact?'] = df_1['match_string'].apply(lambda x: True if x in df_2_unique_exact else False)
+            df_1_match = self.merge_match_perc(df_1_match, df_2,on=cols_to_merge, 
+                                                    how='left',tag="First set of columns exact match")
         
-        logger.info(f'Rows count change after df_1_match merge {df_1_match.shape[0] - df_1_match_rows}')
+        #Now the match string will be based off the column to be fuzzy matched    
+        df_1['match_string'] = df_1[df_1_fuzzy_col].apply(lambda x: self.prepare_string_matching(x))
+        df_2['match_string'] = df_2[df_2_fuzzy_col].apply(lambda x: self.prepare_string_matching(x))
+        
+        df_1_no_match = df_1[df_1['matched_exact_df1?'] == False]
+        
         # Find the unique instances of cleaned captions to be passed to the fuzzy matching function
-        df_1_no_match_unique = df_1_no_match[df_1_fuzzy_col_clean].unique().tolist()
-        df_2_fuzzy_unique = df_2[df_2_fuzzy_col_clean].unique().tolist()
+        df_1_no_match_unique = df_1_no_match['match_string'].unique().tolist()
+        df_2_fuzzy_unique = df_2['match_string'].unique().tolist()
 
-        # the fuzzy match function will return a dictionary of matches for each caption from df_1 that wasn't
-        # matched by link and a list of captions from df_2 that didn't match
+        # the fuzzy match function will return a dictionary of matches for each caption from df_1 with the value
+        # being the fuzzy col of df_2 with the best match above a certain percentage threshold similarity
         best_match_dict = self.best_fuzzy_match(df_1_no_match_unique, df_2_fuzzy_unique, 90,pickle_name)
 
         # create a column that is the closest match in df_2 for every caption in df_1
         # This will be used to merge df_2 onto the remainder of none matching df_1
-        df_1_no_match['match_string'] = df_1_no_match[df_1_fuzzy_col_clean].map(best_match_dict)
+        df_1_no_match['match_string'] = df_1_no_match["match_string"].map(best_match_dict)
 
-        df_1_no_match['match_string'].fillna(False, inplace=True)
-        #Idnetify whether a post has matched using the fuzzy matching function by whether there is a value there
-        df_1_no_match['matched_fuzzy?'] = df_1_no_match['match_string'].apply(lambda x: False if ((x == 'None') or (x == '')) else True)
-        df_2['match_string'] = df_2.apply(lambda x: x['match_string'] if x['match_string'] in df_1_unique_exact else x[df_2_fuzzy_col_clean], axis=1)
-
-        #Now try and merge the rows that didn't match on the exact column
-        df_1_no_match_num_rows = df_1_no_match.shape[0]
+        #Create match_id columns for df_1_no_match and df_2 which concatenates columns together
+        df_1_no_match = self.create_id_from_columns(df_1_no_match, cols_to_merge, 'match_id')
+        df_2 = self.create_id_from_columns(df_2, cols_to_merge, 'match_id')
+        
+        df_1_no_match['matched_fuzzy_df1?'] = df_1_no_match['match_id'].apply(lambda x: True if x in df_2.match_id.unique().tolist() else False)
+        df_2['matched_fuzzy_df2?'] = df_2['match_id'].apply(lambda x: True if x in df_1_no_match.match_id.unique().tolist() else False)
+        
+        #Fuzzy match merge the rows that didn't match on the exact column
         if merge:
-            df_1_no_match = pd.merge(df_1_no_match, df_2.drop(df_2_fuzzy_col, axis=1), left_on=cols_to_merge,
-                                    right_on=cols_to_merge, how='left',indicator=True)
+            df_1_no_match = self.merge_match_perc(df_1_no_match, df_2.drop([df_2_fuzzy_col, 'matched_exact_df2?', 'matched_fuzzy_df2?'], axis=1),
+                                        on=cols_to_merge, how='left', tag="Second set of columns fuzzy match")
         
-            df_1_no_match['matched_fuzzy?'] = df_1_no_match['_merge'].apply(lambda x: True if x == 'both' else False)
-        
-
-        logger.info(f'Rows Lost after no match merge {df_1_no_match_num_rows - df_1_no_match.shape[0]}')
-
         df_1 = pd.concat([df_1_match, df_1_no_match], ignore_index=True)
 
-        df_1[matched_col_name] = df_1.apply(lambda x: True if ((x['matched_exact?'] == True) or (x['matched_fuzzy?'] == True)) else False, axis=1)
+        df_1[matched_col_name] = df_1.apply(lambda x: True if ((x['matched_exact_df1?'] == True) or (x['matched_fuzzy_df1?'] == True)) else False, axis=1)
+        df_2[matched_col_name] = df_2.apply(lambda x: True if ((x['matched_exact_df2?'] == True) or (x['matched_fuzzy_df2?'] == True)) else False, axis=1)
 
-        df_2_no_match = df_2[~df_2['match_string'].isin(df_1['match_string'].unique().tolist())]
+        logger.info(f"Num unique exact col values in df_1 = {df_1[df_1_exact_col].nunique()}")
+        logger.info(f"Num unique fuzzy col values in df_1 = {df_1[df_1_fuzzy_col].nunique()}")
+        logger.info(f"Num unique exact col values in df_2 = {df_2[df_2_exact_col].nunique()}")
+        logger.info(f"Num unique fuzzy col values in df_2 = {df_2[df_2_fuzzy_col].nunique()}")
+        logger.info(f"Perc Matched df_1 exact col = {round(df_1['matched_exact_df1?'].sum()*100/df_1.shape[0], 2)}")
+        logger.info(f"Perc Matched df_1 fuzzy col = {round(df_1['matched_fuzzy_df1?'].sum()*100/df_1.shape[0], 2)}")
+        logger.info(f"Perc df_2 exact col could have matched = {round(df_2['matched_exact_df2?'].sum()*100/df_2.shape[0], 2)}")
+        logger.info(f"Perc df_2 fuzzy col could have matched = {round(df_2['matched_fuzzy_df2?'].sum()*100/df_2.shape[0], 2)}")
+        logger.info(f"Perc Matched df_1 matched = {round(df_1[matched_col_name].sum()*100/df_1.shape[0], 2)}")
+        logger.info(f"Perc Matched df_2 matched = {round(df_2[matched_col_name].sum()*100/df_2.shape[0], 2)}")
 
-        logger.info(f'df_1 row numbers change = {df_1_num_rows - df_1.shape[0]}')
-
-        logger.info(f"Num unique exact col values in df_1: {df_1[df_1_exact_col].nunique()},\
-                Num unique fuzzy col values in df_1: {df_1[df_1_fuzzy_col].nunique()}")
-        logger.info(f"Num unique exact col values in df_2: {df_2[df_2_exact_col].nunique()},\
-                Num unique fuzzy col values in df_2: {df_2[df_2_fuzzy_col].nunique()}")
-
-        logger.info(f"Num Matched df_1 exact col ={df_1['matched_exact?'].sum()}")
-        logger.info(f"Num Matched df_1 fuzzy col ={df_1['matched_fuzzy?'].sum()}")
-        logger.info(f"Num df_2 exact that didn't match= {df_2_no_match[df_2_exact_col].nunique()}")
-
-        matched_df_1_nunique = df_1[df_1[matched_col_name]==True].drop_duplicates(subset=cols_to_merge).shape[0]
-        logger.info(f"Number of df_1 that have matched = {matched_df_1_nunique}")
-        num_df_2_to_match = df_2.drop_duplicates(subset=cols_to_merge).shape[0]
-        logger.info(f"Number of df_2 that need to match {num_df_2_to_match}")
-        logger.info(f"Percentage of df_2 that were matched = {round((matched_df_1_nunique * 100)/num_df_2_to_match,2)}")
-
-        return df_1, df_2, df_2_no_match
+        return df_1, df_2
 
     def best_fuzzy_match(self,list_1, list_2, threshold, pickle_name):
         """Takes in two lists of strings and every string in list_1 is fuzzy matched onto every item in list_2
@@ -339,20 +335,9 @@ class UtilityFunctions():
                 logger.error(f'Connection failed again {error_message}',exc_info=True)
                 return f'{table_name} error: ' + error_message
         return error_message
-    
-    def table_exists(self, table_name):
-        """Check if a table with the given name exists in the database.
 
-        Args:
-            table_name (str): name of the table to check for existence.
-
-        Returns:
-            bool: True if table exists, False otherwise."""
-        all_table_names = sa.inspect(self.postgresql_engine).get_table_names()
-        return (table_name in all_table_names)
-
-    def store_daily_organic_data(self,df,output_table_name,num_days_to_store=30,date_col_name=None,
-                                    dayfirst=None,yearfirst=None, format=None, errors='raise',
+    def store_daily_organic_data(self,df,output_table_name,num_days_to_store=30,date_col_name='date',
+                                    dayfirst="EnterValue",yearfirst="EnterValue", format=None, errors='raise',
                                     check_created_col=True,created_col='created',refresh_lag=1,
                                     cumulative_metric_cols=['impressions','reach','video_views',
                                     'comments','shares'],unique_id_cols=None,
@@ -361,17 +346,16 @@ class UtilityFunctions():
         
         Most organic data is stored at the post level and this function converts it to a daily level dataframe
         and stores it in a PostGreSQL table. It also converts the cumulative metrics to daily difference metrics.
-        The date column is parsed through with the correct format, dayfirst and yearfirst values needing to be
-        specified.\n
+        The date column is parsed through with the correct format, dayfirst and yearfirst values needing to be specified.
         If the table already exists then it checks the date_updated column to see if the data has already been
         updated today. If it has then it doesn't update the table. If it hasn't then it updates the table.
-        If the table doesn't exist then it creates it.\n
+        If the table doesn't exist then it creates it.
         If the require_run_after_hour is set to True then it will only run if the current time is after the
         run_after_hour time which is in 24 hour format but only the hour is used.
         If check_created_col is set to True then it will only run if the created column is less than the
         refresh_lag days ago. This is to ensure that the data is up to date before it is stored. This "created" 
         columns appears in databases from tracer and tells us when Tracer last updated the row items. Tracer is 
-        a day behind hence the refresh_lag of 1 day.\n
+        a day behind hence the refresh_lag of 1 day.
         The date_row_added column is added to the dataframe and is the date that the row was added to the
         data output_table.
         The date_first_tracked column is added to the dataframe and is the date that a unique post as defined
@@ -384,9 +368,9 @@ class UtilityFunctions():
             df (DataFrame): The dataframe to be converted to a daily level dataframe and stored in a PostGreSQL table
             output_table_name (str): The name of the table to store the data in
             num_days_to_store (int, optional): The number of days worth of data per post to store in the table. Defaults to 30.
-            date_col_name (str, optional): The name of the date column in the dataframe that will be formatted.
-            dayfirst (str, optional): Whether the day is the first value in the date column. 
-            yearfirst (str, optional): Whether the year is the first value in the date column.
+            date_col_name (str, optional): The name of the date column in the dataframe that will be formatted. Defaults to 'date'.
+            dayfirst (str, optional): Whether the day is the first value in the date column. Defaults to "EnterValue".
+            yearfirst (str, optional): Whether the year is the first value in the date column. Defaults to "EnterValue".
             format (str, optional): The format of the date column. Defaults to None.
             errors (str, optional): How to handle errors in the date column. Defaults to 'raise'.
             check_created_col (bool, optional): Whether to check the created column to ensure the data is up to date. Defaults to True.
@@ -399,20 +383,6 @@ class UtilityFunctions():
         
         Returns:
             None: the function writes the data to a postgresql table """
-        
-        #It is crucial that the date column is formatted correctly, therefore we check parameters for pd.to_datetime parsing are entered
-        date_param_error_list = []
-        if date_col_name == None:
-            date_param_error_list.append("date_col_name")
-        if dayfirst == None:
-            date_param_error_list.append("dayfirst")
-        if yearfirst == None:
-            date_param_error_list.append("yearfirst")
-        if len(date_param_error_list) > 0:
-            error_message = f"The following date parameters are missing: {date_param_error_list}"
-            logger.error(error_message)
-            return error_message
-
         today_datetime = datetime.today()
         today_date = today_datetime.date()
         if require_run_after_hour and (today_datetime.hour < run_after_hour): 
@@ -452,7 +422,8 @@ class UtilityFunctions():
             df['date_first_tracked'] = today_datetime
             df['date_diff'] = (df['date_row_added'] - df[date_col_name]).dt.days
             self.write_to_postgresql(df,output_table_name,if_exists='replace')
-    
+
+
     def convert_cumulative_to_daily(self,df,metric_list = ['impressions','comments','clicks',
                                     'link_clicks','likes','saved','shares','video_views'],
                                     unique_identifier_cols='url',date_row_added_col='date_row_added'):
@@ -497,6 +468,26 @@ class UtilityFunctions():
         df_metrics[df_metrics <0] = 0
         df[metric_list] = df_metrics
         return df
+    
+    def table_exists(self, table_name):
+        """Check if a table with the given name exists in the database.
+
+        Args:
+            table_name (str): name of the table to check for existence.
+
+        Returns:
+            bool: True if table exists, False otherwise."""
+        all_table_names = sa.inspect(self.postgresql_engine).get_table_names()
+        return (table_name in all_table_names)
+    
+    def match_shortcode_to_url(self,shortcode_list, url_list):
+        url_shortcode_dict = {}
+        for shortcode in shortcode_list:
+            for url in url_list:
+                if shortcode in url:
+                    url_shortcode_dict[url] = shortcode
+        return url_shortcode_dict
+
 
     def read_from_postgresql(self, table_name, clean_date=True, date_col=None, dayfirst=None, yearfirst=None, 
                              format=None, errors='raise'):
@@ -688,24 +679,6 @@ class UtilityFunctions():
         else:
             logger.error('JSON read error, file_type error')
 
-
-    # def remove_vvm_stage(self,creative_name):
-    #     creative_name = re.sub(r'Level 2 - ','', creative_name)
-    #     creative_name = re.sub(r'Level2 -','', creative_name)
-    #     creative_name = re.sub(r'Level_2-','', creative_name)
-    #     creative_name = re.sub(r'Level2_','', creative_name)
-    #     return creative_name
-
-    # def calc_tiktok_vtr_rates(self,df):
-    #     df['Engagements'] = df['likes'] + df['comments'] + df['shares']
-    #     df['EngagementRate'] = round(
-    #         df['Engagements'] * 100 / df['impressions'], 2)
-    #     df['25%VTR'] = round(df['Video Views P 25'] * 100 / df['impressions'], 2)
-    #     df['50%VTR'] = round(df['Video Views P 50'] * 100 / df['impressions'], 2)
-    #     df['75%VTR'] = round(df['Video Views P 75'] * 100 / df['impressions'], 2)
-    #     df['100%VTR'] = round(df['Video Completions'] * 100 / df['impressions'], 2)
-    #     return df
-    
     def columnnames_to_lowercase(self,df):
         """Change the columns in a dataframe into lowercase with spaces replaced by underscores"""
         df.columns = df.columns.str.lower()
@@ -713,46 +686,62 @@ class UtilityFunctions():
         df.columns = df.columns.str.strip()
         return df
 
+    def create_id_from_columns(self,df, columns, id_name=None):
+        """Create a new column in a pandas DataFrame as a concatenation of given columns.
+        Args:
+            df (pandas.DataFrame): The dataframe to which the new column will be added
+            columns (List[str]): List of columns to be concatenated
+            id_name (str, optional): Name for the new column. Defaults to None.
+        
+        Returns:
+            pandas.DataFrame: The input DataFrame with the added column"""
+        
+        if id_name == None:
+            id_name = ''
+            for col in columns:
+                id_name += col + '-'
+            id_name = id_name.rstrip('-')
 
-    def merge_w_match_perc(self,df_1,df_2,left_on,right_on,how='left'):
-            """Merges two dataframes and prints out the number of matches and the percentage of matches out of the total number of rows.
-            
-            Args:
-                df_1 (pd.DataFrame): The first dataframe to merge
-                df_2 (pd.DataFrame): The second dataframe to merge
-                left_on (str): The column name to merge on in the first dataframe
-                right_on (str): The column name to merge on in the second dataframe
-                how (str, optional): The type of merge to perform. Defaults to 'left'.
-            
-            Returns:
-                output_df (pd.DataFrame): A pandas dataframe that contains the merged data from the input dataframes."""
-            df_1_rows = df_1.shape[0]
-            if '_merge' in df_1.columns:
-                df_1 = df_1.drop('_merge',axis=1)
+        def concat_cols(x):
+            result = ''
+            for col in columns:
+                x[col] = str(x[col]).lower()
+                result += x[col] + '-'
+            return result.rstrip('-')
 
-            output_df = pd.merge(df_1,df_2,left_on=left_on,right_on=right_on,how=how,indicator=True)
-            num_rows = output_df.shape[0]
-            num_matches = output_df._merge.value_counts()['both']
-            match_perc = round(num_matches / num_rows * 100,1)
-            rows_diff = df_1_rows - num_rows
-            print(f"df_1 has {df_1_rows} rows")
-            print(f'{num_matches} matches out of {num_rows} rows ({match_perc}%)')
-            print(f'{rows_diff} ')
-            return output_df
+        df[id_name] = df.apply(lambda x: concat_cols(x), axis=1)
+        return df
 
-    # def group_by_asset(self,x):
-    #     d = {}
+    def merge_match_perc(self,df_1,df_2,left_on=None,right_on=None,on=None,how='left',tag=""):
+        """Merges two dataframes and prints out the number of matches and the percentage of matches out of the total number of rows.
+        
+        Args:
+            df_1 (pd.DataFrame): The first dataframe to merge
+            df_2 (pd.DataFrame): The second dataframe to merge
+            left_on (str): The column name to merge on in the first dataframe
+            right_on (str): The column name to merge on in the second dataframe
+            how (str, optional): The type of merge to perform. Defaults to 'left'.
+            tag (str, optional): A tag to add to the print statement. Defaults to "".
+        
+        Returns:
+            output_df (pd.DataFrame): A pandas dataframe that contains the merged data from the input dataframes."""
+        
+        df_1_rows_before = df_1.shape[0] #number of rows in df_1
+        if '_merge' in df_1.columns: #if df_1 has a _merge column, drop it
+            df_1 = df_1.drop('_merge',axis=1)
 
-    #     d['Engagements'] = x['Engagements'].sum()
-    #     d['impressions'] = x['impressions'].sum()
-    #     d['EngagementRate'] = round(d['Engagements'] * 100 / d['impressions'], 2)
-    #     d['25%VTR'] = round(x['25%VTR'].mean(), 2)
-    #     d['50%VTR'] = round(x['50%VTR'].mean(), 2)
-    #     d['75%VTR'] = round(x['75%VTR'].mean(), 2)
-    #     d['100%VTR'] = round(x['100%VTR'].mean(), 2)
-    #     d['Video Length'] = round(x['Video Length'].iloc[0], 2)
+        output_df = pd.merge(df_1,df_2,left_on=left_on,right_on=right_on,how=how,on=on,indicator=True)
+        df_1_rows_after = output_df.shape[0] #number of rows in output_df after merge
 
-    #     return pd.Series(d, index=list(d.keys()))
+        #count the number of matches by using the "_merge" column that is created by "indicator=True"
+        num_matches = output_df['_merge'].value_counts()['both']
+        match_perc = round(num_matches / df_1_rows_after * 100,1)
+
+        logger.info(f"{tag} df_1 has {df_1_rows_before} rows")
+        logger.info(f'{num_matches} matches, how = {how}, out of {df_1_rows_after} rows ({match_perc}%)')
+        logger.info(f'Rows after minus rows before {df_1_rows_after - df_1_rows_before}\n')
+        return output_df
+
 
 class Logger:
     """A class for handling logging of events.
@@ -888,3 +877,5 @@ class SlackNotifier:
             requests.post(self.slack_webhook_url, data=json.dumps(payload))
         except Exception as e:
             logger.error(f"Failed To Send Slack messafe {e}",exc_info=True)
+
+# %%
