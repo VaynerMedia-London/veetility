@@ -121,7 +121,7 @@ class UtilityFunctions():
     def match_ads(self,df_1, df_2, df_1_exact_col, df_2_exact_col, extract_shortcode=False,
                 df_1_fuzzy_col=None, df_2_fuzzy_col=None, is_exact_col_link=True, 
                 matched_col_name='boosted', merge=False, cols_to_merge =['platform'], 
-                pickle_name='NoStore'):
+                json_name='NoStore'):
 
         """Match row items in df_2 onto row items in df_1 based on two sets of columns,using exact and fuzzy matching.
 
@@ -204,7 +204,7 @@ class UtilityFunctions():
 
         # the fuzzy match function will return a dictionary of matches for each caption from df_1 with the value
         # being the fuzzy col of df_2 with the best match above a certain percentage threshold similarity
-        best_match_dict = self.best_fuzzy_match(df_1_no_match_unique, df_2_fuzzy_unique, 90,pickle_name)
+        best_match_dict = self.best_fuzzy_match(df_1_no_match_unique, df_2_fuzzy_unique, 90,json_name)
 
         # create a column that is the closest match in df_2 for every caption in df_1
         # This will be used to merge df_2 onto the remainder of none matching df_1
@@ -240,7 +240,7 @@ class UtilityFunctions():
 
         return df_1, df_2
 
-    def best_fuzzy_match(self,list_1, list_2, threshold, pickle_name):
+    def best_fuzzy_match(self,list_1, list_2, threshold, json_name):
         """Applying a fuzzy match to two lists of strings and returning a dictionary of the best matches
         
         Takes in two lists of strings and every string in list_1 is fuzzy matched onto every item in list_2
@@ -262,9 +262,14 @@ class UtilityFunctions():
 
         best_match_dict = {} 
         stored_best_dict = {} #
-        if pickle_name != 'NoStore':
-            if os.path.isfile(f'Pickled Files/best_match_dict_{pickle_name}'):
-                stored_best_dict = self.unpickle_data(f'best_match_dict_{pickle_name}')
+        # if pickle_name != 'NoStore':
+        #     if os.path.isfile(f'Pickled Files/best_match_dict_{pickle_name}'):
+        #         stored_best_dict = self.unpickle_data(f'best_match_dict_{pickle_name}')
+        #         logger.info(f"loaded dict of len :{len(stored_best_dict)}")
+
+        if json_name != 'NoStore':
+            if os.path.isfile(f'JSON Files/best_match_dict_{json_name}'):
+                stored_best_dict = self.read_json(f'best_match_dict_{json_name}','Dictionary')
                 logger.info(f"loaded dict of len :{len(stored_best_dict)}")
 
         for string_1 in tqdm(list_1):
@@ -304,11 +309,11 @@ class UtilityFunctions():
                 best_match = max(temp_match_dict.items(), key=lambda k: k[1])[0]
                 best_match_dict[string_1] = best_match
 
-        if pickle_name!= 'NoStore':
+        if json_name!= 'NoStore':
             # Remove matches that didn't find anythign as that will let new values be discovered
             # if new data comes in
             #best_match_dict_none_removed = {k:v for k,v in best_match_dict.items() if v != 'None'}
-            self.pickle_data(best_match_dict,f'best_match_dict_{pickle_name}')
+            self.write_json(best_match_dict,f'best_match_dict_{json_name}','Dictionary')
 
         return best_match_dict
 
@@ -657,23 +662,27 @@ class UtilityFunctions():
         return pickle.load(open(folder + '/' + filename, "rb"))
 
     
-    def write_json(self,object,file_name,file_type):
+    def write_json(self,object,file_name,file_type, folder="JSON Files"):
         """Write a Python object to a json file.
         
         Args:
             object (Object): The Python object to be written to a json file.
             file_name (str): The name of the json file to be created.
             file_type (str): The type of the object. It must be 'DataFrame', 'List' or 'Dictionary'
+            folder (str, optional): The folder to save the json file to. Defaults to "JSON Files".
         """
+        if os.path.isdir(folder) == False:
+            os.mkdir(folder)
+
         if file_type == 'DataFrame':
-            object.to_json(file_name+'.json',orient='split')
+            object.to_json(folder + '/' + file_name+'.json',orient='split')
         elif file_type == 'List' or file_type == 'Dictionary':
-            with open(f"{file_name}.json","w") as outfile:
+            with open(f"{folder}/{file_name}.json","w") as outfile:
                 json.dump(object,outfile)
         else:
             logger.error('JSON write error, file_type error')
     
-    def read_json(self,file_name, file_type):
+    def read_json(self,file_name, file_type, folder="JSON Files"):
         """Read a json file and return a Python object.
         
         Args:
@@ -683,9 +692,9 @@ class UtilityFunctions():
         Returns:
             Object: The object read from json file."""
         if file_type == 'DataFrame':
-            return pd.read_json(f'{file_name}.json',orient='split')
+            return pd.read_json(f'{folder}/{file_name}.json',orient='split')
         elif file_type == 'List' or file_type == 'Dictionary':
-            return json.load(open(f'{file_name}.json'))
+            return json.load(open(f'{folder}/{file_name}.json'))
         else:
             logger.error('JSON read error, file_type error')
 

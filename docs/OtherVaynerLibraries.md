@@ -9,4 +9,4 @@ This library has generic quality assessment functions for use in a python pipeli
 This library has generic functions for cleaning advertising data such as standardising column
 names between platforms and countries or extracting a Country like "France" from a string column
 
-[VaynerCleaning](https://vaynermedia-london.github.io/vayner_clean/)
+[VaynerCleaning](https://VaynerMedia-London.github.io/vaynerclean/)
