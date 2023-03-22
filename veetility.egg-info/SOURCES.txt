@@ -1,6 +1,7 @@
 README.md
 setup.py
 veetility/__init__.py
+veetility/point_to_point_regressor.py
 veetility/utility_functions.py
 veetility.egg-info/PKG-INFO
 veetility.egg-info/SOURCES.txt

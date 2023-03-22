@@ -102,8 +102,10 @@ class UtilityFunctions():
             Returns 
             ----------------
             string : str
-                A cleaned string stripped of whitespace, punctuation, emojis, non-ASCII characters, and URLs.
-        """
+                A cleaned string stripped of whitespace, punctuation, emojis, non-ASCII characters, and URLs."""
+        
+        if pd.isna(string):
+            return string
         string = str(string).lower() #convert the input to a string and make it lower case
         if is_url:
             # Remove URLs and characters after the '?'
@@ -119,10 +121,9 @@ class UtilityFunctions():
         return string.replace(' ', '')
 
     def match_ads(self,df_1, df_2, df_1_exact_col, df_2_exact_col, extract_shortcode=False,
-                df_1_fuzzy_col=None, df_2_fuzzy_col=None, is_exact_col_link=True, 
-                matched_col_name='boosted', merge=False, cols_to_merge =['platform'], 
-                json_name='NoStore'):
-
+            df_1_fuzzy_col=None, df_2_fuzzy_col=None, is_exact_col_link=True, 
+            matched_col_name='boosted', merge=False, cols_to_merge =None, 
+            pickle_name='NoStore'):
         """Match row items in df_2 onto row items in df_1 based on two sets of columns,using exact and fuzzy matching.
 
         First try to match the row items in df_1 using the first set of columns, if there is no match then try to match
@@ -151,11 +152,17 @@ class UtilityFunctions():
             df_2 (DataFrame): The original df_2 with cleaned columns and 'Match String' column to help quality check why some rows have or haven't matched.
             df_2_no_match (DataFrame): A dataframe of df_2 row items that haven't found a match in df_1."""
         
+        df_1 = df_1.drop(columns=[col for col in df_1.columns if ('matched' in col) and ('df' in col)])
+        df_2 = df_2.drop(columns=[col for col in df_2.columns if ('matched' in col) and ('df' in col)])
+
+        if cols_to_merge == None:
+            cols_to_merge = ['platform']
+
         if df_1_fuzzy_col == None: #If only oen set of columns then first do an exact match then a fuzzy match on just that set of columns
             df_1_fuzzy_col = df_1_exact_col
             df_2_fuzzy_col = df_2_exact_col
 
-        df_1['message'] = df_1['message'].replace('None','NoValuePresent') # this stops multiple none values in df_2 being written onto ever y null value in df_1
+        # df_1['message'] = df_1['message'].replace('None','NoValuePresent') # this stops multiple none values in df_2 being written onto ever y null value in df_1
 
         # Prepare strings in a raw form with no spaces or punctuation in order to increase chance of matching
         df_1['match_string'] = df_1[df_1_exact_col].apply(lambda x: self.prepare_string_matching(x, is_url=is_exact_col_link))
@@ -172,14 +179,16 @@ class UtilityFunctions():
 
         cols_to_merge.append('match_string')
 
-        #match_ids are not used to actually match, but just as a way to check whether matches have occured
-        df_1 = self.create_id_from_columns(df_1, cols_to_merge, 'match_id') 
-        df_2 = self.create_id_from_columns(df_2, cols_to_merge, 'match_id')
+        # #match_ids are not used to actually match, but just as a way to check whether matches have occured
+        # df_1 = create_id_from_columns(df_1, cols_to_merge, 'match_id') 
+        # df_2 = create_id_from_columns(df_2, cols_to_merge, 'match_id')
+
+        df_1, df_2 = self.identify_match_multi_cols(df_1,df_2,cols_to_merge,cols_to_merge,'matched_exact')
         
         # Find out whether there is an exact match on the first cleaned column by using the list of unique values from df_2
         #This is done to seperate out the rows that have an exact match from the ones that don't
-        df_1['matched_exact_df1?'] = df_1['match_id'].apply(lambda x: True if x in df_2.match_id.unique().tolist() else False)
-        df_2['matched_exact_df2?'] = df_2['match_id'].apply(lambda x: True if x in df_1.match_id.unique().tolist() else False)
+        # df_1['matched_exact_df1_old?'] = df_1['match_id'].apply(lambda x: True if x in df_2.match_id.unique().tolist() else False)
+        # df_2['matched_exact_df2_old?'] = df_2['match_id'].apply(lambda x: True if x in df_1.match_id.unique().tolist() else False)
         df_1[matched_col_name] = False
         df_1['matched_fuzzy_df1?'] = False
 
@@ -188,6 +197,7 @@ class UtilityFunctions():
         df_1_match = df_1[df_1['matched_exact_df1?']== True]
                 
         # Exact column merge match
+        # We don't match on match_id because we don't want the cols_to_merge to be duplicated with _x and _y
         if merge:
             df_1_match = self.merge_match_perc(df_1_match, df_2,on=cols_to_merge, 
                                                     how='left',tag="First set of columns exact match")
@@ -204,18 +214,20 @@ class UtilityFunctions():
 
         # the fuzzy match function will return a dictionary of matches for each caption from df_1 with the value
         # being the fuzzy col of df_2 with the best match above a certain percentage threshold similarity
-        best_match_dict = self.best_fuzzy_match(df_1_no_match_unique, df_2_fuzzy_unique, 90,json_name)
+        best_match_dict = self.best_fuzzy_match(df_1_no_match_unique, df_2_fuzzy_unique, 90, pickle_name)
 
         # create a column that is the closest match in df_2 for every caption in df_1
         # This will be used to merge df_2 onto the remainder of none matching df_1
         df_1_no_match['match_string'] = df_1_no_match["match_string"].map(best_match_dict)
 
         #Create match_id columns for df_1_no_match and df_2 which concatenates columns together
-        df_1_no_match = self.create_id_from_columns(df_1_no_match, cols_to_merge, 'match_id')
-        df_2 = self.create_id_from_columns(df_2, cols_to_merge, 'match_id')
+        # df_1_no_match = create_id_from_columns(df_1_no_match, cols_to_merge, 'match_id')
+        # df_2 = create_id_from_columns(df_2, cols_to_merge, 'match_id')
+
+        df_1_no_match, df_2 = self.identify_match_multi_cols(df_1_no_match,df_2,cols_to_merge,cols_to_merge,'matched_fuzzy')
         
-        df_1_no_match['matched_fuzzy_df1?'] = df_1_no_match['match_id'].apply(lambda x: True if x in df_2.match_id.unique().tolist() else False)
-        df_2['matched_fuzzy_df2?'] = df_2['match_id'].apply(lambda x: True if x in df_1_no_match.match_id.unique().tolist() else False)
+        # df_1_no_match['matched_fuzzy_df1?'] = df_1_no_match['match_id'].apply(lambda x: True if x in df_2.match_id.unique().tolist() else False)
+        # df_2['matched_fuzzy_df2?'] = df_2['match_id'].apply(lambda x: True if x in df_1_no_match.match_id.unique().tolist() else False)
         
         #Fuzzy match merge the rows that didn't match on the exact column
         if merge:
@@ -223,7 +235,7 @@ class UtilityFunctions():
                                         on=cols_to_merge, how='left', tag="Second set of columns fuzzy match")
         
         df_1 = pd.concat([df_1_match, df_1_no_match], ignore_index=True)
-
+    
         df_1[matched_col_name] = df_1.apply(lambda x: True if ((x['matched_exact_df1?'] == True) or (x['matched_fuzzy_df1?'] == True)) else False, axis=1)
         df_2[matched_col_name] = df_2.apply(lambda x: True if ((x['matched_exact_df2?'] == True) or (x['matched_fuzzy_df2?'] == True)) else False, axis=1)
 
@@ -239,11 +251,36 @@ class UtilityFunctions():
         logger.info(f"Perc Matched df_2 matched = {round(df_2[matched_col_name].sum()*100/df_2.shape[0], 2)}")
 
         return df_1, df_2
+    
+    def identify_match_multi_cols(self, df_1, df_2, df_1_cols_to_match, df_2_cols_to_match, match_col_name, exclude_values=['None', 'none', 'nan', '']):
+        """This function will identify if a row in df_1 is in df_2 based on the columns specified in df_1_cols_to_match and df_2_cols_to_match
+        
+        Args:
+            df_1 (pd.DataFrame): The first dataframe to identify matches in
+            df_2 (pd.DataFrame): The second dataframe to identify matches in
+            df_1_cols_to_match (list): The columns in df_1 to look for matches in df_2
+            df_2_cols_to_match (list): The columns in df_2 to look for matches in df_1
+            match_col_name (str): The name of the column to be created in df_1 to indicate if the row is in df_2
+            exclude_values (list): The values to be excluded from the match. Default is ['None', 'none', 'nan', '']"""
+        
+        def is_row_in_dataframe(row, target_df, source_cols, target_cols):
+            mask = np.full(len(target_df), True, dtype=bool)
+            for i in range(len(source_cols)):
+                current_condition = (
+                    (target_df[target_cols[i]] == row[source_cols[i]]) &
+                    (row[source_cols[i]] not in exclude_values)) | (
+                    pd.isna(target_df[target_cols[i]]) & pd.isna(row[source_cols[i]]))
+                mask &= current_condition
+            matches = target_df[mask]
+            return len(matches) > 0
+
+        df_1[match_col_name + '_df1?'] = df_1.apply(lambda row: is_row_in_dataframe(row, df_2, df_1_cols_to_match, df_2_cols_to_match), axis=1)
+        df_2[match_col_name + '_df2?'] = df_2.apply(lambda row: is_row_in_dataframe(row, df_1, df_2_cols_to_match, df_1_cols_to_match), axis=1)
+
+        return df_1, df_2
 
     def best_fuzzy_match(self,list_1, list_2, threshold, json_name):
-        """Applying a fuzzy match to two lists of strings and returning a dictionary of the best matches
-        
-        Takes in two lists of strings and every string in list_1 is fuzzy matched onto every item in list_2
+        """Takes in two lists of strings and every string in list_1 is fuzzy matched onto every item in list_2
         The fuzzy match of a string in list_1 with a string in list_2 with the highest score will count as the 
         match as long as it is above the threshold. The match is then stored as a key value pair in a dictionary
 
@@ -254,7 +291,7 @@ class UtilityFunctions():
             list_1 (list): First List of strings, every item will be searched for a fuzzy match in list_2
             list_2 (list): Second List of strings, every item in list_1 will be fuzzy matched with every item in list 2 and best fuzzy match score wins
             threshold (integer): value between 0 and 100 signifying percentage fuzzy match score at which a match is considered sufficiently close
-            pickle_name (str): name of pickle_file to create or add to if a pickle of the dictionary already exists
+            json_name (str): Name of json file to store dictionary of matches in
         
         Returns:
             best_match_dict (dict): Dictionary of matches (with highest fuzzy match score) between strings in list_1 and list_2 
@@ -264,9 +301,9 @@ class UtilityFunctions():
         stored_best_dict = {} #
         # if pickle_name != 'NoStore':
         #     if os.path.isfile(f'Pickled Files/best_match_dict_{pickle_name}'):
-        #         stored_best_dict = self.unpickle_data(f'best_match_dict_{pickle_name}')
+        #         stored_best_dict = unpickle_data(f'best_match_dict_{pickle_name}')
         #         logger.info(f"loaded dict of len :{len(stored_best_dict)}")
-
+        
         if json_name != 'NoStore':
             if os.path.isfile(f'JSON Files/best_match_dict_{json_name}'):
                 stored_best_dict = self.read_json(f'best_match_dict_{json_name}','Dictionary')
@@ -309,10 +346,11 @@ class UtilityFunctions():
                 best_match = max(temp_match_dict.items(), key=lambda k: k[1])[0]
                 best_match_dict[string_1] = best_match
 
-        if json_name!= 'NoStore':
+        if json_name != 'NoStore':
             # Remove matches that didn't find anythign as that will let new values be discovered
             # if new data comes in
             #best_match_dict_none_removed = {k:v for k,v in best_match_dict.items() if v != 'None'}
+            #pickle_data(best_match_dict,f'best_match_dict_{json_name}')
             self.write_json(best_match_dict,f'best_match_dict_{json_name}','Dictionary')
 
         return best_match_dict
@@ -333,12 +371,14 @@ class UtilityFunctions():
         error_message = ''
         try:
             now = time.time()
+            if 'index' in df.columns:
+                df = df.drop('index',axis=1)
             df.to_sql(table_name, con=self.postgresql_engine, index=False, if_exists=if_exists)
             time_taken = round(time.time() - now,2)
             logger.info(f"Time Taken to write {table_name} = {time_taken}secs")
             logger.info(f"Sent Data to {table_name}")
         except Exception as e:
-            logger.info(f"Connection error {e}")
+            logger.info(f"Connection error {e}") 
             time.sleep(10) # wait for 10 seconds then try again
             try:
                 now = time.time()
@@ -347,7 +387,7 @@ class UtilityFunctions():
                 logger.info(f"Time Taken to write {table_name} = {time_taken}secs")
             except Exception as error_message:
                 logger.error(f'Connection failed again {error_message}',exc_info=True)
-                return f'{table_name} error: ' + error_message
+                return f'{table_name} error: ' + str(error_message)
         return error_message
 
     def store_daily_organic_data(self,df,output_table_name,num_days_to_store=30,date_col_name='date',
@@ -435,6 +475,7 @@ class UtilityFunctions():
             df['date_row_added'] = today_datetime
             df['date_first_tracked'] = today_datetime
             df['date_diff'] = (df['date_row_added'] - df[date_col_name]).dt.days
+            df = self.convert_cumulative_to_daily(df,cumulative_metric_cols,unique_id_cols,'date_row_added')
             self.write_to_postgresql(df,output_table_name,if_exists='replace')
 
 
@@ -471,19 +512,22 @@ class UtilityFunctions():
                 #set the cumulative metrics to the same value as the daily metrics
                 df['cum_'+metric] = df[metric]
                 cum_metric_list.append('cum_'+metric)
-        if isinstance(unique_identifier_cols,list) == False:
+            return df
+        
+        if isinstance(unique_identifier_cols,list) == False: #if the entry is a string just convert it to a list
             unique_identifier_cols = [unique_identifier_cols]
         # Sort the dataframe by the unique identifier columns and the date the row was added
         df = df.sort_values(by= unique_identifier_cols+[date_row_added_col])
         # Calculate the daily metrics by subtracting the previous day's cumulative metric from the current day's cumulative metric
-        df[metric_list] = (df.groupby(unique_identifier_cols)[cum_metric_list].transform(lambda x:x.sub(x.shift().fillna(0))))
+        metrics_updated = df.groupby(unique_identifier_cols)[cum_metric_list].transform(lambda x:x.sub(x.shift().fillna(0)))
+        df[metric_list] = metrics_updated
         df_metrics = df[metric_list]
         # Set negative values to zero, cumulative totals can decrease, potentially due to people accidently liking posts
         df_metrics[df_metrics <0] = 0
         df[metric_list] = df_metrics
         return df
     
-    def table_exists(self, table_name):
+    def table_exists(self, table_name): 
         """Check if a table with the given name exists in the database.
 
         Args:
@@ -497,6 +541,8 @@ class UtilityFunctions():
     def match_shortcode_to_url(self,shortcode_list, url_list):
         url_shortcode_dict = {}
         for shortcode in shortcode_list:
+            if pd.isna(shortcode):
+                    continue
             for url in url_list:
                 if shortcode in url:
                     url_shortcode_dict[url] = shortcode
@@ -594,8 +640,6 @@ class UtilityFunctions():
             time.sleep(10)
             gd.set_with_dataframe(sheet, df)
 
-
-
     def read_from_gsheet(self,workbook_name, sheet_name,clean_date=True,date_col='EnterValue',
                                 dayfirst='EnterValue',yearfirst='EnterValue',format=None,errors='raise'):
         
@@ -679,6 +723,10 @@ class UtilityFunctions():
         elif file_type == 'List' or file_type == 'Dictionary':
             with open(f"{folder}/{file_name}.json","w") as outfile:
                 json.dump(object,outfile)
+        elif file_type == 'append':
+            with open(f"{folder}/{file_name}.json","a") as outfile:
+                json.dump(object,outfile)
+                outfile.write("\n")
         else:
             logger.error('JSON write error, file_type error')
     
@@ -695,6 +743,9 @@ class UtilityFunctions():
             return pd.read_json(f'{folder}/{file_name}.json',orient='split')
         elif file_type == 'List' or file_type == 'Dictionary':
             return json.load(open(f'{folder}/{file_name}.json'))
+        elif file_type == 'append':
+            with open(f"{folder}/{file_name}.json","r") as infile:
+                return [json.loads(line) for line in infile]
         else:
             logger.error('JSON read error, file_type error')
 
@@ -731,7 +782,7 @@ class UtilityFunctions():
         df[id_name] = df.apply(lambda x: concat_cols(x), axis=1)
         return df
 
-    def merge_match_perc(self,df_1,df_2,left_on=None,right_on=None,on=None,how='left',tag=""):
+    def merge_match_perc(self,df_1,df_2,left_on=None,right_on=None,on=None,how='left',tag="",ignore_values_df2=['None','nan','',' ','none']):
         """Merges two dataframes and prints out the number of matches and the percentage of matches out of the total number of rows.
         
         Args:
@@ -741,15 +792,23 @@ class UtilityFunctions():
             right_on (str): The column name to merge on in the second dataframe
             how (str, optional): The type of merge to perform. Defaults to 'left'.
             tag (str, optional): A tag to add to the print statement. Defaults to "".
+
         
         Returns:
             output_df (pd.DataFrame): A pandas dataframe that contains the merged data from the input dataframes."""
-        
+        if right_on != None:
+            df_2['no_merge_flag'] = df_2[right_on].apply(lambda row: any(item in ignore_values_df2 for item in row), axis=1)
+        elif on != None:
+            df_2['no_merge_flag'] = df_2[on].apply(lambda row: any(item in ignore_values_df2 for item in row), axis=1)
+            
         df_1_rows_before = df_1.shape[0] #number of rows in df_1
         if '_merge' in df_1.columns: #if df_1 has a _merge column, drop it
             df_1 = df_1.drop('_merge',axis=1)
 
-        output_df = pd.merge(df_1,df_2,left_on=left_on,right_on=right_on,how=how,on=on,indicator=True)
+        output_df = pd.merge(df_1,df_2.loc[df_2['no_merge_flag']==False],left_on=left_on,right_on=right_on,how=how,on=on,indicator=True)
+
+        # Drop the flag column in the merged dataframe
+        output_df.drop(columns=['no_merge_flag'], inplace=True, errors='ignore')
         df_1_rows_after = output_df.shape[0] #number of rows in output_df after merge
 
         #count the number of matches by using the "_merge" column that is created by "indicator=True"
