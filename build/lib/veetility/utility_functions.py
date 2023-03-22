@@ -155,14 +155,11 @@ class UtilityFunctions():
         df_1 = df_1.drop(columns=[col for col in df_1.columns if ('matched' in col) and ('df' in col)])
         df_2 = df_2.drop(columns=[col for col in df_2.columns if ('matched' in col) and ('df' in col)])
 
-        if cols_to_merge == None:
-            cols_to_merge = ['platform']
+        if cols_to_merge == None: cols_to_merge = ['platform']
 
         if df_1_fuzzy_col == None: #If only oen set of columns then first do an exact match then a fuzzy match on just that set of columns
             df_1_fuzzy_col = df_1_exact_col
             df_2_fuzzy_col = df_2_exact_col
-
-        # df_1['message'] = df_1['message'].replace('None','NoValuePresent') # this stops multiple none values in df_2 being written onto ever y null value in df_1
 
         # Prepare strings in a raw form with no spaces or punctuation in order to increase chance of matching
         df_1['match_string'] = df_1[df_1_exact_col].apply(lambda x: self.prepare_string_matching(x, is_url=is_exact_col_link))
@@ -179,16 +176,9 @@ class UtilityFunctions():
 
         cols_to_merge.append('match_string')
 
-        # #match_ids are not used to actually match, but just as a way to check whether matches have occured
-        # df_1 = create_id_from_columns(df_1, cols_to_merge, 'match_id') 
-        # df_2 = create_id_from_columns(df_2, cols_to_merge, 'match_id')
-
+        #Identify matches between the two dataframes on cols_to_merge,e.g. is there a row with 'platform' and 'message' in df_1 that matches a row in df_2
         df_1, df_2 = self.identify_match_multi_cols(df_1,df_2,cols_to_merge,cols_to_merge,'matched_exact')
-        
-        # Find out whether there is an exact match on the first cleaned column by using the list of unique values from df_2
-        #This is done to seperate out the rows that have an exact match from the ones that don't
-        # df_1['matched_exact_df1_old?'] = df_1['match_id'].apply(lambda x: True if x in df_2.match_id.unique().tolist() else False)
-        # df_2['matched_exact_df2_old?'] = df_2['match_id'].apply(lambda x: True if x in df_1.match_id.unique().tolist() else False)
+
         df_1[matched_col_name] = False
         df_1['matched_fuzzy_df1?'] = False
 
@@ -206,6 +196,7 @@ class UtilityFunctions():
         df_1['match_string'] = df_1[df_1_fuzzy_col].apply(lambda x: self.prepare_string_matching(x))
         df_2['match_string'] = df_2[df_2_fuzzy_col].apply(lambda x: self.prepare_string_matching(x))
         
+        # now create a dataframe of the rows that didn't have an exact match and try and fuzzy match them
         df_1_no_match = df_1[df_1['matched_exact_df1?'] == False]
         
         # Find the unique instances of cleaned captions to be passed to the fuzzy matching function
@@ -220,14 +211,8 @@ class UtilityFunctions():
         # This will be used to merge df_2 onto the remainder of none matching df_1
         df_1_no_match['match_string'] = df_1_no_match["match_string"].map(best_match_dict)
 
-        #Create match_id columns for df_1_no_match and df_2 which concatenates columns together
-        # df_1_no_match = create_id_from_columns(df_1_no_match, cols_to_merge, 'match_id')
-        # df_2 = create_id_from_columns(df_2, cols_to_merge, 'match_id')
-
+        #Identify matches between the two dataframes on cols_to_merge,e.g. is there a row with 'platform' and 'message' in df_1 that matches a row in df_2
         df_1_no_match, df_2 = self.identify_match_multi_cols(df_1_no_match,df_2,cols_to_merge,cols_to_merge,'matched_fuzzy')
-        
-        # df_1_no_match['matched_fuzzy_df1?'] = df_1_no_match['match_id'].apply(lambda x: True if x in df_2.match_id.unique().tolist() else False)
-        # df_2['matched_fuzzy_df2?'] = df_2['match_id'].apply(lambda x: True if x in df_1_no_match.match_id.unique().tolist() else False)
         
         #Fuzzy match merge the rows that didn't match on the exact column
         if merge:
@@ -235,7 +220,8 @@ class UtilityFunctions():
                                         on=cols_to_merge, how='left', tag="Second set of columns fuzzy match")
         
         df_1 = pd.concat([df_1_match, df_1_no_match], ignore_index=True)
-    
+        
+        # The matched_col_name indicates whether a match either exact or fuzzy was found
         df_1[matched_col_name] = df_1.apply(lambda x: True if ((x['matched_exact_df1?'] == True) or (x['matched_fuzzy_df1?'] == True)) else False, axis=1)
         df_2[matched_col_name] = df_2.apply(lambda x: True if ((x['matched_exact_df2?'] == True) or (x['matched_fuzzy_df2?'] == True)) else False, axis=1)
 
@@ -298,11 +284,7 @@ class UtilityFunctions():
                     key = string in list_1, value = string in list_2 """
 
         best_match_dict = {} 
-        stored_best_dict = {} #
-        # if pickle_name != 'NoStore':
-        #     if os.path.isfile(f'Pickled Files/best_match_dict_{pickle_name}'):
-        #         stored_best_dict = unpickle_data(f'best_match_dict_{pickle_name}')
-        #         logger.info(f"loaded dict of len :{len(stored_best_dict)}")
+        stored_best_dict = {}
         
         if json_name != 'NoStore':
             if os.path.isfile(f'JSON Files/best_match_dict_{json_name}'):
@@ -326,15 +308,12 @@ class UtilityFunctions():
             
             #Then go through every string in the second list and fuzzy match to produce a score
             #If the score is below the threshold then set the score to 0
-            #start = time.time()
             temp_match_dict = {}
             for string_2 in list_2:
                 score = fuzz.ratio(string_1, string_2)
                 if score < threshold:
                     score = 0
                 temp_match_dict[string_2] = score
-            # end = time.time()
-            # logger.info(end - start)
             
             #if there were no matches above the threshold then return a match for that 
             #string in list_1 equal to "none"
@@ -349,8 +328,6 @@ class UtilityFunctions():
         if json_name != 'NoStore':
             # Remove matches that didn't find anythign as that will let new values be discovered
             # if new data comes in
-            #best_match_dict_none_removed = {k:v for k,v in best_match_dict.items() if v != 'None'}
-            #pickle_data(best_match_dict,f'best_match_dict_{json_name}')
             self.write_json(best_match_dict,f'best_match_dict_{json_name}','Dictionary')
 
         return best_match_dict
@@ -512,12 +489,14 @@ class UtilityFunctions():
                 #set the cumulative metrics to the same value as the daily metrics
                 df['cum_'+metric] = df[metric]
                 cum_metric_list.append('cum_'+metric)
+            return df
+            
         if isinstance(unique_identifier_cols,list) == False: #if the entry is a string just convert it to a list
             unique_identifier_cols = [unique_identifier_cols]
         # Sort the dataframe by the unique identifier columns and the date the row was added
         df = df.sort_values(by= unique_identifier_cols+[date_row_added_col])
         # Calculate the daily metrics by subtracting the previous day's cumulative metric from the current day's cumulative metric
-        metrics_updated = df.groupby(unique_identifier_cols)[cum_metric_list].transform(lambda x:x.sub(x.shift().fillna(0)))
+        metrics_updated = df.groupby(unique_identifier_cols)[cum_metric_list].transform(lambda x:x.sub(x.shift().fillna(0))).reset_index()
         df[metric_list] = metrics_updated
         df_metrics = df[metric_list]
         # Set negative values to zero, cumulative totals can decrease, potentially due to people accidently liking posts
@@ -537,6 +516,14 @@ class UtilityFunctions():
         return (table_name in all_table_names)
     
     def match_shortcode_to_url(self,shortcode_list, url_list):
+        """Matches a list of shortcodes to a list of urls, creates a dictionary of the matches.
+        
+        Args:
+            shortcode_list (list): A list of shortcodes to match to urls.
+            url_list (list): A list of urls to match to shortcodes.
+        
+        Returns:
+            url_shortcode_dict (dict): A dictionary of the matches between shortcodes and urls."""
         url_shortcode_dict = {}
         for shortcode in shortcode_list:
             if pd.isna(shortcode):
@@ -640,10 +627,9 @@ class UtilityFunctions():
 
     def read_from_gsheet(self,workbook_name, sheet_name,clean_date=True,date_col='EnterValue',
                                 dayfirst='EnterValue',yearfirst='EnterValue',format=None,errors='raise'):
-        
         """Read data from a google sheet and return it as a dataframe.
 
-        Parameters:
+        Args:
             workbook_name (str): The name of the google sheet workbook.
             sheet_name (str): The name of the sheet to read data from.
             clean_date (bool): If true, the 'date_col' column will be converted to datetime format. (default: True)
