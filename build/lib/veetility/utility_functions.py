@@ -15,6 +15,7 @@ import gspread
 import pickle
 import gspread_dataframe as gd
 import os
+import subprocess
 import sqlalchemy as sa
 from unidecode import unidecode
 #%%
@@ -287,7 +288,7 @@ class UtilityFunctions():
         stored_best_dict = {}
         
         if json_name != 'NoStore':
-            if os.path.isfile(f'JSON Files/best_match_dict_{json_name}'):
+            if os.path.isfile(f'JSON Files/best_match_dict_{json_name}.json'):
                 stored_best_dict = self.read_json(f'best_match_dict_{json_name}','Dictionary')
                 logger.info(f"loaded dict of len :{len(stored_best_dict)}")
 
@@ -344,7 +345,9 @@ class UtilityFunctions():
         Returns:
             error_message (str): An error message saying that the connection has failed """
         # create a SQL alchemy engine to write the data to the database after cleaning
-        
+        now = datetime.now()
+        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+        df['DateWrittenToDB'] = dt_string
         error_message = ''
         try:
             now = time.time()
@@ -504,6 +507,36 @@ class UtilityFunctions():
         df[metric_list] = df_metrics
         return df
     
+    def get_active_git_branch(self):
+        """Get the name of the currently active Git branch.
+
+        Raises:
+            RuntimeError: If the active Git branch cannot be found or there's any other error.
+
+        Returns:
+            str: The name of the active Git branch."""
+        try:
+            # Use 'git' command to get the symbolic reference for the HEAD (current branch)
+            # The command is: git symbolic-ref --short HEAD
+            git_branch = subprocess.check_output(
+                ["git", "symbolic-ref", "--short", "HEAD"],
+                stderr=subprocess.STDOUT,
+                universal_newlines=True,
+            ).strip()
+            
+            if not git_branch:
+                raise RuntimeError("No active Git branch found.")
+            
+            return git_branch
+
+        except subprocess.CalledProcessError as e:
+            # Catch the error from the subprocess call
+            raise RuntimeError(f"Error while trying to get active Git branch: {e}")
+
+        except Exception as e:
+            # Catch any other exceptions
+            raise RuntimeError(f"Unexpected error: {e}")
+    
     def table_exists(self, table_name): 
         """Check if a table with the given name exists in the database.
 
@@ -589,6 +622,8 @@ class UtilityFunctions():
         if clean_date:
             df[date_col] = pd.to_datetime(df[date_col], dayfirst=dayfirst, yearfirst=yearfirst,
                                         format=format, errors=errors)
+            print(f'{table_name} min date: {df[date_col].min()}')
+            print(f'{table_name} max date: {df[date_col].max()}')
         return df
 
 
@@ -738,32 +773,6 @@ class UtilityFunctions():
         df.columns = df.columns.str.lower()
         df.columns = df.columns.str.replace(' ','_')
         df.columns = df.columns.str.strip()
-        return df
-
-    def create_id_from_columns(self,df, columns, id_name=None):
-        """Create a new column in a pandas DataFrame as a concatenation of given columns.
-        Args:
-            df (pandas.DataFrame): The dataframe to which the new column will be added
-            columns (List[str]): List of columns to be concatenated
-            id_name (str, optional): Name for the new column. Defaults to None.
-        
-        Returns:
-            pandas.DataFrame: The input DataFrame with the added column"""
-        
-        if id_name == None:
-            id_name = ''
-            for col in columns:
-                id_name += col + '-'
-            id_name = id_name.rstrip('-')
-
-        def concat_cols(x):
-            result = ''
-            for col in columns:
-                x[col] = str(x[col]).lower()
-                result += x[col] + '-'
-            return result.rstrip('-')
-
-        df[id_name] = df.apply(lambda x: concat_cols(x), axis=1)
         return df
 
     def merge_match_perc(self,df_1,df_2,left_on=None,right_on=None,on=None,how='left',tag="",ignore_values_df2=['None','nan','',' ','none']):

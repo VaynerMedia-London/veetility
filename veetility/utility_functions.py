@@ -288,7 +288,7 @@ class UtilityFunctions():
         stored_best_dict = {}
         
         if json_name != 'NoStore':
-            if os.path.isfile(f'JSON Files/best_match_dict_{json_name}'):
+            if os.path.isfile(f'JSON Files/best_match_dict_{json_name}.json'):
                 stored_best_dict = self.read_json(f'best_match_dict_{json_name}','Dictionary')
                 logger.info(f"loaded dict of len :{len(stored_best_dict)}")
 
