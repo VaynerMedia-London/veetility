@@ -27,24 +27,12 @@ emoji_pattern = re.compile("["
                            u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
                            "]+", flags=re.UNICODE)
 
-logger = logging.getLogger('UtilityFunctions')
-if logger.hasHandlers():
-    logger.handlers = []
-if os.path.isdir('logs') == False:
-    os.mkdir('logs')
-logger.setLevel(logging.INFO)
-logger.addHandler(logging.StreamHandler(sys.stdout))
-formatter = logging.Formatter('%(levelname)s %(asctime)s - %(message)s')
-
-file_handler = logging.FileHandler(f'./logs/UtilityFunctions.log')
-file_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
 
 class UtilityFunctions():
 
-    def __init__(self, gspread_auth_dict=None,db_user=None,db_password=None,db_host=None,
+    def __init__(self,client_name,gspread_auth_dict=None,db_user=None,db_password=None,db_host=None,
                         db_port=None,db_name=None):
-        """Initialise a google sheets connector and postgreSQL connector for the utility instance
+        """Initialise a google sheets connector and postgreSQL connector for the utility instance 
 
         This means you can only connect to one google account and one database per instance 
         of the UtilityFunctions class.
@@ -67,22 +55,11 @@ class UtilityFunctions():
             db_user, db_password, db_host, db_port, db_name
             postgres_str = f'postgresql://{self.db_user}:{self.db_password}@{self.db_host}:{self.db_port}/{self.db_name}'
             self.postgresql_engine = sa.create_engine(postgres_str)
-        #if root_path != None:
-        if os.path.isdir('logs') == False:
-            os.mkdir('logs')
-        logger = logging.getLogger('UtilLog')
-        if logger.hasHandlers():
-            logger.handlers = []
-        # if os.path.isdir(f'{root_path}/logs') == False:
-        #     os.mkdir(f'{root_path}/logs')
-        logger.setLevel(logging.INFO)
-        logger.addHandler(logging.StreamHandler(sys.stdout))
-        formatter = logging.Formatter('%(levelname)s %(asctime)s - %(message)s')
-        #file_handler = logging.FileHandler(f'{root_path}/logs/UtilLog.log')
-        file_handler = logging.FileHandler(f'./logs/UtilLog.log')
-        file_handler.setFormatter(formatter)
-        logger.addHandler(file_handler)
-        self.logger = logger
+        
+        #initialise a logger for the utility functions
+        self.logger = Logger(client_name,log_name='utility_functions')
+        
+    
     
     def prepare_string_matching(self, string, is_url=False):
         """Removing unnecessary detail, whitespaces and converting to lower case.
@@ -815,30 +792,30 @@ class UtilityFunctions():
 
 
 class Logger:
-    """A class for handling logging of events.
-    
-    Args:
-        name_of_log (str): The name of the log file"""
+    """A class for handling logging of events."""
 
-    def __init__(self,name_of_log):
-        """Initialize the logger.
+    def __init__(self,client_name,log_name):
+        """Initialise and return the logger
+
         
         Args:
-            name_of_log (str): The name of the log file."""
-        self.name_of_log = name_of_log
-        logger = logging.getLogger(__name__)
-        if logger.hasHandlers():
-            logger.handlers = []
-        if os.path.isdir('logs') == False:
-            os.mkdir('logs')
-        logger.setLevel(logging.INFO)
-        logger.addHandler(logging.StreamHandler(sys.stdout))
-        formatter = logging.Formatter('%(levelname)s %(asctime)s - %(message)s')
-
-        file_handler = logging.FileHandler(f'./logs/{name_of_log}.log')
-        file_handler.setFormatter(formatter)
-        logger.addHandler(file_handler)
-        self.logger = logger
+            client_name (str): The name of the client
+            log_name (str): The name of the log file
+        
+        Returns:
+            logger (logging): A logging object"""
+        
+        #get the log directory from the environment variable
+        base_log_dir = os.environ.get('LOG_DIR')
+        #create a client specific log directory
+        client_log_dir = os.path.join(base_log_dir,client_name)
+        #create the client specific log directory if it doesn't exist
+        os.makedirs(client_log_dir,exist_ok=True) 
+        #create the log file path
+        log_file = os.path.join(client_log_dir,f'{log_name}.log') 
+        logging.basicConfig(filename=log_file, level=logging.INFO, format='%(levelname)s %(asctime)s - %(message)s')
+        self.logger = logging
+        return self.logger
 
 class SlackNotifier:
     """A class that sends a message to a slack channel given a webhook url and optional url links
