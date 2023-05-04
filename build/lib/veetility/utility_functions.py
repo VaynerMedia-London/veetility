@@ -4,7 +4,6 @@ import json
 import pandas as pd
 import regex as re
 import numpy as np
-from datetime import datetime,timedelta
 import time
 from fuzzywuzzy import fuzz
 from tqdm.auto import tqdm
@@ -27,24 +26,12 @@ emoji_pattern = re.compile("["
                            u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
                            "]+", flags=re.UNICODE)
 
-logger = logging.getLogger('UtilityFunctions')
-if logger.hasHandlers():
-    logger.handlers = []
-if os.path.isdir('logs') == False:
-    os.mkdir('logs')
-logger.setLevel(logging.INFO)
-logger.addHandler(logging.StreamHandler(sys.stdout))
-formatter = logging.Formatter('%(levelname)s %(asctime)s - %(message)s')
-
-file_handler = logging.FileHandler(f'./logs/UtilityFunctions.log')
-file_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
 
 class UtilityFunctions():
 
-    def __init__(self, gspread_auth_dict=None,db_user=None,db_password=None,db_host=None,
-                        db_port=None,db_name=None):
-        """Initialise a google sheets connector and postgreSQL connector for the utility instance
+    def __init__(self,client_name,gspread_auth_dict=None,db_user=None,db_password=None,db_host=None,
+                        db_port=None,db_name=None,log_name='utility_functions'):
+        """Initialise a google sheets connector and postgreSQL connector for the utility instance 
 
         This means you can only connect to one google account and one database per instance 
         of the UtilityFunctions class.
@@ -67,22 +54,11 @@ class UtilityFunctions():
             db_user, db_password, db_host, db_port, db_name
             postgres_str = f'postgresql://{self.db_user}:{self.db_password}@{self.db_host}:{self.db_port}/{self.db_name}'
             self.postgresql_engine = sa.create_engine(postgres_str)
-        #if root_path != None:
-        if os.path.isdir('logs') == False:
-            os.mkdir('logs')
-        logger = logging.getLogger('UtilLog')
-        if logger.hasHandlers():
-            logger.handlers = []
-        # if os.path.isdir(f'{root_path}/logs') == False:
-        #     os.mkdir(f'{root_path}/logs')
-        logger.setLevel(logging.INFO)
-        logger.addHandler(logging.StreamHandler(sys.stdout))
-        formatter = logging.Formatter('%(levelname)s %(asctime)s - %(message)s')
-        #file_handler = logging.FileHandler(f'{root_path}/logs/UtilLog.log')
-        file_handler = logging.FileHandler(f'./logs/UtilLog.log')
-        file_handler.setFormatter(formatter)
-        logger.addHandler(file_handler)
-        self.logger = logger
+        self.client_name = client_name
+        #initialise a logger for the utility functions
+        self.logger = Logger(client_name,log_name)
+        
+    
     
     def prepare_string_matching(self, string, is_url=False):
         """Removing unnecessary detail, whitespaces and converting to lower case.
@@ -226,16 +202,16 @@ class UtilityFunctions():
         df_1[matched_col_name] = df_1.apply(lambda x: True if ((x['matched_exact_df1?'] == True) or (x['matched_fuzzy_df1?'] == True)) else False, axis=1)
         df_2[matched_col_name] = df_2.apply(lambda x: True if ((x['matched_exact_df2?'] == True) or (x['matched_fuzzy_df2?'] == True)) else False, axis=1)
 
-        logger.info(f"Num unique exact col values in df_1 = {df_1[df_1_exact_col].nunique()}")
-        logger.info(f"Num unique fuzzy col values in df_1 = {df_1[df_1_fuzzy_col].nunique()}")
-        logger.info(f"Num unique exact col values in df_2 = {df_2[df_2_exact_col].nunique()}")
-        logger.info(f"Num unique fuzzy col values in df_2 = {df_2[df_2_fuzzy_col].nunique()}")
-        logger.info(f"Perc Matched df_1 exact col = {round(df_1['matched_exact_df1?'].sum()*100/df_1.shape[0], 2)}")
-        logger.info(f"Perc Matched df_1 fuzzy col = {round(df_1['matched_fuzzy_df1?'].sum()*100/df_1.shape[0], 2)}")
-        logger.info(f"Perc df_2 exact col could have matched = {round(df_2['matched_exact_df2?'].sum()*100/df_2.shape[0], 2)}")
-        logger.info(f"Perc df_2 fuzzy col could have matched = {round(df_2['matched_fuzzy_df2?'].sum()*100/df_2.shape[0], 2)}")
-        logger.info(f"Perc Matched df_1 matched = {round(df_1[matched_col_name].sum()*100/df_1.shape[0], 2)}")
-        logger.info(f"Perc Matched df_2 matched = {round(df_2[matched_col_name].sum()*100/df_2.shape[0], 2)}")
+        self.logger.logger.info(f"Num unique exact col values in df_1 = {df_1[df_1_exact_col].nunique()}")
+        self.logger.logger.info(f"Num unique fuzzy col values in df_1 = {df_1[df_1_fuzzy_col].nunique()}")
+        self.logger.logger.info(f"Num unique exact col values in df_2 = {df_2[df_2_exact_col].nunique()}")
+        self.logger.logger.info(f"Num unique fuzzy col values in df_2 = {df_2[df_2_fuzzy_col].nunique()}")
+        self.logger.logger.info(f"Perc Matched df_1 exact col = {round(df_1['matched_exact_df1?'].sum()*100/df_1.shape[0], 2)}")
+        self.logger.logger.info(f"Perc Matched df_1 fuzzy col = {round(df_1['matched_fuzzy_df1?'].sum()*100/df_1.shape[0], 2)}")
+        self.logger.logger.info(f"Perc df_2 exact col could have matched = {round(df_2['matched_exact_df2?'].sum()*100/df_2.shape[0], 2)}")
+        self.logger.logger.info(f"Perc df_2 fuzzy col could have matched = {round(df_2['matched_fuzzy_df2?'].sum()*100/df_2.shape[0], 2)}")
+        self.logger.logger.info(f"Perc Matched df_1 matched = {round(df_1[matched_col_name].sum()*100/df_1.shape[0], 2)}")
+        self.logger.logger.info(f"Perc Matched df_2 matched = {round(df_2[matched_col_name].sum()*100/df_2.shape[0], 2)}")
 
         return df_1, df_2
     
@@ -286,11 +262,17 @@ class UtilityFunctions():
 
         best_match_dict = {} 
         stored_best_dict = {}
+        base_log_dir = os.environ.get('LOG_DIR')
+        # Create a client specific log directory
+        client_log_dir = os.path.join(base_log_dir, self.client_name)
+        json_folder = os.path.join(client_log_dir, 'JSON Files')
+        if not os.path.exists(json_folder):
+            os.makedirs(json_folder)
         
         if json_name != 'NoStore':
-            if os.path.isfile(f'JSON Files/best_match_dict_{json_name}.json'):
-                stored_best_dict = self.read_json(f'best_match_dict_{json_name}','Dictionary')
-                logger.info(f"loaded dict of len :{len(stored_best_dict)}")
+            if os.path.exists(os.path.join(json_folder, f'best_match_dict_{json_name}.json')):
+                stored_best_dict = self.read_json(f'best_match_dict_{json_name}','Dictionary',json_folder)
+                self.logger.logger.info(f"loaded dict of len :{len(stored_best_dict)}")
 
         for string_1 in tqdm(list_1):
             
@@ -329,7 +311,7 @@ class UtilityFunctions():
         if json_name != 'NoStore':
             # Remove matches that didn't find anythign as that will let new values be discovered
             # if new data comes in
-            self.write_json(best_match_dict,f'best_match_dict_{json_name}','Dictionary')
+            self.write_json(best_match_dict,f'best_match_dict_{json_name}','Dictionary',json_folder)
 
         return best_match_dict
 
@@ -355,18 +337,18 @@ class UtilityFunctions():
                 df = df.drop('index',axis=1)
             df.to_sql(table_name, con=self.postgresql_engine, index=False, if_exists=if_exists)
             time_taken = round(time.time() - now,2)
-            logger.info(f"Time Taken to write {table_name} = {time_taken}secs")
-            logger.info(f"Sent Data to {table_name}")
+            self.logger.logger.info(f"Time Taken to write {table_name} = {time_taken}secs")
+            self.logger.logger.info(f"Sent Data to {table_name}")
         except Exception as e:
-            logger.info(f"Connection error {e}") 
+            self.logger.logger.info(f"Connection error {e}") 
             time.sleep(10) # wait for 10 seconds then try again
             try:
                 now = time.time()
                 df.to_sql(table_name, con=self.postgresql_engine, index=False, if_exists=if_exists)
                 time_taken = round(time.time() - now,2)
-                logger.info(f"Time Taken to write {table_name} = {time_taken}secs")
+                self.logger.logger.info(f"Time Taken to write {table_name} = {time_taken}secs")
             except Exception as error_message:
-                logger.error(f'Connection failed again {error_message}',exc_info=True)
+                self.logger.logger.error(f'Connection failed again {error_message}',exc_info=True)
                 return f'{table_name} error: ' + str(error_message)
         return error_message
 
@@ -420,18 +402,18 @@ class UtilityFunctions():
         today_datetime = datetime.today()
         today_date = today_datetime.date()
         if require_run_after_hour and (today_datetime.hour < run_after_hour): 
-            logger.info("Require run after hour is set to True and it is before the run after hour time")
+            self.logger.logger.info("Require run after hour is set to True and it is before the run after hour time")
             return
         #Check Tracer data has actually updated
         if self.table_exists(output_table_name):
             old_df = self.read_from_postgresql(output_table_name,clean_date=True,date_col=date_col_name,
                                                dayfirst=dayfirst,yearfirst=yearfirst, format=format, errors=errors)
             if old_df['date_row_added'].max().date() == today_date:
-                logger.info(f"It looks data has already pushed to {output_table_name} today")
+                self.logger.logger.info(f"It looks data has already pushed to {output_table_name} today")
             else:
                 if (df[created_col].max().date() < today_date - timedelta(days=refresh_lag)) and (check_created_col):
                     error_message = "It looks like the input df has not been updated yesterday. Therefore there is no fresh data to add on."
-                    logger.info(error_message)
+                    self.logger.logger.info(error_message)
                     raise Exception(error_message)
                 cutoff_date = today_date - timedelta(days=num_days_to_store)
                 
@@ -594,7 +576,15 @@ class UtilityFunctions():
                 date_param_error_list.append('yearfirst')
             if len(date_param_error_list) > 0:
                 raise Exception(f"The following parameters are required to clean the date column: {date_param_error_list}")
-            
+        
+        def min_max_date(df, date_col,clean_date):
+            if clean_date:
+                df[date_col] = pd.to_datetime(df[date_col], dayfirst=dayfirst, yearfirst=yearfirst,
+                                        format=format, errors=errors)
+                return f'- Min Date: {df[date_col].min()}, Max Date: {df[date_col].max()}'
+            else:
+                return ''
+
         # Connect to the PostgreSQL database
         conn = pg.connect(dbname=self.db_name, host=self.db_host,
                     port=self.db_port, user=self.db_user, password=self.db_password)
@@ -603,27 +593,21 @@ class UtilityFunctions():
             now = time.time()
             df = pd.read_sql_query(f"SELECT * FROM {table_name}", conn)
             time_taken = round(time.time() - now,2)
-            logger.info(f"Time Taken to read {table_name} = {time_taken}secs")
+            self.logger.logger.info(f"Read {table_name} = {time_taken}secs{min_max_date(df, date_col,clean_date)}")
 
         except Exception as error_message:
             # If reading the table fails, log the error and wait 10 seconds before trying again
-            logger.error(f"Read {table_name} error: {error_message}",exc_info=True)
+            self.logger.logger.error(f"Read {table_name} error: {error_message}",exc_info=True)
             time.sleep(10)
 
             now = time.time()
             df = pd.read_sql_query(f"SELECT * FROM {table_name}", conn)
             time_taken = round(time.time() - now,2)
-            logger.info(f"Time Taken to read {table_name} = {time_taken}secs")
+            self.logger.logger.info(f"Time taken to read {table_name} = {time_taken}secs{min_max_date(df, date_col,clean_date)}")
 
         # Close the database connection
         conn.close()
         
-        # If specified, clean the date column
-        if clean_date:
-            df[date_col] = pd.to_datetime(df[date_col], dayfirst=dayfirst, yearfirst=yearfirst,
-                                        format=format, errors=errors)
-            print(f'{table_name} min date: {df[date_col].min()}')
-            print(f'{table_name} max date: {df[date_col].max()}')
         return df
 
 
@@ -654,9 +638,9 @@ class UtilityFunctions():
             # Write the dataframe to the sheet
             gd.set_with_dataframe(sheet, df)
             time_taken = round(time.time() - now,2)
-            logger.info(f"Time Taken to write to google sheet {sheet_name} = {time_taken}secs")
+            self.logger.logger.info(f"Time Taken to write to google sheet {sheet_name} = {time_taken}secs")
         except Exception as error_message:
-            logger.error(error_message,exc_info=True)
+            self.logger.logger.error(error_message,exc_info=True)
             time.sleep(10)
             gd.set_with_dataframe(sheet, df)
 
@@ -679,7 +663,7 @@ class UtilityFunctions():
         try:
             spreadsheet = self.sa.open(workbook_name)
         except Exception as error_message:
-            logger.info(error_message)
+            self.logger.logger.info(error_message)
             time.sleep(10)
             spreadsheet = self.sa.open(workbook_name)
         worksheet = spreadsheet.worksheet(sheet_name)
@@ -747,7 +731,7 @@ class UtilityFunctions():
                 json.dump(object,outfile)
                 outfile.write("\n")
         else:
-            logger.error('JSON write error, file_type error')
+            self.logger.logger.error('JSON write error, file_type error')
     
     def read_json(self,file_name, file_type, folder="JSON Files"):
         """Read a json file and return a Python object.
@@ -766,7 +750,7 @@ class UtilityFunctions():
             with open(f"{folder}/{file_name}.json","r") as infile:
                 return [json.loads(line) for line in infile]
         else:
-            logger.error('JSON read error, file_type error')
+            self.logger.logger.error('JSON read error, file_type error')
 
     def columnnames_to_lowercase(self,df):
         """Change the columns in a dataframe into lowercase with spaces replaced by underscores"""
@@ -808,37 +792,63 @@ class UtilityFunctions():
         num_matches = output_df['_merge'].value_counts()['both']
         match_perc = round(num_matches / df_1_rows_after * 100,1)
 
-        logger.info(f"{tag} df_1 has {df_1_rows_before} rows")
-        logger.info(f'{num_matches} matches, how = {how}, out of {df_1_rows_after} rows ({match_perc}%)')
-        logger.info(f'Rows after minus rows before {df_1_rows_after - df_1_rows_before}\n')
+        self.logger.logger.info(f"{tag} df_1 has {df_1_rows_before} rows")
+        self.logger.logger.info(f'{num_matches} matches, how = {how}, out of {df_1_rows_after} rows ({match_perc}%)')
+        self.logger.logger.info(f'Rows after minus rows before {df_1_rows_after - df_1_rows_before}\n')
         return output_df
 
 
 class Logger:
-    """A class for handling logging of events.
-    
-    Args:
-        name_of_log (str): The name of the log file"""
+    """A class for handling logging of events."""
 
-    def __init__(self,name_of_log):
-        """Initialize the logger.
-        
+    def __init__(self, client_name, log_name):
+        """Initialize the logger
+
         Args:
-            name_of_log (str): The name of the log file."""
-        self.name_of_log = name_of_log
-        logger = logging.getLogger(__name__)
-        if logger.hasHandlers():
-            logger.handlers = []
-        if os.path.isdir('logs') == False:
-            os.mkdir('logs')
-        logger.setLevel(logging.INFO)
-        logger.addHandler(logging.StreamHandler(sys.stdout))
-        formatter = logging.Formatter('%(levelname)s %(asctime)s - %(message)s')
+            client_name (str): The name of the client
+            log_name (str): The name of the log file
+        """
+        # Get the log directory from the environment variable
+        base_log_dir = os.environ.get('LOG_DIR')
 
-        file_handler = logging.FileHandler(f'./logs/{name_of_log}.log')
-        file_handler.setFormatter(formatter)
+        # Create a client specific log directory
+        client_log_dir = os.path.join(base_log_dir, client_name)
+
+        # Create the client specific log directory if it doesn't exist
+        os.makedirs(client_log_dir, exist_ok=True) 
+
+        # Create the log file path
+        log_file = os.path.join(client_log_dir, f'{log_name}.log') 
+
+        # Initialize the logger
+        logger = logging.getLogger(__name__)
+        logger.setLevel(logging.INFO)
+
+        # Check if the logger already has handlers
+        if logger.hasHandlers():
+            logger.handlers.clear()
+
+        # Create a file handler for the logger
+        file_handler = logging.FileHandler(log_file)
+        file_handler.setLevel(logging.INFO)
+
+        # Create a stream handler for the logger
+        stream_handler = logging.StreamHandler(sys.stdout)
+        stream_handler.setLevel(logging.INFO)
+
+        # Create a formatter for the log messages
+        file_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        stream_formatter = logging.Formatter('%(message)s')
+
+        # Set the formatter for the handlers
+        file_handler.setFormatter(file_formatter)
+        stream_handler.setFormatter(stream_formatter)
+
+        # Add the handlers to the logger
         logger.addHandler(file_handler)
-        self.logger = logger
+        logger.addHandler(stream_handler)
+
+        self.logger = logger    
 
 class SlackNotifier:
     """A class that sends a message to a slack channel given a webhook url and optional url links
@@ -947,6 +957,6 @@ class SlackNotifier:
         try:
             requests.post(self.slack_webhook_url, data=json.dumps(payload))
         except Exception as e:
-            logger.error(f"Failed To Send Slack messafe {e}",exc_info=True)
+            self.logger.logger.error(f"Failed To Send Slack messafe {e}",exc_info=True)
 
 # %%
