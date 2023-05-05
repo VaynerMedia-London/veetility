@@ -11,5 +11,7 @@ nav:
   - Other Vayner Libraries: OtherVaynerLibraries.md
   - UtilityFunctions Methods: UtilityFunctions.md
   - SlackNotifier Methods: SlackNotifier.md
+  - Snowflake Methods: snowflake.md
+  - V Lift:  V_lift.md
   - Logger Methods: Logger.md
   - Tutorials: tutorials.md

@@ -7,6 +7,7 @@ veetility/__init__.py
 veetility/point_to_point_regressor.py
 veetility/snowflake.py
 veetility/utility_functions.py
+veetility/v_lift.py
 veetility.egg-info/PKG-INFO
 veetility.egg-info/SOURCES.txt
 veetility.egg-info/dependency_links.txt

@@ -8,7 +8,7 @@ from snowflake.sqlalchemy import URL
 from datetime import datetime
 import time
 from sqlalchemy import create_engine
-import utility_functions as uf
+#import utility_functions as uf
 #%%
 
 
@@ -89,12 +89,12 @@ class Snowflake():
         now = time.time()
 
         if schema ==None:
-            schema = self.default_schema
+            schema = self.schema
         if database == None:
-            database = self.default_database
+            database = self.database
         try:
             #Reassert connection parameters to ensure reliabilty
-            self.reassert_connection_parameters(database,schema)
+            #self.reassert_connection_parameters(database,schema)
             self.session.write_pandas(df, table_name, parallel=8,schema=schema,database=database,
                                       auto_create_table=auto_create_table,overwrite=overwrite)
             time_taken = round(time.time() - now,2)
@@ -113,8 +113,8 @@ class Snowflake():
             except Exception as error_message:
                 print("Connection failed again")
                 #self.logger.error(f'Connection failed again {error_message}',exc_info=True)
-            return f'{table_name} error: ' + error_message
-        return error_message
+                return f'{table_name} error: ' + str(error_message)
+        
 
     def reassert_connection_parameters(self,database,schema):
         '''Function to reassert connection parameters
