@@ -362,6 +362,68 @@
       <p>Calculate the add-on weight of the engagement metric using beta hill function
 if the value is higher than the threshold, return the logit transformed weight, else return 0</p>
 
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>x</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>the engagement metric value</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>inflection</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>the inflection point of the beta hill function</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>w</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>the weight of the engagement metric</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+<td><code>w_value</code></td>          <td>
+                <code>float</code>
+          </td>
+          <td><p>the add-on weight of the engagement metric</p></td>
+        </tr>
+    </tbody>
+  </table>
+
       <details class="quote">
         <summary>Source code in <code>veetility/v_lift.py</code></summary>
         <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 6</span>
@@ -376,11 +438,23 @@ if the value is higher than the threshold, return the logit transformed weight, 
 <span class="normal">15</span>
 <span class="normal">16</span>
 <span class="normal">17</span>
-<span class="normal">18</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">add_on_weight_v2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">inflection</span><span class="p">,</span><span class="n">w</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Calculate the add-on weight of the engagement metric using beta hill function</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">add_on_weight_v2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">inflection</span><span class="p">,</span><span class="n">w</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the add-on weight of the engagement metric using beta hill function</span>
 <span class="sd">    if the value is higher than the threshold, return the logit transformed weight, else return 0</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x (float): the engagement metric value</span>
+<span class="sd">        inflection (float): the inflection point of the beta hill function</span>
+<span class="sd">        w (float): the weight of the engagement metric</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        w_value (float): the add-on weight of the engagement metric&quot;&quot;&quot;</span>
     <span class="n">hill</span><span class="o">=</span><span class="mi">1</span>
     <span class="c1">#print(f&#39;inflection: {inflection}, w: {w}, x: {x}&#39;)</span>
 
@@ -424,8 +498,9 @@ Return a dataframe with all original columns and three results columns: ER, Scor
         <tr>
           <td><code>df</code></td>
           <td>
+                <code>dataframe</code>
           </td>
-          <td><p>dataframe</p></td>
+          <td><p>a dataframe with columns: 'impressions', 'engagement metric 1', 'engagement metric 2', ...</p></td>
           <td>
               <em>required</em>
           </td>
@@ -433,17 +508,19 @@ Return a dataframe with all original columns and three results columns: ER, Scor
         <tr>
           <td><code>metric_list</code></td>
           <td>
+                <code>list</code>
           </td>
-          <td><p>list of engagement columns</p></td>
+          <td><p>a list of engagement metric column names</p></td>
           <td>
               <em>required</em>
           </td>
         </tr>
         <tr>
-          <td><code>note</code></td>
+          <td><code>impression_weight</code></td>
           <td>
+                <code>float</code>
           </td>
-          <td><p>the impression column is called 'Impressions'</p></td>
+          <td><p>the weight of impression in the final score</p></td>
           <td>
               <em>required</em>
           </td>
@@ -451,15 +528,27 @@ Return a dataframe with all original columns and three results columns: ER, Scor
     </tbody>
   </table>
 
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+<td><code>df</code></td>          <td>
+                <code>dataframe</code>
+          </td>
+          <td><p>a dataframe with all original columns and three results columns: ER, Score and V_lift</p></td>
+        </tr>
+    </tbody>
+  </table>
+
       <details class="quote">
         <summary>Source code in <code>veetility/v_lift.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">27</span>
 <span class="normal">28</span>
 <span class="normal">29</span>
 <span class="normal">30</span>
@@ -490,16 +579,24 @@ Return a dataframe with all original columns and three results columns: ER, Scor
 <span class="normal">55</span>
 <span class="normal">56</span>
 <span class="normal">57</span>
-<span class="normal">58</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">v_lift</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">metric_list</span><span class="p">,</span><span class="n">impression_weight</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Calculate the lift value for the engagement columns, </span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">v_lift</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">metric_list</span><span class="p">,</span><span class="n">impression_weight</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the lift value for the engagement columns, </span>
 <span class="sd">    Return a dataframe with all original columns and three results columns: ER, Score and V_lift</span>
 
-<span class="sd">    parameters:</span>
-<span class="sd">      df: dataframe</span>
-<span class="sd">      metric_list: list of engagement columns</span>
-<span class="sd">      note: the impression column is called &#39;Impressions&#39;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    Args:</span>
+<span class="sd">        df (dataframe): a dataframe with columns: &#39;impressions&#39;, &#39;engagement metric 1&#39;, &#39;engagement metric 2&#39;, ...</span>
+<span class="sd">        metric_list (list): a list of engagement metric column names</span>
+<span class="sd">        impression_weight (float): the weight of impression in the final score</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        df (dataframe): a dataframe with all original columns and three results columns: ER, Score and V_lift&quot;&quot;&quot;</span>
 
     <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;impressions&#39;</span><span class="p">:</span><span class="s1">&#39;Impressions&#39;</span><span class="p">},</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">impression_metric_list</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Impressions&#39;</span><span class="p">]</span><span class="o">+</span><span class="n">metric_list</span>
