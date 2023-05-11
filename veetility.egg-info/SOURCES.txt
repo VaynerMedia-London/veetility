@@ -6,6 +6,7 @@ tests/test_prepare_string_matching.py
 veetility/__init__.py
 veetility/point_to_point_regressor.py
 veetility/snowflake.py
+veetility/tiktok_vtr.py
 veetility/utility_functions.py
 veetility/v_lift.py
 veetility.egg-info/PKG-INFO

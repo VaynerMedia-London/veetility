@@ -16,6 +16,16 @@ from sqlalchemy import create_engine
 class Snowflake():
     
     def __init__(self,connection_params_dict,client_name) -> None:
+        """Initialise the snowflake connection with a dictionary of connection parameters.
+
+        Log File is created in the LOG_DIR environment variable with a subdirectory with the name of the client_name
+        
+        Args:
+            connection_params_dict (dict): Dictionary of connection parameters
+            client_name (str): Name of the client, this is used to create a folder in the LOG_DIR environment variable
+        
+        Returns:
+            None"""
         
         self.connection_params_dict = connection_params_dict
 
@@ -31,6 +41,7 @@ class Snowflake():
         #self.logger = Logger(client_name,'snowflake')
     
     def test_snowflake_connection(self):
+        """Function to test the snowflake connection"""
         print(self.session.sql('''SELECT 'Connected!' as STATUS''').collect())
         # Show databases
         df_test = self.session.sql('SHOW DATABASES')
@@ -41,7 +52,14 @@ class Snowflake():
     def get_data_with_URL(self,data_table, schema=None):
         """Function to read Snowflake table using SQLAlchemy
         
-        URL stands for Uniform Resource Locator. It is a reference (an address) to a resource on the Internet."""
+        URL stands for Uniform Resource Locator. It is a reference (an address) to a resource on the Internet.
+        
+        Args:
+            data_table (str): Name of the table to read
+            schema (str, optional): Name of the schema to read from. Defaults to the schema specified on class initialisation.
+        
+        Returns:
+            df: Pandas dataframe of the data read from Snowflake"""
 
         if schema == None:
             schema = self.schema
@@ -64,7 +82,16 @@ class Snowflake():
         return df  
 
     def create_table_from_dataframe(self,df,table_name,database=None, schema=None):
-        '''Define function to create Snowflake table from Pandas dataframe'''
+        '''Define function to create Snowflake table from Pandas dataframe
+        
+        Args:
+            df (dataframe): Pandas dataframe to create table from
+            table_name (str): Name of the table to create
+            database (str, optional): Name of the database to create the table in. Defaults to the database specified on class initialisation.
+            schema (str, optional): Name of the schema to create the table in. Defaults to the schema specified on class initialisation.
+        
+        Returns:
+            None'''
         if schema == None:
             schema = self.schema
         if database == None:
@@ -75,7 +102,15 @@ class Snowflake():
         self.session.sql(f'''CREATE OR REPLACE TABLE "{database}"."{schema}"."{table_name}" AS SELECT * FROM {table_name}''').collect()
     
     def drop_table(self,table_name,database=None, schema=None):
-        '''Function to drop Snowflake table'''
+        '''Function to drop Snowflake table
+        
+        Args:
+            table_name (str): Name of the table to drop
+            database (str, optional): Name of the database to drop the table from. Defaults to the database specified on class initialisation.
+            schema (str, optional): Name of the schema to drop the table from. Defaults to the schema specified on class initialisation.
+        
+        Returns:
+            None'''
         if schema == None:
             schema = self.schema
         if database == None:
@@ -85,7 +120,20 @@ class Snowflake():
     
     def write_df_to_snowflake(self,df,table_name,database=None,schema=None,
                               auto_create_table=False,overwrite=False):
-        '''Truncates (if it exists) or creates new table and inserts the new data into the selcted table'''
+        '''Function to write Pandas dataframe to Snowflake table
+
+        Truncates (if it exists) or creates new table and inserts the new data into the selcted table
+        
+        Args:
+            df (dataframe): Pandas dataframe to write to Snowflake
+            table_name (str): Name of the table to write to
+            database (str, optional): Name of the database to write the table to. Defaults to the database specified on class initialisation.
+            schema (str, optional): Name of the schema to write the table to. Defaults to the schema specified on class initialisation.
+            auto_create_table (bool, optional): If True, creates the table if it does not exist. Defaults to False.
+            overwrite (bool, optional): If True, overwrites the table if it exists. Defaults to False.
+        
+        Returns:
+            None'''
         now = time.time()
 
         if schema ==None:
@@ -118,7 +166,13 @@ class Snowflake():
 
     def reassert_connection_parameters(self,database,schema):
         '''Function to reassert connection parameters
-        This just ensures reliabilty of the connection'''
+        
+        Args:
+            database (str): Name of the database to reassert
+            schema (str): Name of the schema to reassert
+        
+        Returns:
+            None'''
         #.collect() is super important
         self.session.sql(f'''USE WAREHOUSE {self.warehouse}''').collect()
         self.session.sql(f'''USE ROLE {self.role}''').collect()
@@ -127,7 +181,16 @@ class Snowflake():
         self.session.sql(f'''USE SCHEMA {schema}''').collect()
         
     def select_all_snowflake_view(self,database=None, schema=None, view_name="vw_echopark_monthly_summary",print_previews=False):
-        '''Define function to read Snowflake view using Snowpark'''
+        '''Function to read all data from a Snowflake view
+        
+        Args:
+            database (str, optional): Name of the database to read the view from. Defaults to the database specified on class initialisation.
+            schema (str, optional): Name of the schema to read the view from. Defaults to the schema specified on class initialisation.
+            view_name (str, optional): Name of the view to read. Defaults to "vw_echopark_monthly_summary".
+            print_previews (bool, optional): If True, prints the first 5 rows of the view. Defaults to False.
+        
+        Returns:
+            dataframe: Pandas dataframe of the view'''
         if schema == None:
             schema = self.schema
         if database == None:

@@ -4,10 +4,16 @@ import numpy as np
 
 
 def add_on_weight_v2(x,inflection,w):
-    """
-    Calculate the add-on weight of the engagement metric using beta hill function
+    """Calculate the add-on weight of the engagement metric using beta hill function
     if the value is higher than the threshold, return the logit transformed weight, else return 0
-    """
+    
+    Args:
+        x (float): the engagement metric value
+        inflection (float): the inflection point of the beta hill function
+        w (float): the weight of the engagement metric
+    
+    Returns:
+        w_value (float): the add-on weight of the engagement metric"""
     hill=1
     #print(f'inflection: {inflection}, w: {w}, x: {x}')
 
@@ -19,15 +25,16 @@ def add_on_weight_v2(x,inflection,w):
     
 
 def v_lift(df,metric_list,impression_weight):
-    """
-    Calculate the lift value for the engagement columns, 
+    """Calculate the lift value for the engagement columns, 
     Return a dataframe with all original columns and three results columns: ER, Score and V_lift
     
-    parameters:
-      df: dataframe
-      metric_list: list of engagement columns
-      note: the impression column is called 'Impressions'
-    """
+    Args:
+        df (dataframe): a dataframe with columns: 'impressions', 'engagement metric 1', 'engagement metric 2', ...
+        metric_list (list): a list of engagement metric column names
+        impression_weight (float): the weight of impression in the final score
+    
+    Returns:
+        df (dataframe): a dataframe with all original columns and three results columns: ER, Score and V_lift"""
 
     df.rename(columns={'impressions':'Impressions'},inplace=True)
     impression_metric_list=['Impressions']+metric_list

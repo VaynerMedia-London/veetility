@@ -17,7 +17,7 @@ import os
 import subprocess
 import sqlalchemy as sa
 from unidecode import unidecode
-import datetime
+from datetime import datetime,timedelta
 #%%
 
 emoji_pattern = re.compile("["
