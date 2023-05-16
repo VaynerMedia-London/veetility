@@ -5,6 +5,7 @@ import pandas as pd
 # from snowflake.sqlalchemy import URL
 from snowflake.snowpark import Session
 from snowflake.sqlalchemy import URL
+from snowflake.connector.pandas_tools import pd_writer
 from datetime import datetime
 import time
 from sqlalchemy import create_engine
@@ -48,7 +49,8 @@ class Snowflake():
         df_test.show()
         # Show roles
         #self.logger.info(self.session.sql(f'''USE ROLE {self.role}''').collect())
-    
+        print(self.session.sql(f'''USE ROLE {self.role}''').collect())
+
     def get_data_with_URL(self,data_table, schema=None):
         """Function to read Snowflake table using SQLAlchemy
         
@@ -157,9 +159,12 @@ class Snowflake():
                                       auto_create_table=auto_create_table,overwrite=overwrite)
                 time_taken = round(time.time() - now,2)
                 #self.logger.info(f"Time Taken to write {table_name} = {time_taken}secs")
+                print(f"Time Taken to write {table_name} = {time_taken}secs")
                 #self.logger.info(f"Sent Data to {table_name}")
+                print(f"Sent Data to {table_name}")
             except Exception as error_message:
                 print("Connection failed again")
+                print(f'{table_name} error: ' + str(error_message))
                 #self.logger.error(f'Connection failed again {error_message}',exc_info=True)
                 return f'{table_name} error: ' + str(error_message)
         
@@ -199,15 +204,18 @@ class Snowflake():
             #Reassert connection parameters to ensure reliabilty
             self.reassert_connection_parameters(database,schema)
             ##self.logger.info(f'''Reading view {view_name}...''')
+            print(f'''Reading view {view_name}...''')
             data = self.session.sql(f'''SELECT * FROM "{database}"."{schema}"."{view_name}"''').to_pandas()
         except Exception as error_message:
             #self.logger.info(f"Connection error {error_message}")
+            print(f'{view_name} error: ' + error_message)
             time.sleep(10)
             try:
                 #self.logger.info(f'''Reading view {view_name}...''')
                 data = self.session.sql(f'''SELECT * FROM "{database}"."{schema}"."{view_name}"''').to_pandas()
             except Exception as error_message:
                 #self.logger.error(f'Connection failed again {error_message}',exc_info=True)
+                print(f'{view_name} error: ' + error_message)
                 return f'{view_name} error: ' + error_message
         
         # Reindex dataframe
@@ -216,5 +224,6 @@ class Snowflake():
             self.logger.info(f'''Preview of data:\n''')
             self.logger.info(data.head(10))
         #self.logger.info(f'''Reading view {view_name} completed''')
+        print(f'''Reading view {view_name} completed''')
         return data
 # %%
