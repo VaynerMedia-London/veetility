@@ -5,6 +5,7 @@ tests/test_identify_match_multi_cols.py
 tests/test_prepare_string_matching.py
 veetility/__init__.py
 veetility/cleaning_functions.py
+veetility/generic_functions.py
 veetility/matched_qa.py
 veetility/point_to_point_regressor.py
 veetility/quality_assessments.py
