@@ -333,8 +333,9 @@ def two_urls_per_post_to_1(x, target_cols=None):
     """Sometimes there are identical posts posted on the same day. 
     This can be used to return just the url of the post with
     the highest amount of 'impressions' or 'video views'"""
-    if target_col == None:
-        target_col = ['url', 'influencer?']
+    if target_cols is None:
+        target_cols = ['url', 'influencer?']
+
     if x['platform'].iloc[0] != 'TikTok':
         target_col = 'impressions'
         max_score = x['impressions'].max()
@@ -342,8 +343,8 @@ def two_urls_per_post_to_1(x, target_cols=None):
         target_col = 'video_views'
         max_score = x['video_views'].max()
 
-    # return pd.Series(d,index=list(d.keys()))
-    return x[x[target_col] == max_score][target_col]
+    # Return pd.Series(d,index=list(d.keys()))
+    return x[x[target_col] == max_score][target_cols]
 
 
 # for ID_Organic__CA_2022_Q2_USD_ENG_TW
