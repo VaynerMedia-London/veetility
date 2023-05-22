@@ -55,6 +55,8 @@ def clean_column_names(df, hardcode_col_dict = {},errors= 'ignore',cols_no_chang
             column = column
         elif ('created' in column) and (('date' in column) or ('time' in column) or ('video' in column)):
             column = 'date'  # for organic
+        elif ('video_create_time' in column):
+            column = 'post_timestamp'  # TikTok organic
         elif ('like' in column) or ('favorite' in column) or ('reaction' in column):
             column = 'likes'
         elif ('video' not in column) and ('impression' in column) and ('unique' not in column):
@@ -66,7 +68,7 @@ def clean_column_names(df, hardcode_col_dict = {},errors= 'ignore',cols_no_chang
         elif (('adset' in column) or ('group' in column)) and ('name' in column):
             column = 'group_name'
         elif ('ad' in column) and ('name' in column):
-            column = 'ad_name' # for tt_organic
+            column = 'ad_name' # for TikTok organic
         elif ('creative' in column) and ('name' in column):
             column = 'creative_name'
         elif ('video' in column) and ('impression' in column):                       
