@@ -11,7 +11,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.15">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
     
     
       
@@ -19,10 +19,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.113286f1.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.558e4712.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.a0c5b2b5.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.2505c338.min.css">
       
       
 
@@ -432,6 +432,7 @@
                   
 
 
+
 <h1 id="cleaning-functions">"Cleaning Functions"</h1>
 
 
@@ -646,7 +647,9 @@ then other functions in other libraries can work with the dataset.</p>
 <span class="normal">121</span>
 <span class="normal">122</span>
 <span class="normal">123</span>
-<span class="normal">124</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clean_column_names</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">hardcode_col_dict</span> <span class="o">=</span> <span class="p">{},</span><span class="n">errors</span><span class="o">=</span> <span class="s1">&#39;ignore&#39;</span><span class="p">,</span><span class="n">cols_no_change</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;spend&#39;</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;currency&#39;</span><span class="p">,</span> 
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clean_column_names</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">hardcode_col_dict</span> <span class="o">=</span> <span class="p">{},</span><span class="n">errors</span><span class="o">=</span> <span class="s1">&#39;ignore&#39;</span><span class="p">,</span><span class="n">cols_no_change</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;spend&#39;</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;currency&#39;</span><span class="p">,</span> 
                             <span class="s1">&#39;cohort&#39;</span><span class="p">,</span> <span class="s1">&#39;creative_name&#39;</span><span class="p">,</span> <span class="s1">&#39;group_id&#39;</span><span class="p">,</span> <span class="s1">&#39;engagements&#39;</span><span class="p">,</span> <span class="s1">&#39;created&#39;</span><span class="p">,</span> <span class="s1">&#39;ad_id&#39;</span><span class="p">,</span>
                             <span class="s1">&#39;plays&#39;</span><span class="p">,</span> <span class="s1">&#39;saved&#39;</span><span class="p">,</span> <span class="s1">&#39;post_hastags&#39;</span><span class="p">,</span> <span class="s1">&#39;content_type&#39;</span><span class="p">,</span> <span class="s1">&#39;linked_content&#39;</span><span class="p">,</span> <span class="s1">&#39;post_id&#39;</span><span class="p">,</span>
                             <span class="s1">&#39;video_duration&#39;</span><span class="p">,</span> <span class="s1">&#39;average_time_watched&#39;</span><span class="p">,</span> <span class="s1">&#39;total_time_watched&#39;</span><span class="p">,</span>
@@ -682,6 +685,8 @@ then other functions in other libraries can work with the dataset.</p>
             <span class="n">column</span> <span class="o">=</span> <span class="n">column</span>
         <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;created&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">((</span><span class="s1">&#39;date&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;time&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;video&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)):</span>
             <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;date&#39;</span>  <span class="c1"># for organic</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;video_create_time&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
+            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;post_timestamp&#39;</span>  <span class="c1"># TikTok organic</span>
         <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;like&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;favorite&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;reaction&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
             <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;likes&#39;</span>
         <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;video&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;impression&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;unique&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
@@ -693,7 +698,7 @@ then other functions in other libraries can work with the dataset.</p>
         <span class="k">elif</span> <span class="p">((</span><span class="s1">&#39;adset&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;group&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;name&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
             <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;group_name&#39;</span>
         <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;ad&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;name&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;ad_name&#39;</span> <span class="c1"># for tt_organic</span>
+            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;ad_name&#39;</span> <span class="c1"># for TikTok organic</span>
         <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;creative&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;name&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
             <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;creative_name&#39;</span>
         <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;video&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;impression&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>                       
@@ -771,9 +776,7 @@ then other functions in other libraries can work with the dataset.</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">252</span>
-<span class="normal">253</span>
-<span class="normal">254</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">254</span>
 <span class="normal">255</span>
 <span class="normal">256</span>
 <span class="normal">257</span>
@@ -796,7 +799,9 @@ then other functions in other libraries can work with the dataset.</p>
 <span class="normal">274</span>
 <span class="normal">275</span>
 <span class="normal">276</span>
-<span class="normal">277</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clean_media_type</span><span class="p">(</span><span class="n">media_type</span><span class="p">):</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clean_media_type</span><span class="p">(</span><span class="n">media_type</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Clean the media type into a standardised version of media type&quot;&quot;&quot;</span>
     <span class="n">media_type</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">media_type</span><span class="p">)</span>
     <span class="c1"># replace multiple underscores with a single space</span>
@@ -886,9 +891,7 @@ then other functions in other libraries can work with the dataset.</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">280</span>
-<span class="normal">281</span>
-<span class="normal">282</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">282</span>
 <span class="normal">283</span>
 <span class="normal">284</span>
 <span class="normal">285</span>
@@ -902,7 +905,9 @@ then other functions in other libraries can work with the dataset.</p>
 <span class="normal">293</span>
 <span class="normal">294</span>
 <span class="normal">295</span>
-<span class="normal">296</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clean_placement</span><span class="p">(</span><span class="n">placement</span><span class="p">):</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clean_placement</span><span class="p">(</span><span class="n">placement</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Clean a placement string into a standardised placement</span>
 <span class="sd">    Args:</span>
 <span class="sd">        placement (str): A string representing the placement of the post </span>
@@ -944,9 +949,7 @@ presented as having a capital letter midway through the word.</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">202</span>
-<span class="normal">203</span>
-<span class="normal">204</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">204</span>
 <span class="normal">205</span>
 <span class="normal">206</span>
 <span class="normal">207</span>
@@ -955,7 +958,9 @@ presented as having a capital letter midway through the word.</p>
 <span class="normal">210</span>
 <span class="normal">211</span>
 <span class="normal">212</span>
-<span class="normal">213</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clean_platform_name</span><span class="p">(</span><span class="n">platform</span><span class="p">):</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clean_platform_name</span><span class="p">(</span><span class="n">platform</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Cleans platform name, deals with the fact that most platforms </span>
 <span class="sd">    are in the &#39;title&#39; case, i.e. First letter of each word is capitalised</span>
 <span class="sd">    However there are some platforms that have are one word but are usually </span>
@@ -992,9 +997,7 @@ This removes the utm parameters</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">215</span>
-<span class="normal">216</span>
-<span class="normal">217</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">217</span>
 <span class="normal">218</span>
 <span class="normal">219</span>
 <span class="normal">220</span>
@@ -1006,7 +1009,9 @@ This removes the utm parameters</p>
 <span class="normal">226</span>
 <span class="normal">227</span>
 <span class="normal">228</span>
-<span class="normal">229</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clean_url</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clean_url</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Clean the url of the post to produce a string with just</span>
 <span class="sd">        the important information for matching</span>
 <span class="sd">        In he case of Tiktok remove everything after and including the ?</span>
@@ -1043,12 +1048,12 @@ This removes the utm parameters</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">303</span>
-<span class="normal">304</span>
-<span class="normal">305</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">305</span>
 <span class="normal">306</span>
 <span class="normal">307</span>
-<span class="normal">308</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">extract_after_nth_occurrence</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">char</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">extract_after_nth_occurrence</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">char</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts the string between the nth and n+1th occurrence of the character&quot;&quot;&quot;</span>
     <span class="n">extract</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">char</span><span class="p">)[</span><span class="n">n</span><span class="p">]</span>
     <span class="n">extract</span> <span class="o">=</span> <span class="n">extract</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
@@ -1129,9 +1134,7 @@ country Tag abbreviation mostly following the ISO 3166-1 alpha-2 format</p></td>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">126</span>
-<span class="normal">127</span>
-<span class="normal">128</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">128</span>
 <span class="normal">129</span>
 <span class="normal">130</span>
 <span class="normal">131</span>
@@ -1168,7 +1171,9 @@ country Tag abbreviation mostly following the ISO 3166-1 alpha-2 format</p></td>
 <span class="normal">162</span>
 <span class="normal">163</span>
 <span class="normal">164</span>
-<span class="normal">165</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">extract_country_from_string</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">client_name</span><span class="p">,</span> <span class="n">hardcode_dict</span><span class="p">):</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">extract_country_from_string</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">client_name</span><span class="p">,</span> <span class="n">hardcode_dict</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a string containing info identifying a certain </span>
 <span class="sd">    Args:</span>
 <span class="sd">        string : str </span>
@@ -1230,10 +1235,10 @@ country Tag abbreviation mostly following the ISO 3166-1 alpha-2 format</p></td>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">298</span>
-<span class="normal">299</span>
-<span class="normal">300</span>
-<span class="normal">301</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">extract_quarter_from_date</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">extract_quarter_from_date</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts the quarter from the date&quot;&quot;&quot;</span>
     <span class="n">date</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">date</span><span class="o">.</span><span class="n">quarter</span>
@@ -1315,9 +1320,7 @@ None</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">175</span>
-<span class="normal">176</span>
-<span class="normal">177</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">177</span>
 <span class="normal">178</span>
 <span class="normal">179</span>
 <span class="normal">180</span>
@@ -1339,7 +1342,9 @@ None</p>
 <span class="normal">196</span>
 <span class="normal">197</span>
 <span class="normal">198</span>
-<span class="normal">199</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">extract_region_from_country</span><span class="p">(</span><span class="n">country</span><span class="p">):</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">extract_region_from_country</span><span class="p">(</span><span class="n">country</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts the region from the given country.</span>
 
 <span class="sd">    Args:</span>
@@ -1388,13 +1393,13 @@ are essentially the same but one just has a whitespace</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">167</span>
-<span class="normal">168</span>
-<span class="normal">169</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">169</span>
 <span class="normal">170</span>
 <span class="normal">171</span>
 <span class="normal">172</span>
-<span class="normal">173</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">strip_object_columns</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">strip_object_columns</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Strips leading and trailing whitespaces in columns containing strings. </span>
 <span class="sd">        This stops effective duplications when two categories in a column </span>
 <span class="sd">        are essentially the same but one just has a whitespace&quot;&quot;&quot;</span>
@@ -1425,9 +1430,7 @@ the highest amount of 'impressions' or 'video views'</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">332</span>
-<span class="normal">333</span>
-<span class="normal">334</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">334</span>
 <span class="normal">335</span>
 <span class="normal">336</span>
 <span class="normal">337</span>
@@ -1439,12 +1442,16 @@ the highest amount of 'impressions' or 'video views'</p>
 <span class="normal">343</span>
 <span class="normal">344</span>
 <span class="normal">345</span>
-<span class="normal">346</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">two_urls_per_post_to_1</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">target_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">two_urls_per_post_to_1</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">target_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Sometimes there are identical posts posted on the same day. </span>
 <span class="sd">    This can be used to return just the url of the post with</span>
 <span class="sd">    the highest amount of &#39;impressions&#39; or &#39;video views&#39;&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">target_col</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">target_col</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">,</span> <span class="s1">&#39;influencer?&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">target_cols</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">target_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">,</span> <span class="s1">&#39;influencer?&#39;</span><span class="p">]</span>
+
     <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;platform&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;TikTok&#39;</span><span class="p">:</span>
         <span class="n">target_col</span> <span class="o">=</span> <span class="s1">&#39;impressions&#39;</span>
         <span class="n">max_score</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
@@ -1452,8 +1459,8 @@ the highest amount of 'impressions' or 'video views'</p>
         <span class="n">target_col</span> <span class="o">=</span> <span class="s1">&#39;video_views&#39;</span>
         <span class="n">max_score</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;video_views&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
 
-    <span class="c1"># return pd.Series(d,index=list(d.keys()))</span>
-    <span class="k">return</span> <span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="n">target_col</span><span class="p">]</span> <span class="o">==</span> <span class="n">max_score</span><span class="p">][</span><span class="n">target_col</span><span class="p">]</span>
+    <span class="c1"># Return pd.Series(d,index=list(d.keys()))</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="n">target_col</span><span class="p">]</span> <span class="o">==</span> <span class="n">max_score</span><span class="p">][</span><span class="n">target_cols</span><span class="p">]</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
@@ -1478,9 +1485,7 @@ it is a numerical code, sometimes it is alphanumeric</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">231</span>
-<span class="normal">232</span>
-<span class="normal">233</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">233</span>
 <span class="normal">234</span>
 <span class="normal">235</span>
 <span class="normal">236</span>
@@ -1497,7 +1502,9 @@ it is a numerical code, sometimes it is alphanumeric</p>
 <span class="normal">247</span>
 <span class="normal">248</span>
 <span class="normal">249</span>
-<span class="normal">250</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">updated_value_extract</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">updated_value_extract</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract the unique identifier for a post from the url</span>
 <span class="sd">        This format of this code depends on the platform, sometimes</span>
 <span class="sd">        it is a numerical code, sometimes it is alphanumeric&quot;&quot;&quot;</span>
@@ -1540,17 +1547,17 @@ This function converts it into just seconds</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">365</span>
-<span class="normal">366</span>
-<span class="normal">367</span>
-<span class="normal">368</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">368</span>
 <span class="normal">369</span>
 <span class="normal">370</span>
 <span class="normal">371</span>
 <span class="normal">372</span>
 <span class="normal">373</span>
 <span class="normal">374</span>
-<span class="normal">375</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">video_len_toseconds</span><span class="p">(</span><span class="n">len_string</span><span class="p">):</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">video_len_toseconds</span><span class="p">(</span><span class="n">len_string</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Video lengths come through tracer in the format &#39;minute:seconds&#39;, e.g. &#39;1:20&#39; or 80 seconds</span>
 <span class="sd">        This function converts it into just seconds&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
@@ -1611,10 +1618,10 @@ This function converts it into just seconds</p>
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.2a6f1dda.min.js"></script>
+      <script src="../assets/javascripts/bundle.51d95adb.min.js"></script>
       
     
   </body>
