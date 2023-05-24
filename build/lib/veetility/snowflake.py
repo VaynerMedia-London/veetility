@@ -5,6 +5,7 @@ import pandas as pd
 # from snowflake.sqlalchemy import URL
 from snowflake.snowpark import Session
 from snowflake.sqlalchemy import URL
+from snowflake.connector.pandas_tools import pd_writer
 from datetime import datetime
 import time
 from sqlalchemy import create_engine
@@ -50,7 +51,7 @@ class Snowflake():
         #self.logger.info(self.session.sql(f'''USE ROLE {self.role}''').collect())
         print(self.session.sql(f'''USE ROLE {self.role}''').collect())
 
-    def get_data_with_URL(self,data_table, schema=None):
+    def get_data_with_URL(self, data_table, schema=None, chunk_size=200000):
         """Function to read Snowflake table using SQLAlchemy
         
         URL stands for Uniform Resource Locator. It is a reference (an address) to a resource on the Internet.
@@ -58,6 +59,7 @@ class Snowflake():
         Args:
             data_table (str): Name of the table to read
             schema (str, optional): Name of the schema to read from. Defaults to the schema specified on class initialisation.
+            chunk_size (int, optional): Size of the data chunks to read in a single batch. Defaults to 200000.
         
         Returns:
             df: Pandas dataframe of the data read from Snowflake"""
@@ -65,22 +67,33 @@ class Snowflake():
         if schema == None:
             schema = self.schema
 
-        url = URL(user=self.user,
-                password=self.password,
-                account=self.account,
-                warehouse=self.warehouse,
-                database=self.database,
-                schema=schema,
-                role = self.role)
-    
+        url = URL(user=self.user,password=self.password,account=self.account,
+                    warehouse=self.warehouse,database=self.database,schema=schema,role = self.role)
+        
         engine = create_engine(url)
         connection = engine.connect()
 
-        query_data = '''select * from "{}" '''.format(data_table)
+        # count the total number of rows
+        count_query = f"SELECT COUNT(*) FROM {schema}.{data_table}"
+        #count_query = f'''select count(*) from "{data_table}"'''
+        total_rows = pd.read_sql(count_query, connection).values[0][0]
 
-        df = pd.read_sql(query_data, connection)
+        print(f"Total rows in {data_table}: {total_rows}")
+        if total_rows == 0:
+            print("No data in the table.")
+            return pd.DataFrame()
+
+        df = pd.DataFrame()
+
+        # read the data in chunks
+        query_data = f"SELECT * FROM {schema}.{data_table}"
+        #query_data = f'''select * from "{data_table}" '''
+        for chunk in pd.read_sql(query_data, connection, chunksize=chunk_size):
+            df = pd.concat([df, chunk])
+
         df.info
-        return df  
+        return df
+  
 
     def create_table_from_dataframe(self,df,table_name,database=None, schema=None):
         '''Define function to create Snowflake table from Pandas dataframe
@@ -119,8 +132,8 @@ class Snowflake():
         # Drop table
         self.session.sql(f'''DROP TABLE "{database}"."{schema}"."{table_name}"''').collect()
     
-    def write_df_to_snowflake(self,df,table_name,database=None,schema=None,
-                              auto_create_table=False,overwrite=False):
+    def write_df_to_snowflake(self, df, table_name, database=None, schema=None,
+                          auto_create_table=False, overwrite=False, chunk_size=200000):
         '''Function to write Pandas dataframe to Snowflake table
 
         Truncates (if it exists) or creates new table and inserts the new data into the selcted table
@@ -132,40 +145,45 @@ class Snowflake():
             schema (str, optional): Name of the schema to write the table to. Defaults to the schema specified on class initialisation.
             auto_create_table (bool, optional): If True, creates the table if it does not exist. Defaults to False.
             overwrite (bool, optional): If True, overwrites the table if it exists. Defaults to False.
+            chunk_size (int, optional): Size of the data chunks to write in a single batch. Defaults to 200000.
         
         Returns:
             None'''
-        now = time.time()
-
-        if schema ==None:
+        if schema == None:
             schema = self.schema
         if database == None:
             database = self.database
-        try:
-            #Reassert connection parameters to ensure reliabilty
-            #self.reassert_connection_parameters(database,schema)
-            self.session.write_pandas(df, table_name, parallel=8,schema=schema,database=database,
-                                      auto_create_table=auto_create_table,overwrite=overwrite)
-            time_taken = round(time.time() - now,2)
-            #self.logger.info(f"Time Taken to write {table_name} = {time_taken}secs")
-            #self.logger.info(f"Sent Data to {table_name}")
-        except Exception as error_message:
-            #self.logger.info(f"Connection error {error_message}")
-            time.sleep(10) # wait for 10 seconds then try again
+
+        rows = df.shape[0]
+        batches = [df[i:i + chunk_size] for i in range(0, rows, chunk_size)]
+        
+        for i, batch in enumerate(batches):
+            overwrite_batch = overwrite if i == 0 else False  # overwrite for first batch, append for others
+            now = time.time()
+            
             try:
-                now = time.time()
-                self.session.write_pandas(df, table_name, parallel=8,schema=schema,database=database,
-                                      auto_create_table=auto_create_table,overwrite=overwrite)
+                self.session.write_pandas(batch, table_name, parallel=8,schema=schema,database=database,
+                                        auto_create_table=auto_create_table,overwrite=overwrite_batch)
                 time_taken = round(time.time() - now,2)
-                #self.logger.info(f"Time Taken to write {table_name} = {time_taken}secs")
-                print(f"Time Taken to write {table_name} = {time_taken}secs")
-                #self.logger.info(f"Sent Data to {table_name}")
+                print(f"Time Taken to write batch {i+1} to {table_name} = {time_taken}secs")
                 print(f"Sent Data to {table_name}")
+                
             except Exception as error_message:
-                print("Connection failed again")
-                print(f'{table_name} error: ' + str(error_message))
-                #self.logger.error(f'Connection failed again {error_message}',exc_info=True)
-                return f'{table_name} error: ' + str(error_message)
+                print(f"Connection error {error_message}")
+                time.sleep(10)  # wait for 10 seconds then try again
+                try:
+                    now = time.time()
+                    self.session.write_pandas(batch, table_name, parallel=8,schema=schema,database=database,
+                                            auto_create_table=auto_create_table,overwrite=overwrite_batch)
+                    time_taken = round(time.time() - now,2)
+                    print(f"Time Taken to write batch {i+1} to {table_name} = {time_taken}secs")
+                    print(f"Sent Data to {table_name}")
+                    
+                except Exception as error_message:
+                    print("Connection failed again")
+                    print(f'{table_name} error: ' + str(error_message))
+                    return f'{table_name} error: ' + str(error_message) 
+
         
 
     def reassert_connection_parameters(self,database,schema):
