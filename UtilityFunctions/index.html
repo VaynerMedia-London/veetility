@@ -19,7 +19,7 @@
     
     
       
-        <title>Utility Functions Methods - Veetility Docs</title>
+        <title>Utility Functions - Veetility Docs</title>
       
     
     
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Utility Functions Methods
+              Utility Functions
             
           </span>
         </div>
@@ -180,12 +180,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Utility Functions Methods
+          Utility Functions
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Utility Functions Methods
+        Utility Functions
       </a>
       
         
@@ -374,7 +374,7 @@
   
     <li class="md-nav__item">
       <a href="../CleaningFunction.md" class="md-nav__link">
-        Cleaning Functions Methods
+        Cleaning
       </a>
     </li>
   
@@ -389,7 +389,7 @@
   
     <li class="md-nav__item">
       <a href="../QAFunctions/" class="md-nav__link">
-        QA Functions Methods
+        Quality Assessment
       </a>
     </li>
   
@@ -419,7 +419,7 @@
   
     <li class="md-nav__item">
       <a href="../SlackNotifier/" class="md-nav__link">
-        Slack Notifier Methods
+        Slack Notifier
       </a>
     </li>
   
@@ -434,7 +434,7 @@
   
     <li class="md-nav__item">
       <a href="../snowflake/" class="md-nav__link">
-        Snowflake Methods
+        Snowflake
       </a>
     </li>
   
@@ -464,7 +464,7 @@
   
     <li class="md-nav__item">
       <a href="../Logger.md" class="md-nav__link">
-        Logger Methods
+        Logger
       </a>
     </li>
   
@@ -694,7 +694,8 @@
 
         <details class="quote">
           <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 33</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 32</span>
+<span class="normal"> 33</span>
 <span class="normal"> 34</span>
 <span class="normal"> 35</span>
 <span class="normal"> 36</span>
@@ -1864,7 +1865,7 @@
 
                 <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_cumulative_to_daily</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">cumulative_metric_cols</span><span class="p">,</span><span class="n">unique_id_cols</span><span class="p">,</span><span class="s1">&#39;date_row_added&#39;</span><span class="p">)</span>
 
-                <span class="bp">self</span><span class="o">.</span><span class="n">write_to_postgresql</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">output_table_name</span><span class="p">,</span><span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;append&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">write_to_postgresql</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">output_table_name</span><span class="p">,</span><span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span> <span class="c1">#if the table doesn&#39;t exist create it with the whole dataset for the first time</span>
             <span class="n">df</span><span class="p">[</span><span class="n">date_col_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">date_col_name</span><span class="p">],</span> <span class="n">dayfirst</span><span class="o">=</span><span class="n">dayfirst</span><span class="p">,</span> <span class="n">yearfirst</span><span class="o">=</span><span class="n">yearfirst</span><span class="p">,</span>
@@ -1953,6 +1954,7 @@
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="c1"># Catch any other exceptions</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
 
     <span class="k">def</span> <span class="nf">table_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">):</span> 
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if a table with the given name exists in the database.</span>
@@ -2356,7 +2358,8 @@ of the UtilityFunctions class.</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">35</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">34</span>
+<span class="normal">35</span>
 <span class="normal">36</span>
 <span class="normal">37</span>
 <span class="normal">38</span>
@@ -2382,8 +2385,7 @@ of the UtilityFunctions class.</p>
 <span class="normal">58</span>
 <span class="normal">59</span>
 <span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">client_name</span><span class="p">,</span><span class="n">gspread_auth_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">db_user</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">db_password</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">db_host</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="normal">61</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">client_name</span><span class="p">,</span><span class="n">gspread_auth_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">db_user</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">db_password</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">db_host</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">db_port</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">db_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">log_name</span><span class="o">=</span><span class="s1">&#39;utility_functions&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialise a google sheets connector and postgreSQL connector for the utility instance </span>
 
@@ -2510,7 +2512,8 @@ having to do searches on a string if we've already found a match in the past</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">248</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">247</span>
+<span class="normal">248</span>
 <span class="normal">249</span>
 <span class="normal">250</span>
 <span class="normal">251</span>
@@ -2580,8 +2583,7 @@ having to do searches on a string if we've already found a match in the past</p>
 <span class="normal">315</span>
 <span class="normal">316</span>
 <span class="normal">317</span>
-<span class="normal">318</span>
-<span class="normal">319</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">best_fuzzy_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">list_1</span><span class="p">,</span> <span class="n">list_2</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">json_name</span><span class="p">):</span>
+<span class="normal">318</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">best_fuzzy_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">list_1</span><span class="p">,</span> <span class="n">list_2</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">json_name</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Takes in two lists of strings and every string in list_1 is fuzzy matched onto every item in list_2</span>
 <span class="sd">    The fuzzy match of a string in list_1 with a string in list_2 with the highest score will count as the </span>
 <span class="sd">    match as long as it is above the threshold. The match is then stored as a key value pair in a dictionary</span>
@@ -2781,7 +2783,8 @@ having to do searches on a string if we've already found a match in the past</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">447</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">446</span>
+<span class="normal">447</span>
 <span class="normal">448</span>
 <span class="normal">449</span>
 <span class="normal">450</span>
@@ -2826,8 +2829,7 @@ having to do searches on a string if we've already found a match in the past</p>
 <span class="normal">489</span>
 <span class="normal">490</span>
 <span class="normal">491</span>
-<span class="normal">492</span>
-<span class="normal">493</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">convert_cumulative_to_daily</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">,</span><span class="n">metric_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">,</span><span class="s1">&#39;comments&#39;</span><span class="p">,</span><span class="s1">&#39;clicks&#39;</span><span class="p">,</span>
+<span class="normal">492</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">convert_cumulative_to_daily</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">,</span><span class="n">metric_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">,</span><span class="s1">&#39;comments&#39;</span><span class="p">,</span><span class="s1">&#39;clicks&#39;</span><span class="p">,</span>
                                 <span class="s1">&#39;link_clicks&#39;</span><span class="p">,</span><span class="s1">&#39;likes&#39;</span><span class="p">,</span><span class="s1">&#39;saved&#39;</span><span class="p">,</span><span class="s1">&#39;shares&#39;</span><span class="p">,</span><span class="s1">&#39;video_views&#39;</span><span class="p">],</span>
                                 <span class="n">unique_identifier_cols</span><span class="o">=</span><span class="s1">&#39;url&#39;</span><span class="p">,</span><span class="n">date_row_added_col</span><span class="o">=</span><span class="s1">&#39;date_row_added&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert cumulative metrics to daily metrics for a given dataframe.</span>
@@ -2931,7 +2933,8 @@ having to do searches on a string if we've already found a match in the past</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">495</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">494</span>
+<span class="normal">495</span>
 <span class="normal">496</span>
 <span class="normal">497</span>
 <span class="normal">498</span>
@@ -2958,8 +2961,7 @@ having to do searches on a string if we've already found a match in the past</p>
 <span class="normal">519</span>
 <span class="normal">520</span>
 <span class="normal">521</span>
-<span class="normal">522</span>
-<span class="normal">523</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_active_git_branch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">522</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_active_git_branch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the name of the currently active Git branch.</span>
 
 <span class="sd">    Raises:</span>
@@ -3084,7 +3086,8 @@ having to do searches on a string if we've already found a match in the past</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">221</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">220</span>
+<span class="normal">221</span>
 <span class="normal">222</span>
 <span class="normal">223</span>
 <span class="normal">224</span>
@@ -3108,8 +3111,7 @@ having to do searches on a string if we've already found a match in the past</p>
 <span class="normal">242</span>
 <span class="normal">243</span>
 <span class="normal">244</span>
-<span class="normal">245</span>
-<span class="normal">246</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">identify_match_multi_cols</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df_1</span><span class="p">,</span> <span class="n">df_2</span><span class="p">,</span> <span class="n">df_1_cols_to_match</span><span class="p">,</span> <span class="n">df_2_cols_to_match</span><span class="p">,</span> <span class="n">match_col_name</span><span class="p">,</span> <span class="n">exclude_values</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="s1">&#39;nan&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">]):</span>
+<span class="normal">245</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">identify_match_multi_cols</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df_1</span><span class="p">,</span> <span class="n">df_2</span><span class="p">,</span> <span class="n">df_1_cols_to_match</span><span class="p">,</span> <span class="n">df_2_cols_to_match</span><span class="p">,</span> <span class="n">match_col_name</span><span class="p">,</span> <span class="n">exclude_values</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="s1">&#39;nan&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;This function will identify if a row in df_1 is in df_2 based on the columns specified in df_1_cols_to_match and df_2_cols_to_match</span>
 
 <span class="sd">    Args:</span>
@@ -3366,7 +3368,8 @@ need to be is used.</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">103</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">102</span>
+<span class="normal">103</span>
 <span class="normal">104</span>
 <span class="normal">105</span>
 <span class="normal">106</span>
@@ -3481,8 +3484,7 @@ need to be is used.</p>
 <span class="normal">215</span>
 <span class="normal">216</span>
 <span class="normal">217</span>
-<span class="normal">218</span>
-<span class="normal">219</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">match_ads</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df_1</span><span class="p">,</span> <span class="n">df_2</span><span class="p">,</span> <span class="n">df_1_exact_col</span><span class="p">,</span> <span class="n">df_2_exact_col</span><span class="p">,</span> <span class="n">extract_shortcode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="normal">218</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">match_ads</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df_1</span><span class="p">,</span> <span class="n">df_2</span><span class="p">,</span> <span class="n">df_1_exact_col</span><span class="p">,</span> <span class="n">df_2_exact_col</span><span class="p">,</span> <span class="n">extract_shortcode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">df_1_fuzzy_col</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">df_2_fuzzy_col</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_exact_col_link</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
         <span class="n">matched_col_name</span><span class="o">=</span><span class="s1">&#39;boosted&#39;</span><span class="p">,</span> <span class="n">merge</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cols_to_merge</span> <span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
         <span class="n">pickle_name</span><span class="o">=</span><span class="s1">&#39;NoStore&#39;</span><span class="p">):</span>
@@ -4019,7 +4021,8 @@ string : str
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 66</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 65</span>
+<span class="normal"> 66</span>
 <span class="normal"> 67</span>
 <span class="normal"> 68</span>
 <span class="normal"> 69</span>
@@ -4053,8 +4056,7 @@ string : str
 <span class="normal"> 97</span>
 <span class="normal"> 98</span>
 <span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">prepare_string_matching</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">is_url</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="normal">100</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">prepare_string_matching</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">is_url</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Removing unnecessary detail, whitespaces and converting to lower case.</span>
 
 <span class="sd">    Prepare strings for matching say in a merge function by removing unnecessary </span>
@@ -4852,7 +4854,8 @@ was first tracked and when that particular row item was added to the data output
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">358</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">357</span>
+<span class="normal">358</span>
 <span class="normal">359</span>
 <span class="normal">360</span>
 <span class="normal">361</span>
@@ -4937,8 +4940,7 @@ was first tracked and when that particular row item was added to the data output
 <span class="normal">440</span>
 <span class="normal">441</span>
 <span class="normal">442</span>
-<span class="normal">443</span>
-<span class="normal">444</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">store_daily_organic_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">,</span><span class="n">output_table_name</span><span class="p">,</span><span class="n">num_days_to_store</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">date_col_name</span><span class="o">=</span><span class="s1">&#39;date&#39;</span><span class="p">,</span>
+<span class="normal">443</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">store_daily_organic_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">,</span><span class="n">output_table_name</span><span class="p">,</span><span class="n">num_days_to_store</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">date_col_name</span><span class="o">=</span><span class="s1">&#39;date&#39;</span><span class="p">,</span>
                                 <span class="n">dayfirst</span><span class="o">=</span><span class="s2">&quot;EnterValue&quot;</span><span class="p">,</span><span class="n">yearfirst</span><span class="o">=</span><span class="s2">&quot;EnterValue&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">,</span>
                                 <span class="n">check_created_col</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">created_col</span><span class="o">=</span><span class="s1">&#39;created&#39;</span><span class="p">,</span><span class="n">refresh_lag</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                                 <span class="n">cumulative_metric_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">,</span><span class="s1">&#39;reach&#39;</span><span class="p">,</span><span class="s1">&#39;video_views&#39;</span><span class="p">,</span>
@@ -5015,7 +5017,7 @@ was first tracked and when that particular row item was added to the data output
 
             <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_cumulative_to_daily</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">cumulative_metric_cols</span><span class="p">,</span><span class="n">unique_id_cols</span><span class="p">,</span><span class="s1">&#39;date_row_added&#39;</span><span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">write_to_postgresql</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">output_table_name</span><span class="p">,</span><span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;append&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">write_to_postgresql</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">output_table_name</span><span class="p">,</span><span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span> <span class="c1">#if the table doesn&#39;t exist create it with the whole dataset for the first time</span>
         <span class="n">df</span><span class="p">[</span><span class="n">date_col_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">date_col_name</span><span class="p">],</span> <span class="n">dayfirst</span><span class="o">=</span><span class="n">dayfirst</span><span class="p">,</span> <span class="n">yearfirst</span><span class="o">=</span><span class="n">yearfirst</span><span class="p">,</span>
@@ -5571,7 +5573,8 @@ If writing fails it waits 10 seconds then trys again</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">321</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">320</span>
+<span class="normal">321</span>
 <span class="normal">322</span>
 <span class="normal">323</span>
 <span class="normal">324</span>
@@ -5605,8 +5608,7 @@ If writing fails it waits 10 seconds then trys again</p>
 <span class="normal">352</span>
 <span class="normal">353</span>
 <span class="normal">354</span>
-<span class="normal">355</span>
-<span class="normal">356</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">write_to_postgresql</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">,</span><span class="n">table_name</span><span class="p">,</span> <span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">):</span>
+<span class="normal">355</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">write_to_postgresql</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">,</span><span class="n">table_name</span><span class="p">,</span> <span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Writes a dataframe to a PostgreSQL database table using a SQLalchemy engine defined elsewhere.</span>
 <span class="sd">    If writing fails it waits 10 seconds then trys again</span>
 

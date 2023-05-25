@@ -19,7 +19,7 @@
     
     
       
-        <title>QA Functions Methods - Veetility Docs</title>
+        <title>Quality Assessment - Veetility Docs</title>
       
     
     
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              QA Functions Methods
+              Quality Assessment
             
           </span>
         </div>
@@ -171,7 +171,7 @@
   
     <li class="md-nav__item">
       <a href="../UtilityFunctions/" class="md-nav__link">
-        Utility Functions Methods
+        Utility Functions
       </a>
     </li>
   
@@ -186,7 +186,7 @@
   
     <li class="md-nav__item">
       <a href="../CleaningFunction.md" class="md-nav__link">
-        Cleaning Functions Methods
+        Cleaning
       </a>
     </li>
   
@@ -210,12 +210,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          QA Functions Methods
+          Quality Assessment
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        QA Functions Methods
+        Quality Assessment
       </a>
       
         
@@ -276,6 +276,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#veetility.quality_assessments.QualityAssessments.duplicates_qa_plus" class="md-nav__link">
+    duplicates_qa_plus()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#veetility.quality_assessments.QualityAssessments.naming_convention_checker" class="md-nav__link">
     naming_convention_checker()
   </a>
@@ -321,7 +328,7 @@
   
     <li class="md-nav__item">
       <a href="../SlackNotifier/" class="md-nav__link">
-        Slack Notifier Methods
+        Slack Notifier
       </a>
     </li>
   
@@ -336,7 +343,7 @@
   
     <li class="md-nav__item">
       <a href="../snowflake/" class="md-nav__link">
-        Snowflake Methods
+        Snowflake
       </a>
     </li>
   
@@ -366,7 +373,7 @@
   
     <li class="md-nav__item">
       <a href="../Logger.md" class="md-nav__link">
-        Logger Methods
+        Logger
       </a>
     </li>
   
@@ -451,6 +458,13 @@
         <li class="md-nav__item">
   <a href="#veetility.quality_assessments.QualityAssessments.duplicates_qa" class="md-nav__link">
     duplicates_qa()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#veetility.quality_assessments.QualityAssessments.duplicates_qa_plus" class="md-nav__link">
+    duplicates_qa_plus()
   </a>
   
 </li>
@@ -854,7 +868,84 @@
 <span class="normal">381</span>
 <span class="normal">382</span>
 <span class="normal">383</span>
-<span class="normal">384</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">QualityAssessments</span><span class="p">:</span>
+<span class="normal">384</span>
+<span class="normal">385</span>
+<span class="normal">386</span>
+<span class="normal">387</span>
+<span class="normal">388</span>
+<span class="normal">389</span>
+<span class="normal">390</span>
+<span class="normal">391</span>
+<span class="normal">392</span>
+<span class="normal">393</span>
+<span class="normal">394</span>
+<span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">QualityAssessments</span><span class="p">:</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">util_object</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
@@ -1001,6 +1092,11 @@
                                    <span class="n">perc_decrease_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">check_cols_set</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">raise_exceptions</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; This function stores the high level sums for a datatable from the previous run of the script</span>
 <span class="sd">        and if they have reduced or increased too sharply an error is raised.</span>
+
+<span class="sd">        A JSON file is created which stores historical data about the dataframe, the columns present and the</span>
+<span class="sd">        sum of the columns specified in cols_to_check. This can then be used for reference purposes to see if any changes in the totals are</span>
+<span class="sd">        caused by code changes or errors. </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            df (pd.DataFrame): Input dataframe that the historic checks are going to be performed on.</span>
 <span class="sd">            name_of_df (str): Name of the dataframe, this will be used to name a file to save for future comparison.</span>
@@ -1089,6 +1185,78 @@
             <span class="k">if</span> <span class="n">drop_duplicates</span><span class="p">:</span>
                 <span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">subset</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">df</span>
+
+    <span class="k">def</span> <span class="nf">duplicates_qa_plus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">name_of_df</span><span class="p">,</span> <span class="n">perc_dupes_thresh</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cols_to_check</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                        <span class="n">cols_to_add</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;duplicates&#39;</span><span class="p">,</span><span class="n">raise_exceptions</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks for duplicates in a dataframe and returns the duplicates or the dataframe without duplicates.</span>
+
+<span class="sd">        The function first checks to see whether the input dataframe is paid or organic data. If it is paid data then the columns to check for duplicates are</span>
+<span class="sd">        [&#39;date&#39;,&#39;platform&#39;,&#39;country&#39;,&#39;media_type&#39;,&#39;cohort&#39;,&#39;message&#39;,&#39;ad_name&#39;,&#39;spend&#39;].</span>
+
+<span class="sd">        For organic data the standard columns it will check for are [&#39;platform&#39;, &#39;country&#39;,&#39;media_type&#39; ,&#39;message&#39;,&#39;url&#39;]</span>
+
+<span class="sd">        You can specify other columns to check for duplicates by passing a list to the cols_to_check argument. You can also add to the standard columns by passing</span>
+<span class="sd">        a list to the cols_to_add argument.</span>
+
+<span class="sd">        You can specify whether to return the original dataframe with duplicates removed or just the duplicates by passing &#39;duplicates&#39; or &#39;duplicates_removed&#39; to the</span>
+<span class="sd">        return_type argument.</span>
+
+<span class="sd">        If the return type is duplicates_removed, an error message will also be returned, with the error message being blank if no duplicates are found. This can be passed</span>
+<span class="sd">        to a notification function for example.</span>
+
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pd.DataFrame): The Dataframe to be checked for duplicates</span>
+<span class="sd">            name_of_df (str): The name of the dataframe to be used for logging purposes</span>
+<span class="sd">            perc_dupes_thresh (int, optional): The percentage of duplicates that are allowed before an error is raised. Defaults to 3.</span>
+<span class="sd">            cols_to_check (Optional[list], optional): The columns to check for duplicates. Defaults to None.</span>
+<span class="sd">            cols_to_add (Optional[list], optional): The columns to add to the standard cols_to_check to duplicates check. Defaults to None.</span>
+<span class="sd">            return_type (str, optional): The type of return. Either &#39;duplicates&#39; or &#39;duplicates_removed&#39;. Defaults to &#39;duplicates&#39;.</span>
+<span class="sd">            raise_exceptions (bool, optional): If true raise an exception if duplicates are found. Defaults to True.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            Exception: If raise_exceptions = True and duplicates are found</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pd.DataFrame: Returns the duplicates or the dataframe without duplicates depending on the return_type&quot;&quot;&quot;</span>
+
+        <span class="n">num_rows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Num of rows in </span><span class="si">{</span><span class="n">name_of_df</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">num_rows</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">paid_or_organic</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">identify_paid_or_organic</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">cols_to_check</span> <span class="o">==</span><span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">paid_or_organic</span> <span class="o">==</span> <span class="s1">&#39;Paid&#39;</span><span class="p">:</span>
+                <span class="c1">#Include date in paid duplicate check because the same ad is repeated across consequitve days</span>
+                <span class="c1">#Spend is a good indicator of duplicates in paid data</span>
+                <span class="n">cols_to_check</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">,</span><span class="s1">&#39;platform&#39;</span><span class="p">,</span><span class="s1">&#39;country&#39;</span><span class="p">,</span><span class="s1">&#39;media_type&#39;</span><span class="p">,</span><span class="s1">&#39;cohort&#39;</span><span class="p">,</span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="s1">&#39;ad_name&#39;</span><span class="p">,</span><span class="s1">&#39;spend&#39;</span><span class="p">]</span>
+
+            <span class="k">elif</span> <span class="n">paid_or_organic</span> <span class="o">==</span> <span class="s1">&#39;Organic&#39;</span><span class="p">:</span>
+                <span class="n">cols_to_check</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;platform&#39;</span><span class="p">,</span> <span class="s1">&#39;country&#39;</span><span class="p">,</span><span class="s1">&#39;media_type&#39;</span> <span class="p">,</span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="s1">&#39;url&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="s1">&#39;date_row_added&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                    <span class="n">cols_to_check</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;date_row_added&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">cols_to_add</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cols_to_check</span> <span class="o">=</span> <span class="n">cols_to_check</span> <span class="o">+</span> <span class="n">cols_to_add</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">cols_to_check</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">num_duplicates</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">cols_to_check</span><span class="p">[:</span><span class="n">i</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">num_duplicates</span><span class="si">}</span><span class="s1"> - </span><span class="si">{</span><span class="n">name_of_df</span><span class="si">}</span><span class="s1"> - </span><span class="si">{</span><span class="n">cols_to_check</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="n">exceed_thresh</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">cols_to_check</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">*</span><span class="mi">100</span> <span class="o">/</span> <span class="n">num_rows</span> <span class="o">&gt;</span> <span class="n">perc_dupes_thresh</span>
+
+        <span class="k">if</span> <span class="n">exceed_thresh</span><span class="p">:</span>
+            <span class="n">error_message</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Number of duplicates in </span><span class="si">{</span><span class="n">name_of_df</span><span class="si">}</span><span class="s1"> exceeds </span><span class="si">{</span><span class="n">perc_dupes_thresh</span><span class="si">}</span><span class="s1">%&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">error_message</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="k">if</span> <span class="n">raise_exceptions</span> <span class="ow">and</span> <span class="n">exceed_thresh</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">return_type</span> <span class="o">==</span> <span class="s1">&#39;duplicates&#39;</span><span class="p">:</span> 
+            <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">cols_to_check</span><span class="p">,</span><span class="n">keep</span><span class="o">=</span><span class="kc">False</span><span class="p">)]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="n">cols_to_check</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">return_type</span> <span class="o">==</span> <span class="s1">&#39;duplicates_removed&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">cols_to_check</span><span class="p">,</span><span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">error_message</span>
 
 
     <span class="k">def</span> <span class="nf">check_impressions_no_engagements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">,</span><span class="n">gsheet_name</span><span class="p">,</span><span class="n">tab_name</span><span class="o">=</span><span class="s1">&#39;NoImpressionsButEngagements&#39;</span><span class="p">,</span><span class="n">raise_exceptions</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -1749,57 +1917,57 @@ platforms count viral engagements differently.</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/quality_assessments.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">265</span>
-<span class="normal">266</span>
-<span class="normal">267</span>
-<span class="normal">268</span>
-<span class="normal">269</span>
-<span class="normal">270</span>
-<span class="normal">271</span>
-<span class="normal">272</span>
-<span class="normal">273</span>
-<span class="normal">274</span>
-<span class="normal">275</span>
-<span class="normal">276</span>
-<span class="normal">277</span>
-<span class="normal">278</span>
-<span class="normal">279</span>
-<span class="normal">280</span>
-<span class="normal">281</span>
-<span class="normal">282</span>
-<span class="normal">283</span>
-<span class="normal">284</span>
-<span class="normal">285</span>
-<span class="normal">286</span>
-<span class="normal">287</span>
-<span class="normal">288</span>
-<span class="normal">289</span>
-<span class="normal">290</span>
-<span class="normal">291</span>
-<span class="normal">292</span>
-<span class="normal">293</span>
-<span class="normal">294</span>
-<span class="normal">295</span>
-<span class="normal">296</span>
-<span class="normal">297</span>
-<span class="normal">298</span>
-<span class="normal">299</span>
-<span class="normal">300</span>
-<span class="normal">301</span>
-<span class="normal">302</span>
-<span class="normal">303</span>
-<span class="normal">304</span>
-<span class="normal">305</span>
-<span class="normal">306</span>
-<span class="normal">307</span>
-<span class="normal">308</span>
-<span class="normal">309</span>
-<span class="normal">310</span>
-<span class="normal">311</span>
-<span class="normal">312</span>
-<span class="normal">313</span>
-<span class="normal">314</span>
-<span class="normal">315</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_impressions_no_engagements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">,</span><span class="n">gsheet_name</span><span class="p">,</span><span class="n">tab_name</span><span class="o">=</span><span class="s1">&#39;NoImpressionsButEngagements&#39;</span><span class="p">,</span><span class="n">raise_exceptions</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span>
+<span class="normal">384</span>
+<span class="normal">385</span>
+<span class="normal">386</span>
+<span class="normal">387</span>
+<span class="normal">388</span>
+<span class="normal">389</span>
+<span class="normal">390</span>
+<span class="normal">391</span>
+<span class="normal">392</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_impressions_no_engagements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">,</span><span class="n">gsheet_name</span><span class="p">,</span><span class="n">tab_name</span><span class="o">=</span><span class="s1">&#39;NoImpressionsButEngagements&#39;</span><span class="p">,</span><span class="n">raise_exceptions</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Function to check if a row item has engagements but no impressions and no video views. </span>
 <span class="sd">    This shouldn&#39;t happen and is indicative of an error with Tracer but can be valid as some </span>
 <span class="sd">    platforms count viral engagements differently.</span>
@@ -1870,6 +2038,9 @@ platforms count viral engagements differently.</p>
   
       <p>This function stores the high level sums for a datatable from the previous run of the script
 and if they have reduced or increased too sharply an error is raised.</p>
+<p>A JSON file is created which stores historical data about the dataframe, the columns present and the
+sum of the columns specified in cols_to_check. This can then be used for reference purposes to see if any changes in the totals are
+caused by code changes or errors. </p>
 
   <p><strong>Parameters:</strong></p>
   <table>
@@ -2051,10 +2222,20 @@ columns have been added or removed next time, in which case it is deemed an erro
 <span class="normal">240</span>
 <span class="normal">241</span>
 <span class="normal">242</span>
-<span class="normal">243</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">comparison_with_previous_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">,</span><span class="n">name_of_df</span><span class="p">,</span><span class="n">cols_to_check</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">,</span><span class="s1">&#39;likes&#39;</span><span class="p">],</span><span class="n">perc_increase_threshold</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">comparison_with_previous_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">,</span><span class="n">name_of_df</span><span class="p">,</span><span class="n">cols_to_check</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">,</span><span class="s1">&#39;likes&#39;</span><span class="p">],</span><span class="n">perc_increase_threshold</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
                                <span class="n">perc_decrease_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">check_cols_set</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">raise_exceptions</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; This function stores the high level sums for a datatable from the previous run of the script</span>
 <span class="sd">    and if they have reduced or increased too sharply an error is raised.</span>
+
+<span class="sd">    A JSON file is created which stores historical data about the dataframe, the columns present and the</span>
+<span class="sd">    sum of the columns specified in cols_to_check. This can then be used for reference purposes to see if any changes in the totals are</span>
+<span class="sd">    caused by code changes or errors. </span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        df (pd.DataFrame): Input dataframe that the historic checks are going to be performed on.</span>
 <span class="sd">        name_of_df (str): Name of the dataframe, this will be used to name a file to save for future comparison.</span>
@@ -2218,12 +2399,7 @@ columns have been added or removed next time, in which case it is deemed an erro
 
       <details class="quote">
         <summary>Source code in <code>veetility/quality_assessments.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">245</span>
-<span class="normal">246</span>
-<span class="normal">247</span>
-<span class="normal">248</span>
-<span class="normal">249</span>
-<span class="normal">250</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">250</span>
 <span class="normal">251</span>
 <span class="normal">252</span>
 <span class="normal">253</span>
@@ -2235,7 +2411,12 @@ columns have been added or removed next time, in which case it is deemed an erro
 <span class="normal">259</span>
 <span class="normal">260</span>
 <span class="normal">261</span>
-<span class="normal">262</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">duplicates_qa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">df_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span><span class="n">subset</span><span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">drop_duplicates</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">duplicates_qa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">df_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span><span class="n">subset</span><span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">drop_duplicates</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks for duplicates and optionally drops duplicates in a dataframe.</span>
 
 <span class="sd">    Args:</span>
@@ -2253,6 +2434,297 @@ columns have been added or removed next time, in which case it is deemed an erro
         <span class="k">if</span> <span class="n">drop_duplicates</span><span class="p">:</span>
             <span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">subset</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">df</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="veetility.quality_assessments.QualityAssessments.duplicates_qa_plus" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">duplicates_qa_plus</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">name_of_df</span><span class="p">,</span> <span class="n">perc_dupes_thresh</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cols_to_check</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cols_to_add</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;duplicates&#39;</span><span class="p">,</span> <span class="n">raise_exceptions</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Checks for duplicates in a dataframe and returns the duplicates or the dataframe without duplicates.</p>
+<p>The function first checks to see whether the input dataframe is paid or organic data. If it is paid data then the columns to check for duplicates are
+['date','platform','country','media_type','cohort','message','ad_name','spend'].</p>
+<p>For organic data the standard columns it will check for are ['platform', 'country','media_type' ,'message','url']</p>
+<p>You can specify other columns to check for duplicates by passing a list to the cols_to_check argument. You can also add to the standard columns by passing
+a list to the cols_to_add argument.</p>
+<p>You can specify whether to return the original dataframe with duplicates removed or just the duplicates by passing 'duplicates' or 'duplicates_removed' to the
+return_type argument.</p>
+<p>If the return type is duplicates_removed, an error message will also be returned, with the error message being blank if no duplicates are found. This can be passed
+to a notification function for example.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>df</code></td>
+          <td>
+                <code><span title="pandas">pd</span>.<span title="pandas.DataFrame">DataFrame</span></code>
+          </td>
+          <td><p>The Dataframe to be checked for duplicates</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>name_of_df</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>The name of the dataframe to be used for logging purposes</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>perc_dupes_thresh</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>The percentage of duplicates that are allowed before an error is raised. Defaults to 3.</p></td>
+          <td>
+                <code>3</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>cols_to_check</code></td>
+          <td>
+                <code>Optional[list]</code>
+          </td>
+          <td><p>The columns to check for duplicates. Defaults to None.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>cols_to_add</code></td>
+          <td>
+                <code>Optional[list]</code>
+          </td>
+          <td><p>The columns to add to the standard cols_to_check to duplicates check. Defaults to None.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>return_type</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>The type of return. Either 'duplicates' or 'duplicates_removed'. Defaults to 'duplicates'.</p></td>
+          <td>
+                <code>&#39;duplicates&#39;</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>raise_exceptions</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>If true raise an exception if duplicates are found. Defaults to True.</p></td>
+          <td>
+                <code>True</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Raises:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>Exception</code>
+          </td>
+          <td><p>If raise_exceptions = True and duplicates are found</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+          </td>
+          <td><p>pd.DataFrame: Returns the duplicates or the dataframe without duplicates depending on the return_type</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>veetility/quality_assessments.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">duplicates_qa_plus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">name_of_df</span><span class="p">,</span> <span class="n">perc_dupes_thresh</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cols_to_check</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                    <span class="n">cols_to_add</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;duplicates&#39;</span><span class="p">,</span><span class="n">raise_exceptions</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks for duplicates in a dataframe and returns the duplicates or the dataframe without duplicates.</span>
+
+<span class="sd">    The function first checks to see whether the input dataframe is paid or organic data. If it is paid data then the columns to check for duplicates are</span>
+<span class="sd">    [&#39;date&#39;,&#39;platform&#39;,&#39;country&#39;,&#39;media_type&#39;,&#39;cohort&#39;,&#39;message&#39;,&#39;ad_name&#39;,&#39;spend&#39;].</span>
+
+<span class="sd">    For organic data the standard columns it will check for are [&#39;platform&#39;, &#39;country&#39;,&#39;media_type&#39; ,&#39;message&#39;,&#39;url&#39;]</span>
+
+<span class="sd">    You can specify other columns to check for duplicates by passing a list to the cols_to_check argument. You can also add to the standard columns by passing</span>
+<span class="sd">    a list to the cols_to_add argument.</span>
+
+<span class="sd">    You can specify whether to return the original dataframe with duplicates removed or just the duplicates by passing &#39;duplicates&#39; or &#39;duplicates_removed&#39; to the</span>
+<span class="sd">    return_type argument.</span>
+
+<span class="sd">    If the return type is duplicates_removed, an error message will also be returned, with the error message being blank if no duplicates are found. This can be passed</span>
+<span class="sd">    to a notification function for example.</span>
+
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pd.DataFrame): The Dataframe to be checked for duplicates</span>
+<span class="sd">        name_of_df (str): The name of the dataframe to be used for logging purposes</span>
+<span class="sd">        perc_dupes_thresh (int, optional): The percentage of duplicates that are allowed before an error is raised. Defaults to 3.</span>
+<span class="sd">        cols_to_check (Optional[list], optional): The columns to check for duplicates. Defaults to None.</span>
+<span class="sd">        cols_to_add (Optional[list], optional): The columns to add to the standard cols_to_check to duplicates check. Defaults to None.</span>
+<span class="sd">        return_type (str, optional): The type of return. Either &#39;duplicates&#39; or &#39;duplicates_removed&#39;. Defaults to &#39;duplicates&#39;.</span>
+<span class="sd">        raise_exceptions (bool, optional): If true raise an exception if duplicates are found. Defaults to True.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        Exception: If raise_exceptions = True and duplicates are found</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: Returns the duplicates or the dataframe without duplicates depending on the return_type&quot;&quot;&quot;</span>
+
+    <span class="n">num_rows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Num of rows in </span><span class="si">{</span><span class="n">name_of_df</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">num_rows</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">paid_or_organic</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">identify_paid_or_organic</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">cols_to_check</span> <span class="o">==</span><span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">paid_or_organic</span> <span class="o">==</span> <span class="s1">&#39;Paid&#39;</span><span class="p">:</span>
+            <span class="c1">#Include date in paid duplicate check because the same ad is repeated across consequitve days</span>
+            <span class="c1">#Spend is a good indicator of duplicates in paid data</span>
+            <span class="n">cols_to_check</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">,</span><span class="s1">&#39;platform&#39;</span><span class="p">,</span><span class="s1">&#39;country&#39;</span><span class="p">,</span><span class="s1">&#39;media_type&#39;</span><span class="p">,</span><span class="s1">&#39;cohort&#39;</span><span class="p">,</span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="s1">&#39;ad_name&#39;</span><span class="p">,</span><span class="s1">&#39;spend&#39;</span><span class="p">]</span>
+
+        <span class="k">elif</span> <span class="n">paid_or_organic</span> <span class="o">==</span> <span class="s1">&#39;Organic&#39;</span><span class="p">:</span>
+            <span class="n">cols_to_check</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;platform&#39;</span><span class="p">,</span> <span class="s1">&#39;country&#39;</span><span class="p">,</span><span class="s1">&#39;media_type&#39;</span> <span class="p">,</span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="s1">&#39;url&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s1">&#39;date_row_added&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="n">cols_to_check</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;date_row_added&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">cols_to_add</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cols_to_check</span> <span class="o">=</span> <span class="n">cols_to_check</span> <span class="o">+</span> <span class="n">cols_to_add</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">cols_to_check</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">num_duplicates</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">cols_to_check</span><span class="p">[:</span><span class="n">i</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">num_duplicates</span><span class="si">}</span><span class="s1"> - </span><span class="si">{</span><span class="n">name_of_df</span><span class="si">}</span><span class="s1"> - </span><span class="si">{</span><span class="n">cols_to_check</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">exceed_thresh</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">cols_to_check</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">*</span><span class="mi">100</span> <span class="o">/</span> <span class="n">num_rows</span> <span class="o">&gt;</span> <span class="n">perc_dupes_thresh</span>
+
+    <span class="k">if</span> <span class="n">exceed_thresh</span><span class="p">:</span>
+        <span class="n">error_message</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Number of duplicates in </span><span class="si">{</span><span class="n">name_of_df</span><span class="si">}</span><span class="s1"> exceeds </span><span class="si">{</span><span class="n">perc_dupes_thresh</span><span class="si">}</span><span class="s1">%&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">error_message</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="k">if</span> <span class="n">raise_exceptions</span> <span class="ow">and</span> <span class="n">exceed_thresh</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">return_type</span> <span class="o">==</span> <span class="s1">&#39;duplicates&#39;</span><span class="p">:</span> 
+        <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">cols_to_check</span><span class="p">,</span><span class="n">keep</span><span class="o">=</span><span class="kc">False</span><span class="p">)]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="n">cols_to_check</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">return_type</span> <span class="o">==</span> <span class="s1">&#39;duplicates_removed&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">cols_to_check</span><span class="p">,</span><span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">error_message</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
@@ -2424,74 +2896,74 @@ i.e. 'CampaignNameErrors', 'AdGroupNameErrors', 'AdNameErrors'.</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/quality_assessments.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">317</span>
-<span class="normal">318</span>
-<span class="normal">319</span>
-<span class="normal">320</span>
-<span class="normal">321</span>
-<span class="normal">322</span>
-<span class="normal">323</span>
-<span class="normal">324</span>
-<span class="normal">325</span>
-<span class="normal">326</span>
-<span class="normal">327</span>
-<span class="normal">328</span>
-<span class="normal">329</span>
-<span class="normal">330</span>
-<span class="normal">331</span>
-<span class="normal">332</span>
-<span class="normal">333</span>
-<span class="normal">334</span>
-<span class="normal">335</span>
-<span class="normal">336</span>
-<span class="normal">337</span>
-<span class="normal">338</span>
-<span class="normal">339</span>
-<span class="normal">340</span>
-<span class="normal">341</span>
-<span class="normal">342</span>
-<span class="normal">343</span>
-<span class="normal">344</span>
-<span class="normal">345</span>
-<span class="normal">346</span>
-<span class="normal">347</span>
-<span class="normal">348</span>
-<span class="normal">349</span>
-<span class="normal">350</span>
-<span class="normal">351</span>
-<span class="normal">352</span>
-<span class="normal">353</span>
-<span class="normal">354</span>
-<span class="normal">355</span>
-<span class="normal">356</span>
-<span class="normal">357</span>
-<span class="normal">358</span>
-<span class="normal">359</span>
-<span class="normal">360</span>
-<span class="normal">361</span>
-<span class="normal">362</span>
-<span class="normal">363</span>
-<span class="normal">364</span>
-<span class="normal">365</span>
-<span class="normal">366</span>
-<span class="normal">367</span>
-<span class="normal">368</span>
-<span class="normal">369</span>
-<span class="normal">370</span>
-<span class="normal">371</span>
-<span class="normal">372</span>
-<span class="normal">373</span>
-<span class="normal">374</span>
-<span class="normal">375</span>
-<span class="normal">376</span>
-<span class="normal">377</span>
-<span class="normal">378</span>
-<span class="normal">379</span>
-<span class="normal">380</span>
-<span class="normal">381</span>
-<span class="normal">382</span>
-<span class="normal">383</span>
-<span class="normal">384</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">naming_convention_checker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span><span class="n">gsheet_name</span><span class="p">,</span><span class="n">naming_convention</span><span class="p">,</span><span class="n">campaignname_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">adgroupname_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">394</span>
+<span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">naming_convention_checker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span><span class="n">gsheet_name</span><span class="p">,</span><span class="n">naming_convention</span><span class="p">,</span><span class="n">campaignname_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">adgroupname_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
                                 <span class="n">adname_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">campaign_col</span><span class="o">=</span><span class="s1">&#39;campaign_name&#39;</span><span class="p">,</span><span class="n">adgroup_col</span><span class="o">=</span><span class="s1">&#39;group_name&#39;</span><span class="p">,</span><span class="n">adname_col</span><span class="o">=</span><span class="s1">&#39;name&#39;</span><span class="p">,</span>
                                 <span class="n">start_char</span><span class="o">=</span><span class="s1">&#39;_&#39;</span><span class="p">,</span><span class="n">middle_char</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span><span class="n">end_char</span><span class="o">=</span><span class="s1">&#39;_&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks for naming convention errors in a given DataFrame and outputs the errors to a Google Sheet.</span>
