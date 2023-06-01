@@ -8,12 +8,12 @@ plugins:
 
 nav:
   - Getting Started: index.md
-  - Utility Functions Methods: UtilityFunctions.md
-  - Cleaning Functions Methods: CleaningFunction.md
-  - QA Functions Methods: QAFunctions.md
+  - Utility Functions : UtilityFunctions.md
+  - Cleaning : CleaningFunction.md
+  - Quality Assessment: QAFunctions.md
   - View Through Rate: ViewThroughRate.md
-  - Slack Notifier Methods: SlackNotifier.md
-  - Snowflake Methods: snowflake.md
+  - Slack Notifier: SlackNotifier.md
+  - Snowflake : snowflake.md
   - V Lift:  V_lift.md
-  - Logger Methods: Logger.md
+  - Logger : Logger.md
   - Tutorials: tutorials.md

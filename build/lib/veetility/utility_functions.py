@@ -18,6 +18,7 @@ import subprocess
 import sqlalchemy as sa
 from unidecode import unidecode
 from datetime import datetime,timedelta
+
 #%%
 
 emoji_pattern = re.compile("["
@@ -428,9 +429,11 @@ class UtilityFunctions():
                 for metric in cumulative_metric_cols: 
                     df['cum_'+metric] = df[metric]#set the cumulative metrics to the same value as the daily metrics
                 
-                df = self.convert_cumulative_to_daily(df,cumulative_metric_cols,unique_id_cols,'date_row_added')
+                self.write_to_postgresql(df,output_table_name,if_exists='replace')
+
+                daily_df = self.convert_cumulative_to_daily(df,cumulative_metric_cols,unique_id_cols,'date_row_added')
                 
-                self.write_to_postgresql(df,output_table_name,if_exists='append')
+                self.write_to_postgresql(daily_df,output_table_name + '_daily_conv',if_exists='replace')
 
         else: #if the table doesn't exist create it with the whole dataset for the first time
             df[date_col_name] = pd.to_datetime(df[date_col_name], dayfirst=dayfirst, yearfirst=yearfirst,
@@ -438,8 +441,12 @@ class UtilityFunctions():
             df['date_row_added'] = today_datetime
             df['date_first_tracked'] = today_datetime
             df['date_diff'] = (df['date_row_added'] - df[date_col_name]).dt.days
-            df = self.convert_cumulative_to_daily(df,cumulative_metric_cols,unique_id_cols,'date_row_added')
+            
             self.write_to_postgresql(df,output_table_name,if_exists='replace')
+
+            daily_df = self.convert_cumulative_to_daily(df,cumulative_metric_cols,unique_id_cols,'date_row_added')
+            
+            self.write_to_postgresql(daily_df,output_table_name + '_daily_conv',if_exists='replace')
 
 
     def convert_cumulative_to_daily(self,df,metric_list = ['impressions','comments','clicks',
@@ -519,6 +526,7 @@ class UtilityFunctions():
         except Exception as e:
             # Catch any other exceptions
             raise RuntimeError(f"Unexpected error: {e}")
+        
     
     def table_exists(self, table_name): 
         """Check if a table with the given name exists in the database.

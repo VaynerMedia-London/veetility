@@ -1,4 +1,3 @@
-#%%
 import pandas as pd
 import regex as re
 import numpy as np
@@ -173,6 +172,11 @@ class QualityAssessments:
                                    perc_decrease_threshold=0.5, check_cols_set=True,raise_exceptions=False):
         """ This function stores the high level sums for a datatable from the previous run of the script
         and if they have reduced or increased too sharply an error is raised.
+
+        A JSON file is created which stores historical data about the dataframe, the columns present and the
+        sum of the columns specified in cols_to_check. This can then be used for reference purposes to see if any changes in the totals are
+        caused by code changes or errors. 
+
         Args:
             df (pd.DataFrame): Input dataframe that the historic checks are going to be performed on.
             name_of_df (str): Name of the dataframe, this will be used to name a file to save for future comparison.
@@ -204,7 +208,7 @@ class QualityAssessments:
             self.util.write_json(new_dict,f'{name_of_df}_previous_totals',file_type='append',folder='Historic df Comparison (Do Not Delete)/')
             logger.info(f"Creation of {name_of_df}_previous_totals")
             logger.info(new_dict)
-            return
+            return error_message
         else:
             #old_dict = self.util.unpickle_data(f'{name_of_df}_previous_totals',folder='Historic df Comparison (Do Not Delete)')
             old_dict_file = self.util.read_json(f'{name_of_df}_previous_totals',folder='Historic df Comparison (Do Not Delete)',
@@ -261,6 +265,78 @@ class QualityAssessments:
             if drop_duplicates:
                 df.drop_duplicates(subset=subset, inplace=True)
         return df
+    
+    def duplicates_qa_plus(self, df, name_of_df, perc_dupes_thresh=3, cols_to_check=None, 
+                        cols_to_add=None, return_type='duplicates',raise_exceptions=True):
+        """Checks for duplicates in a dataframe and returns the duplicates or the dataframe without duplicates.
+
+        The function first checks to see whether the input dataframe is paid or organic data. If it is paid data then the columns to check for duplicates are
+        ['date','platform','country','media_type','cohort','message','ad_name','spend'].
+
+        For organic data the standard columns it will check for are ['platform', 'country','media_type' ,'message','url']
+
+        You can specify other columns to check for duplicates by passing a list to the cols_to_check argument. You can also add to the standard columns by passing
+        a list to the cols_to_add argument.
+
+        You can specify whether to return the original dataframe with duplicates removed or just the duplicates by passing 'duplicates' or 'duplicates_removed' to the
+        return_type argument.
+
+        If the return type is duplicates_removed, an error message will also be returned, with the error message being blank if no duplicates are found. This can be passed
+        to a notification function for example.
+
+        
+        Args:
+            df (pd.DataFrame): The Dataframe to be checked for duplicates
+            name_of_df (str): The name of the dataframe to be used for logging purposes
+            perc_dupes_thresh (int, optional): The percentage of duplicates that are allowed before an error is raised. Defaults to 3.
+            cols_to_check (Optional[list], optional): The columns to check for duplicates. Defaults to None.
+            cols_to_add (Optional[list], optional): The columns to add to the standard cols_to_check to duplicates check. Defaults to None.
+            return_type (str, optional): The type of return. Either 'duplicates' or 'duplicates_removed'. Defaults to 'duplicates'.
+            raise_exceptions (bool, optional): If true raise an exception if duplicates are found. Defaults to True.
+        
+        Raises:
+            Exception: If raise_exceptions = True and duplicates are found
+        
+        Returns:
+            pd.DataFrame: Returns the duplicates or the dataframe without duplicates depending on the return_type"""
+
+        num_rows = len(df)
+        logger.info(f'Num of rows in {name_of_df} = {num_rows}')
+        paid_or_organic = self.util.identify_paid_or_organic(df)
+        
+        if cols_to_check ==None:
+            if paid_or_organic == 'Paid':
+                #Include date in paid duplicate check because the same ad is repeated across consequitve days
+                #Spend is a good indicator of duplicates in paid data
+                cols_to_check = ['date','platform','country','media_type','cohort','message','ad_name','spend']
+                
+            elif paid_or_organic == 'Organic':
+                cols_to_check = ['platform', 'country','media_type' ,'message','url']
+                if 'date_row_added' in df.columns:
+                    cols_to_check.append('date_row_added')
+        
+        if cols_to_add != None:
+            cols_to_check = cols_to_check + cols_to_add
+        
+        for i in range(2,len(cols_to_check)+1):
+            num_duplicates = df.duplicated(subset=cols_to_check[:i]).sum()
+            logger.info(f'{num_duplicates} - {name_of_df} - {cols_to_check[:i]}')
+        
+        exceed_thresh = df.duplicated(subset=cols_to_check).sum()*100 / num_rows > perc_dupes_thresh
+
+        if exceed_thresh:
+            error_message = f'Number of duplicates in {name_of_df} exceeds {perc_dupes_thresh}%'
+        else:
+            error_message = ''
+
+        if raise_exceptions and exceed_thresh:
+            raise Exception(error_message)
+        
+        elif return_type == 'duplicates': 
+            return df[df.duplicated(subset=cols_to_check,keep=False)].sort_values(by=cols_to_check)
+
+        elif return_type == 'duplicates_removed':
+            return df.drop_duplicates(subset=cols_to_check,inplace=False), error_message
 
     
     def check_impressions_no_engagements(self,df,gsheet_name,tab_name='NoImpressionsButEngagements',raise_exceptions=False):
@@ -384,5 +460,3 @@ class QualityAssessments:
                     output_df[f'{label} ("{tag}")'] = output_df[level[1]].apply(lambda x: return_value(x,tag,acceptable_values))
             self.util.write_to_gsheet(workbook_name = gsheet_name,sheet_name= level[2],df = output_df)
     
-
-# %%
