@@ -1,10 +1,11 @@
-
+#%%
 import pandas as pd
 import regex as re
 import logging
 import os
 import sys
 from unidecode import unidecode
+from collections import Counter
 from . import utility_functions
 
 pickle_path = "Pickled Files/"
@@ -19,7 +20,7 @@ emoji_pattern = re.compile("["
                            u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
                            "]+", flags=re.UNICODE)
 
-def clean_column_names(df, hardcode_col_dict = {}, errors= 'ignore', cols_no_change = ['spend', 'date', 'currency', 
+def clean_column_names(df, name_of_df,hardcode_col_dict = {},errors= 'ignore',cols_no_change = ['spend', 'date', 'currency', 
                             'cohort', 'creative_name', 'group_id', 'engagements', 'created', 'ad_id',
                             'plays', 'saved', 'post_hastags', 'content_type', 'linked_content', 'post_id',
                             'video_duration', 'average_time_watched', 'total_time_watched',
@@ -112,14 +113,14 @@ def clean_column_names(df, hardcode_col_dict = {}, errors= 'ignore', cols_no_cha
         elif('cohort' in column):
             column = 'cohort'
         else:
-            message = f'Column "{column}" is not handled in column cleaning function'
+            message = f'Column "{column}" in {name_of_df} not cleaned'
             if errors == 'raise':
                 raise Exception(message)
             cleaning_logger.logger.info(message)
 
         new_columns.append(column)
     if len(new_columns) != len(set(new_columns)):
-        cleaning_logger.logger.exception(f'Duplicate column names found {sorted(new_columns)}')
+        cleaning_logger.logger.exception(f'Duplicate column names in {name_of_df} : {[item for item, count in Counter(new_columns).items() if count > 1]}')
         raise ValueError
     df.columns = new_columns
 
@@ -336,7 +337,7 @@ def two_urls_per_post_to_1(x, target_cols=None):
     This can be used to return just the url of the post with
     the highest amount of 'impressions' or 'video views'"""
     if target_cols is None:
-        target_cols = ['url', 'influencer?']
+        target_cols =   ['url', 'influencer?']
 
     if x['platform'].iloc[0] != 'TikTok':
         target_col = 'impressions'

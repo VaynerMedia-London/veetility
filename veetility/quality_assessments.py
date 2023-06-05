@@ -32,8 +32,8 @@ class QualityAssessments:
         if util_object != None:
             self.util = util_object
     
-    def null_values_checker(self, df, cols_to_group, cols_to_ignore, gsheet_name, tab_name,
-                    null_definitions=[np.nan, 'N/A', '', 'None'], output_method='gsheet'):
+    def null_values_checker(self,df,cols_to_group,gsheet_name,tab_name,cols_to_ignore=None,
+                            null_definitions=[np.nan,'N/A','','None'],output_method='gsheet'):
         """Takes in a dataframe and columns to groupby and checks how many null values or null equivalents
         there are in the rest of the columns.
             
@@ -41,8 +41,7 @@ class QualityAssessments:
             df (pandas.DataFrame): The Input Dataframe of any type where you want to check for nulls.
             cols_to_group (list of str): The list of columns to perform a groupby operation with the null 
                                         percentage counts will be a percentage of nulls in these groupbys.
-            cols_to_ignore (list of str): The list of columns to not count nulls in, to make the output 
-                                        dataframe smaller perhaps.
+            cols_to_ignore (list of str): The list of columns to ignore when checking for nulls. Default is None.
             gsheet_name (str): The name of the google sheet workbook to pass to the google sheet function.
             tab_name (str): The name of the tab in the google sheet workbook to pass to the google sheet function.
                                             The google sheet must be setup with this tab already created.
@@ -53,6 +52,9 @@ class QualityAssessments:
         Returns:
             null_count_df (pandas.DataFrame): Dataframe showing the percentage of nulls in each column grouped 
                                            by the 'cols_to_group'."""
+        
+        if cols_to_ignore == None:
+            cols_to_ignore = []
 
         for null in null_definitions: 
             df = df.replace(null, 'NullValue')
@@ -322,10 +324,13 @@ class QualityAssessments:
             num_duplicates = df.duplicated(subset=cols_to_check[:i]).sum()
             logger.info(f'{num_duplicates} - {name_of_df} - {cols_to_check[:i]}')
         
-        exceed_thresh = df.duplicated(subset=cols_to_check).sum()*100 / num_rows > perc_dupes_thresh
+        perc_dupes = df.duplicated(subset=cols_to_check).sum()*100 / num_rows
+        exceed_thresh = perc_dupes > perc_dupes_thresh
+
+        logger.info(f'% Dupes of whole subset - {name_of_df} = {perc_dupes}')
 
         if exceed_thresh:
-            error_message = f'Number of duplicates in {name_of_df} exceeds {perc_dupes_thresh}%'
+            error_message = f'% Dupes in {name_of_df} exceeds {perc_dupes_thresh}%'
         else:
             error_message = ''
 
