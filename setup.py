@@ -15,7 +15,7 @@ with open(path.join(HERE, 'README.md'), encoding='utf-8') as f:
 # This call to setup() does all the work
 setup(
     name="veetility",
-    version="0.1.75",
+    version="0.1.77",
     description="Demo library",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -36,8 +36,8 @@ setup(
     ],
     packages=["veetility"],
     include_package_data=True,
-    install_requires=["fuzzywuzzy",'gspread',
-                        "gspread_dataframe","numpy",
-                        "pandas","psycopg2-binary","regex",
-                        "requests","SQLAlchemy","tqdm"]
+    install_requires=["fuzzywuzzy", 'gspread',
+                        "gspread_dataframe", "numpy",
+                        "pandas", "psycopg2-binary", "regex",
+                        "requests", "SQLAlchemy", "tqdm"]
 )

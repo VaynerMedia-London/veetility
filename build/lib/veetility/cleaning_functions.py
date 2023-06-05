@@ -19,7 +19,7 @@ emoji_pattern = re.compile("["
                            u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
                            "]+", flags=re.UNICODE)
 
-def clean_column_names(df, hardcode_col_dict = {},errors= 'ignore',cols_no_change = ['spend', 'date', 'currency', 
+def clean_column_names(df, hardcode_col_dict = {}, errors= 'ignore', cols_no_change = ['spend', 'date', 'currency', 
                             'cohort', 'creative_name', 'group_id', 'engagements', 'created', 'ad_id',
                             'plays', 'saved', 'post_hastags', 'content_type', 'linked_content', 'post_id',
                             'video_duration', 'average_time_watched', 'total_time_watched',
@@ -44,7 +44,7 @@ def clean_column_names(df, hardcode_col_dict = {},errors= 'ignore',cols_no_chang
     new_columns = []
     for column in df.columns:
         column = column.lower()
-        hardcode_col_dict = {k.lower():v for k,v in hardcode_col_dict.items()} #make sure the keys are lowercase
+        hardcode_col_dict = {k.lower():v for k, v in hardcode_col_dict.items()} #make sure the keys are lowercase
         #hardcoded columns, for those unusual columns
         if column in hardcode_col_dict.keys():
             column = hardcode_col_dict[column]
@@ -137,7 +137,7 @@ def extract_country_from_string(string, client_name, hardcode_dict):
         country_code : str 
             country Tag abbreviation mostly following the ISO 3166-1 alpha-2 format"""
     string = str(string).lower().strip()
-    hardcode_dict = {k.lower():v for k,v in hardcode_dict.items()}
+    hardcode_dict = {k.lower():v for k, v in hardcode_dict.items()}
     client_name = client_name.lower()
     # remove all non-alphanumeric characters
     if string in hardcode_dict.keys():

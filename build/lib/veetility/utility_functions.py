@@ -17,7 +17,7 @@ import os
 import subprocess
 import sqlalchemy as sa
 from unidecode import unidecode
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta
 
 #%%
 
@@ -31,8 +31,8 @@ emoji_pattern = re.compile("["
 
 class UtilityFunctions():
 
-    def __init__(self,client_name,gspread_auth_dict=None,db_user=None,db_password=None,db_host=None,
-                        db_port=None,db_name=None,log_name='utility_functions'):
+    def __init__(self, client_name, gspread_auth_dict=None, db_user=None, db_password=None, db_host=None,
+                        db_port=None, db_name=None, log_name='utility_functions'):
         """Initialise a google sheets connector and postgreSQL connector for the utility instance 
 
         This means you can only connect to one google account and one database per instance 
@@ -57,8 +57,8 @@ class UtilityFunctions():
             postgres_str = f'postgresql://{self.db_user}:{self.db_password}@{self.db_host}:{self.db_port}/{self.db_name}'
             self.postgresql_engine = sa.create_engine(postgres_str)
         self.client_name = client_name
-        #initialise a logger for the utility functions
-        self.logger = Logger(client_name,log_name)
+        # Initialise a logger for the utility functions
+        self.logger = Logger(client_name, log_name)
         
     
     
@@ -85,14 +85,14 @@ class UtilityFunctions():
         
         if pd.isna(string):
             return string
-        string = str(string).lower() #convert the input to a string and make it lower case
+        string = str(string).lower() # Convert the input to a string and make it lower case
         if is_url:
             # Remove URLs and characters after the '?'
-            string = string.split('?')[0] # get rid of everything after they start to be utm parameters
+            string = string.split('?')[0] # Get rid of everything after they start to be utm parameters
 
         else: #this is commonly for a post message
             string = string + ' ' # add a space to the end of the string so that the regex below works            
-            string = re.sub(r'(https?://\S+)\s', '', string) # remove URLs up to the first whitespace
+            string = re.sub(r'(https?://\S+)\s', '', string) # Remove URLs up to the first whitespace
 
         string = emoji_pattern.sub(r'', string) # remove emojis
         string = unidecode(string)  # replace non-ASCII characters with their closest ASCII equivalents
@@ -101,7 +101,7 @@ class UtilityFunctions():
 
     def match_ads(self,df_1, df_2, df_1_exact_col, df_2_exact_col, extract_shortcode=False,
             df_1_fuzzy_col=None, df_2_fuzzy_col=None, is_exact_col_link=True, 
-            matched_col_name='boosted', merge=False, cols_to_merge =None, 
+            matched_col_name='boosted', merge=False, cols_to_merge=None, 
             pickle_name='NoStore'):
         """Match row items in df_2 onto row items in df_1 based on two sets of columns,using exact and fuzzy matching.
 
@@ -136,7 +136,7 @@ class UtilityFunctions():
 
         if cols_to_merge == None: cols_to_merge = ['platform']
 
-        if df_1_fuzzy_col == None: #If only oen set of columns then first do an exact match then a fuzzy match on just that set of columns
+        if df_1_fuzzy_col == None: # If only oen set of columns then first do an exact match then a fuzzy match on just that set of columns
             df_1_fuzzy_col = df_1_exact_col
             df_2_fuzzy_col = df_2_exact_col
 
@@ -155,23 +155,23 @@ class UtilityFunctions():
 
         cols_to_merge.append('match_string')
 
-        #Identify matches between the two dataframes on cols_to_merge,e.g. is there a row with 'platform' and 'message' in df_1 that matches a row in df_2
-        df_1, df_2 = self.identify_match_multi_cols(df_1,df_2,cols_to_merge,cols_to_merge,'matched_exact')
+        # Identify matches between the two dataframes on cols_to_merge,e.g. is there a row with 'platform' and 'message' in df_1 that matches a row in df_2
+        df_1, df_2 = self.identify_match_multi_cols(df_1, df_2, cols_to_merge, cols_to_merge, 'matched_exact')
 
         df_1[matched_col_name] = False
         df_1['matched_fuzzy_df1?'] = False
 
         # Split Dataframes up into rows that had a URL match and one where the rows didn't match
         # Then the ones that didn't match will try and be matched with the cleaned caption
-        df_1_match = df_1[df_1['matched_exact_df1?']== True]
+        df_1_match = df_1[df_1['matched_exact_df1?'] == True]
                 
         # Exact column merge match
         # We don't match on match_id because we don't want the cols_to_merge to be duplicated with _x and _y
         if merge:
-            df_1_match = self.merge_match_perc(df_1_match, df_2,on=cols_to_merge, 
-                                                    how='left',tag="First set of columns exact match")
+            df_1_match = self.merge_match_perc(df_1_match, df_2, on=cols_to_merge, 
+                                                    how='left', tag="First set of columns exact match")
         
-        #Now the match string will be based off the column to be fuzzy matched    
+        # Now the match string will be based off the column to be fuzzy matched    
         df_1['match_string'] = df_1[df_1_fuzzy_col].apply(lambda x: self.prepare_string_matching(x))
         df_2['match_string'] = df_2[df_2_fuzzy_col].apply(lambda x: self.prepare_string_matching(x))
         
@@ -184,16 +184,16 @@ class UtilityFunctions():
 
         # the fuzzy match function will return a dictionary of matches for each caption from df_1 with the value
         # being the fuzzy col of df_2 with the best match above a certain percentage threshold similarity
-        best_match_dict = self.best_fuzzy_match(df_1_no_match_unique, df_2_fuzzy_unique, 90, pickle_name)
+        best_match_dict = self.best_fuzzy_match(df_1_no_match_unique, df_2_fuzzy_unique, 80, pickle_name)
 
         # create a column that is the closest match in df_2 for every caption in df_1
         # This will be used to merge df_2 onto the remainder of none matching df_1
         df_1_no_match['match_string'] = df_1_no_match["match_string"].map(best_match_dict)
 
-        #Identify matches between the two dataframes on cols_to_merge,e.g. is there a row with 'platform' and 'message' in df_1 that matches a row in df_2
-        df_1_no_match, df_2 = self.identify_match_multi_cols(df_1_no_match,df_2,cols_to_merge,cols_to_merge,'matched_fuzzy')
+        # Identify matches between the two dataframes on cols_to_merge,e.g. is there a row with 'platform' and 'message' in df_1 that matches a row in df_2
+        df_1_no_match, df_2 = self.identify_match_multi_cols(df_1_no_match, df_2, cols_to_merge, cols_to_merge, 'matched_fuzzy')
         
-        #Fuzzy match merge the rows that didn't match on the exact column
+        # Fuzzy match merge the rows that didn't match on the exact column
         if merge:
             df_1_no_match = self.merge_match_perc(df_1_no_match, df_2.drop([df_2_fuzzy_col, 'matched_exact_df2?', 'matched_fuzzy_df2?'], axis=1),
                                         on=cols_to_merge, how='left', tag="Second set of columns fuzzy match")
@@ -244,7 +244,7 @@ class UtilityFunctions():
 
         return df_1, df_2
 
-    def best_fuzzy_match(self,list_1, list_2, threshold, json_name):
+    def best_fuzzy_match(self, list_1, list_2, threshold, json_name):
         """Takes in two lists of strings and every string in list_1 is fuzzy matched onto every item in list_2
         The fuzzy match of a string in list_1 with a string in list_2 with the highest score will count as the 
         match as long as it is above the threshold. The match is then stored as a key value pair in a dictionary
@@ -273,7 +273,7 @@ class UtilityFunctions():
         
         if json_name != 'NoStore':
             if os.path.exists(os.path.join(json_folder, f'best_match_dict_{json_name}.json')):
-                stored_best_dict = self.read_json(f'best_match_dict_{json_name}','Dictionary',json_folder)
+                stored_best_dict = self.read_json(f'best_match_dict_{json_name}', 'Dictionary', json_folder)
                 self.logger.logger.info(f"loaded dict of len :{len(stored_best_dict)}")
 
         for string_1 in tqdm(list_1):
@@ -313,11 +313,11 @@ class UtilityFunctions():
         if json_name != 'NoStore':
             # Remove matches that didn't find anythign as that will let new values be discovered
             # if new data comes in
-            self.write_json(best_match_dict,f'best_match_dict_{json_name}','Dictionary',json_folder)
+            self.write_json(best_match_dict, f'best_match_dict_{json_name}', 'Dictionary', json_folder)
 
         return best_match_dict
 
-    def write_to_postgresql(self,df,table_name, if_exists='replace'):
+    def write_to_postgresql(self, df, table_name, if_exists='replace'):
         """Writes a dataframe to a PostgreSQL database table using a SQLalchemy engine defined elsewhere.
         If writing fails it waits 10 seconds then trys again
             
@@ -336,29 +336,29 @@ class UtilityFunctions():
         try:
             now = time.time()
             if 'index' in df.columns:
-                df = df.drop('index',axis=1)
+                df = df.drop('index', axis=1)
             df.to_sql(table_name, con=self.postgresql_engine, index=False, if_exists=if_exists)
-            time_taken = round(time.time() - now,2)
+            time_taken = round(time.time() - now, 2)
             self.logger.logger.info(f"Time Taken to write {table_name} = {time_taken}secs")
             self.logger.logger.info(f"Sent Data to {table_name}")
         except Exception as e:
             self.logger.logger.info(f"Connection error {e}") 
-            time.sleep(10) # wait for 10 seconds then try again
+            time.sleep(10) # Wait for 10 seconds then try again
             try:
                 now = time.time()
                 df.to_sql(table_name, con=self.postgresql_engine, index=False, if_exists=if_exists)
                 time_taken = round(time.time() - now,2)
                 self.logger.logger.info(f"Time Taken to write {table_name} = {time_taken}secs")
             except Exception as error_message:
-                self.logger.logger.error(f'Connection failed again {error_message}',exc_info=True)
+                self.logger.logger.error(f'Connection failed again {error_message}', exc_info=True)
                 return f'{table_name} error: ' + str(error_message)
         return error_message
 
-    def store_daily_organic_data(self,df,output_table_name,num_days_to_store=30,date_col_name='date',
-                                    dayfirst="EnterValue",yearfirst="EnterValue", format=None, errors='raise',
-                                    check_created_col=True,created_col='created',refresh_lag=1,
-                                    cumulative_metric_cols=['impressions','reach','video_views',
-                                    'comments','shares'],unique_id_cols=None,
+    def store_daily_organic_data(self, df, output_table_name, num_days_to_store=30, date_col_name='date',
+                                    dayfirst="EnterValue", yearfirst="EnterValue", format=None, errors='raise',
+                                    check_created_col=True, created_col='created', refresh_lag=1,
+                                    cumulative_metric_cols=['impressions', 'reach', 'video_views',
+                                    'comments', 'shares'], unique_id_cols=None,
                                     require_run_after_hour=False, run_after_hour=15):
         """Converts a post level organic dataframe to a daily level dataframe and stores it in a PostGreSQL table.
         
@@ -408,8 +408,8 @@ class UtilityFunctions():
             return
         #Check Tracer data has actually updated
         if self.table_exists(output_table_name):
-            old_df = self.read_from_postgresql(output_table_name,clean_date=True,date_col=date_col_name,
-                                               dayfirst=dayfirst,yearfirst=yearfirst, format=format, errors=errors)
+            old_df = self.read_from_postgresql(output_table_name, clean_date=True, date_col=date_col_name,
+                                               dayfirst=dayfirst, yearfirst=yearfirst, format=format, errors=errors)
             if old_df['date_row_added'].max().date() == today_date:
                 self.logger.logger.info(f"It looks data has already pushed to {output_table_name} today")
             else:
@@ -421,19 +421,19 @@ class UtilityFunctions():
                 
                 df[date_col_name] = pd.to_datetime(df[date_col_name], dayfirst=dayfirst, yearfirst=yearfirst,
                                         format=format, errors=errors)
-                df = df[df[date_col_name].dt.date >=(cutoff_date)]#filter data only after the cutoff date
+                df = df[df[date_col_name].dt.date >= (cutoff_date)] # Filter data only after the cutoff date
                 df['date_row_added'] = today_datetime
                 df['date_diff'] = (df['date_row_added'] - df[date_col_name]).dt.days
                 df['date_first_tracked'] = df.groupby(unique_id_cols)['date_row_added'].transform('min')
-                df = pd.concat([df,old_df])
+                df = pd.concat([df, old_df])
                 for metric in cumulative_metric_cols: 
-                    df['cum_'+metric] = df[metric]#set the cumulative metrics to the same value as the daily metrics
+                    df['cum_'+metric] = df[metric] # Set the cumulative metrics to the same value as the daily metrics
                 
-                self.write_to_postgresql(df,output_table_name,if_exists='replace')
+                self.write_to_postgresql(df, output_table_name, if_exists='replace')
 
-                daily_df = self.convert_cumulative_to_daily(df,cumulative_metric_cols,unique_id_cols,'date_row_added')
+                daily_df = self.convert_cumulative_to_daily(df, cumulative_metric_cols, unique_id_cols, 'date_row_added')
                 
-                self.write_to_postgresql(daily_df,output_table_name + '_daily_conv',if_exists='replace')
+                self.write_to_postgresql(daily_df, output_table_name + '_daily_conv', if_exists='replace')
 
         else: #if the table doesn't exist create it with the whole dataset for the first time
             df[date_col_name] = pd.to_datetime(df[date_col_name], dayfirst=dayfirst, yearfirst=yearfirst,
@@ -442,16 +442,16 @@ class UtilityFunctions():
             df['date_first_tracked'] = today_datetime
             df['date_diff'] = (df['date_row_added'] - df[date_col_name]).dt.days
             
-            self.write_to_postgresql(df,output_table_name,if_exists='replace')
+            self.write_to_postgresql(df, output_table_name, if_exists='replace')
 
-            daily_df = self.convert_cumulative_to_daily(df,cumulative_metric_cols,unique_id_cols,'date_row_added')
+            daily_df = self.convert_cumulative_to_daily(df, cumulative_metric_cols, unique_id_cols, 'date_row_added')
             
-            self.write_to_postgresql(daily_df,output_table_name + '_daily_conv',if_exists='replace')
+            self.write_to_postgresql(daily_df, output_table_name + '_daily_conv', if_exists='replace')
 
 
-    def convert_cumulative_to_daily(self,df,metric_list = ['impressions','comments','clicks',
-                                    'link_clicks','likes','saved','shares','video_views'],
-                                    unique_identifier_cols='url',date_row_added_col='date_row_added'):
+    def convert_cumulative_to_daily(self, df, metric_list = ['impressions', 'comments', 'clicks',
+                                    'link_clicks', 'likes', 'saved', 'shares', 'video_views'],
+                                    unique_identifier_cols='url', date_row_added_col='date_row_added'):
         """Convert cumulative metrics to daily metrics for a given dataframe.
 
         Args:
@@ -464,7 +464,7 @@ class UtilityFunctions():
             df (DataFrame): The dataframe with the cumulative metrics converted to daily metrics"""
         
         #rename the metric list to create by appending 'cum_' to the start of each metric
-        cum_metric_list = ['cum_'+metric for metric in metric_list]
+        cum_metric_list = ['cum_' + metric for metric in metric_list]
         #Check if the cumulative metrics have been calculated before
         if any(['cum_' in x for x in df.columns]):
             conversion_run_before = True
@@ -477,23 +477,23 @@ class UtilityFunctions():
 
         if conversion_run_before == False:
             # If the cumulative metrics have not been calculated before then 
-            # duplicate the metrics from the dataframe as by default the metrics are cumulative
+            # Duplicate the metrics from the dataframe as by default the metrics are cumulative
             for metric in metric_list:
                 #set the cumulative metrics to the same value as the daily metrics
-                df['cum_'+metric] = df[metric]
-                cum_metric_list.append('cum_'+metric)
+                df['cum_' + metric] = df[metric]
+                cum_metric_list.append('cum_' + metric)
             return df
             
-        if isinstance(unique_identifier_cols,list) == False: #if the entry is a string just convert it to a list
+        if isinstance(unique_identifier_cols, list) == False: # If the entry is a string just convert it to a list
             unique_identifier_cols = [unique_identifier_cols]
         # Sort the dataframe by the unique identifier columns and the date the row was added
-        df = df.sort_values(by= unique_identifier_cols+[date_row_added_col])
+        df = df.sort_values(by=unique_identifier_cols+[date_row_added_col])
         # Calculate the daily metrics by subtracting the previous day's cumulative metric from the current day's cumulative metric
         metrics_updated = df.groupby(unique_identifier_cols)[cum_metric_list].transform(lambda x:x.sub(x.shift().fillna(0))).reset_index()
         df[metric_list] = metrics_updated
         df_metrics = df[metric_list]
         # Set negative values to zero, cumulative totals can decrease, potentially due to people accidently liking posts
-        df_metrics[df_metrics <0] = 0
+        df_metrics[df_metrics < 0] = 0
         df[metric_list] = df_metrics
         return df
     
@@ -539,7 +539,7 @@ class UtilityFunctions():
         all_table_names = sa.inspect(self.postgresql_engine).get_table_names()
         return (table_name in all_table_names)
     
-    def match_shortcode_to_url(self,shortcode_list, url_list):
+    def match_shortcode_to_url(self, shortcode_list, url_list):
         """Matches a list of shortcodes to a list of urls, creates a dictionary of the matches.
         
         Args:
@@ -586,7 +586,7 @@ class UtilityFunctions():
             if len(date_param_error_list) > 0:
                 raise Exception(f"The following parameters are required to clean the date column: {date_param_error_list}")
         
-        def min_max_date(df, date_col,clean_date):
+        def min_max_date(df, date_col, clean_date):
             if clean_date:
                 df[date_col] = pd.to_datetime(df[date_col], dayfirst=dayfirst, yearfirst=yearfirst,
                                         format=format, errors=errors)
@@ -601,18 +601,18 @@ class UtilityFunctions():
             # Try to read the table
             now = time.time()
             df = pd.read_sql_query(f"SELECT * FROM {table_name}", conn)
-            time_taken = round(time.time() - now,2)
-            self.logger.logger.info(f"Read {table_name} = {time_taken}secs{min_max_date(df, date_col,clean_date)}")
+            time_taken = round(time.time() - now, 2)
+            self.logger.logger.info(f"Read {table_name} = {time_taken}secs{min_max_date(df, date_col, clean_date)}")
 
         except Exception as error_message:
             # If reading the table fails, log the error and wait 10 seconds before trying again
-            self.logger.logger.error(f"Read {table_name} error: {error_message}",exc_info=True)
+            self.logger.logger.error(f"Read {table_name} error: {error_message}", exc_info=True)
             time.sleep(10)
 
             now = time.time()
             df = pd.read_sql_query(f"SELECT * FROM {table_name}", conn)
             time_taken = round(time.time() - now,2)
-            self.logger.logger.info(f"Time taken to read {table_name} = {time_taken}secs{min_max_date(df, date_col,clean_date)}")
+            self.logger.logger.info(f"Time taken to read {table_name} = {time_taken}secs{min_max_date(df, date_col, clean_date)}")
 
         # Close the database connection
         conn.close()
@@ -649,12 +649,12 @@ class UtilityFunctions():
             time_taken = round(time.time() - now,2)
             self.logger.logger.info(f"Time Taken to write to google sheet {sheet_name} = {time_taken}secs")
         except Exception as error_message:
-            self.logger.logger.error(error_message,exc_info=True)
+            self.logger.logger.error(error_message, exc_info=True)
             time.sleep(10)
             gd.set_with_dataframe(sheet, df)
 
-    def read_from_gsheet(self,workbook_name, sheet_name,clean_date=True,date_col='EnterValue',
-                                dayfirst='EnterValue',yearfirst='EnterValue',format=None,errors='raise'):
+    def read_from_gsheet(self, workbook_name, sheet_name, clean_date=True, date_col='EnterValue',
+                                dayfirst='EnterValue', yearfirst='EnterValue', format=None, errors='raise'):
         """Read data from a google sheet and return it as a dataframe.
 
         Args:
@@ -678,22 +678,22 @@ class UtilityFunctions():
         worksheet = spreadsheet.worksheet(sheet_name)
         df = pd.DataFrame(worksheet.get_all_records())
         if clean_date:
-            df[date_col] = pd.to_datetime(df[date_col],dayfirst=dayfirst,yearfirst=yearfirst,
-                                            format=format,errors=errors)
+            df[date_col] = pd.to_datetime(df[date_col], dayfirst=dayfirst, yearfirst=yearfirst,
+                                            format=format, errors=errors)
         return df
 
     
-    def identify_paid_or_organic(self,df):
+    def identify_paid_or_organic(self, df):
         """Identify whether a given dataframe contains paid data"""
         paid_or_organic = 'Organic'
-        #make columns to check lower case so can work on
-        # columns that have or haven't been cleaned
+        # Make columns to check lower case so can work on
+        # Columns that have or haven't been cleaned
         col_list = [x.lower() for x in df.columns]
         if 'spend' in col_list:
             paid_or_organic = 'Paid'
         return paid_or_organic
 
-    def pickle_data(self,data, filename,folder="Pickled Files"):
+    def pickle_data(self, data, filename, folder="Pickled Files"):
         """Pickle data and save it to a file.
         
         Args:
@@ -706,7 +706,7 @@ class UtilityFunctions():
         pickle.dump(data, open(folder + '/' + filename, "wb"))
 
     
-    def unpickle_data(self,filename,folder ="Pickled Files"):
+    def unpickle_data(self, filename, folder ="Pickled Files"):
         """Load pickled data from a file.
         
         Args:
@@ -718,7 +718,7 @@ class UtilityFunctions():
         return pickle.load(open(folder + '/' + filename, "rb"))
 
     
-    def write_json(self,object,file_name,file_type, folder="JSON Files"):
+    def write_json(self, object, file_name, file_type, folder="JSON Files"):
         """Write a Python object to a json file.
         
         Args:
@@ -731,18 +731,18 @@ class UtilityFunctions():
             os.mkdir(folder)
 
         if file_type == 'DataFrame':
-            object.to_json(folder + '/' + file_name+'.json',orient='split')
+            object.to_json(folder + '/' + file_name + '.json', orient='split')
         elif file_type == 'List' or file_type == 'Dictionary':
-            with open(f"{folder}/{file_name}.json","w") as outfile:
-                json.dump(object,outfile)
+            with open(f"{folder}/{file_name}.json", "w") as outfile:
+                json.dump(object, outfile)
         elif file_type == 'append':
-            with open(f"{folder}/{file_name}.json","a") as outfile:
-                json.dump(object,outfile)
+            with open(f"{folder}/{file_name}.json", "a") as outfile:
+                json.dump(object, outfile)
                 outfile.write("\n")
         else:
             self.logger.logger.error('JSON write error, file_type error')
     
-    def read_json(self,file_name, file_type, folder="JSON Files"):
+    def read_json(self, file_name, file_type, folder="JSON Files"):
         """Read a json file and return a Python object.
         
         Args:
@@ -752,23 +752,23 @@ class UtilityFunctions():
         Returns:
             Object: The object read from json file."""
         if file_type == 'DataFrame':
-            return pd.read_json(f'{folder}/{file_name}.json',orient='split')
+            return pd.read_json(f'{folder}/{file_name}.json', orient='split')
         elif file_type == 'List' or file_type == 'Dictionary':
             return json.load(open(f'{folder}/{file_name}.json'))
         elif file_type == 'append':
-            with open(f"{folder}/{file_name}.json","r") as infile:
+            with open(f"{folder}/{file_name}.json", "r") as infile:
                 return [json.loads(line) for line in infile]
         else:
             self.logger.logger.error('JSON read error, file_type error')
 
-    def columnnames_to_lowercase(self,df):
+    def columnnames_to_lowercase(self, df):
         """Change the columns in a dataframe into lowercase with spaces replaced by underscores"""
         df.columns = df.columns.str.lower()
-        df.columns = df.columns.str.replace(' ','_')
+        df.columns = df.columns.str.replace(' ', '_')
         df.columns = df.columns.str.strip()
         return df
 
-    def merge_match_perc(self,df_1,df_2,left_on=None,right_on=None,on=None,how='left',tag="",ignore_values_df2=['None','nan','',' ','none']):
+    def merge_match_perc(self, df_1, df_2, left_on=None, right_on=None, on=None, how='left', tag="", ignore_values_df2=['None', 'nan', '', ' ', 'none']):
         """Merges two dataframes and prints out the number of matches and the percentage of matches out of the total number of rows.
         
         Args:
@@ -787,19 +787,19 @@ class UtilityFunctions():
         elif on != None:
             df_2['no_merge_flag'] = df_2[on].apply(lambda row: any(item in ignore_values_df2 for item in row), axis=1)
             
-        df_1_rows_before = df_1.shape[0] #number of rows in df_1
-        if '_merge' in df_1.columns: #if df_1 has a _merge column, drop it
-            df_1 = df_1.drop('_merge',axis=1)
+        df_1_rows_before = df_1.shape[0] # Number of rows in df_1
+        if '_merge' in df_1.columns: # If df_1 has a _merge column, drop it
+            df_1 = df_1.drop('_merge', axis=1)
 
-        output_df = pd.merge(df_1,df_2.loc[df_2['no_merge_flag']==False],left_on=left_on,right_on=right_on,how=how,on=on,indicator=True)
+        output_df = pd.merge(df_1, df_2.loc[df_2['no_merge_flag']==False], left_on=left_on, right_on=right_on, how=how, on=on, indicator=True)
 
         # Drop the flag column in the merged dataframe
         output_df.drop(columns=['no_merge_flag'], inplace=True, errors='ignore')
         df_1_rows_after = output_df.shape[0] #number of rows in output_df after merge
 
-        #count the number of matches by using the "_merge" column that is created by "indicator=True"
+        # Count the number of matches by using the "_merge" column that is created by "indicator=True"
         num_matches = output_df['_merge'].value_counts()['both']
-        match_perc = round(num_matches / df_1_rows_after * 100,1)
+        match_perc = round(num_matches / df_1_rows_after * 100, 1)
 
         self.logger.logger.info(f"{tag} df_1 has {df_1_rows_before} rows")
         self.logger.logger.info(f'{num_matches} matches, how = {how}, out of {df_1_rows_after} rows ({match_perc}%)')
@@ -873,8 +873,8 @@ class SlackNotifier:
         link_4 (str): An optional link to be included in the slack message. Default: ''
         link_4_name (str): The name to be displayed for link_4. Default: 'No Url'"""
 
-    def __init__(self, slack_webhook_url: str, title = "Update" ,link_1 = '', link_1_name='No Url',
-                    link_2 ='', link_2_name = 'No Url', link_3 = '', link_3_name = 'No Url',
+    def __init__(self, slack_webhook_url: str, title = "Update" ,link_1='', link_1_name='No Url',
+                    link_2='', link_2_name='No Url', link_3='', link_3_name='No Url',
                     link_4='', link_4_name='No Url'):
         """Initiate slack notifier object
 
@@ -891,8 +891,8 @@ class SlackNotifier:
             link_4_name (str): The name to be displayed for link_4. Default: 'No Url'"""
     
         self.slack_webhook_url, self.title = slack_webhook_url, title
-        self.link_1,self.link_2,self.link_3,self.link_4 = link_1,link_2,link_3,link_4
-        self.link_1_name,self.link_2_name,self.link_3_name,self.link_4_name = link_1_name,link_2_name,link_3_name,link_4_name
+        self.link_1, self.link_2, self.link_3, self.link_4 = link_1, link_2, link_3, link_4
+        self.link_1_name, self.link_2_name, self.link_3_name, self.link_4_name = link_1_name, link_2_name, link_3_name, link_4_name
         
     def send_slack_message(self, message:str):
         """Sends message to slack channel
@@ -966,6 +966,4 @@ class SlackNotifier:
         try:
             requests.post(self.slack_webhook_url, data=json.dumps(payload))
         except Exception as e:
-            self.logger.logger.error(f"Failed To Send Slack messafe {e}",exc_info=True)
-
-# %%
+            self.logger.logger.error(f"Failed To Send Slack message {e}", exc_info=True)

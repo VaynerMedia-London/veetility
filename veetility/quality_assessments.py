@@ -1,7 +1,7 @@
 import pandas as pd
 import regex as re
 import numpy as np
-from datetime import date,datetime
+from datetime import date, datetime
 from tqdm.auto import tqdm
 import os
 import logging
@@ -27,13 +27,13 @@ logger.addHandler(file_handler)
 
 class QualityAssessments:
 
-    def __init__(self,util_object=None):
+    def __init__(self, util_object=None):
 
         if util_object != None:
             self.util = util_object
     
-    def null_values_checker(self,df,cols_to_group,cols_to_ignore,gsheet_name,tab_name,
-                    null_definitions=[np.nan,'N/A','','None'],output_method='gsheet'):
+    def null_values_checker(self, df, cols_to_group, cols_to_ignore, gsheet_name, tab_name,
+                    null_definitions=[np.nan, 'N/A', '', 'None'], output_method='gsheet'):
         """Takes in a dataframe and columns to groupby and checks how many null values or null equivalents
         there are in the rest of the columns.
             
@@ -55,23 +55,23 @@ class QualityAssessments:
                                            by the 'cols_to_group'."""
 
         for null in null_definitions: 
-            df = df.replace(null,'NullValue')
+            df = df.replace(null, 'NullValue')
 
         null_count_df = pd.DataFrame(index=df[cols_to_group].value_counts().index).reset_index()
         other_cols = list(set(df.columns) - set(cols_to_group) - set(cols_to_ignore))
 
         for col in other_cols:
             col_groupby = df.groupby(cols_to_group)[col].apply(lambda x: round(100 * x[x == 'NullValue'].count()/x.shape[0],1)).reset_index()
-            null_count_df = pd.merge(null_count_df,col_groupby)
+            null_count_df = pd.merge(null_count_df, col_groupby)
 
         if output_method == 'gsheet':
-            self.util.write_to_gsheet(gsheet_name,tab_name,null_count_df)
+            self.util.write_to_gsheet(gsheet_name, tab_name, null_count_df)
         elif output_method == 'Dataframe': 
             return null_count_df
     
-    def check_data_recency(self,df,cols_to_group,gsheet_name,tab_name='DataRecency',
-                            three_days_for_monday= True,date_col='date',
-                            dayfirst='EnterValue',yearfirst='EnterValue',format=None,errors='raise'):
+    def check_data_recency(self, df, cols_to_group, gsheet_name, tab_name='DataRecency',
+                            three_days_for_monday= True, date_col='date',
+                            dayfirst='EnterValue', yearfirst='EnterValue', format=None, errors='raise'):
         """Post a google sheet showing how many days since different channels have been active.
         Also return a list of channels that have been inactive for more than 2 days which
         might be indicative of an error
@@ -97,16 +97,16 @@ class QualityAssessments:
         print(organic_or_paid)
         buffer_days_since_active = 2
         #remove any timezone information from the date_col and check the date is being read in in correct format
-        df[date_col] = pd.to_datetime(df[date_col].dt.date,dayfirst=dayfirst,
-                                      yearfirst=yearfirst,format=format,errors=errors)
+        df[date_col] = pd.to_datetime(df[date_col].dt.date, dayfirst=dayfirst,
+                                      yearfirst=yearfirst, format=format, errors=errors)
 
         data_recency = pd.DataFrame(df.groupby(cols_to_group)[date_col].max().apply(lambda x: (today - x).days)).reset_index().rename(columns={date_col:'DaysSinceActive'})  
     
-        self.util.write_to_gsheet(gsheet_name,tab_name,data_recency,sheet_prefix=organic_or_paid)
+        self.util.write_to_gsheet(gsheet_name, tab_name, data_recency, sheet_prefix=organic_or_paid)
 
         #create a tag string to identify a channel, a concatenation of all the column values specified in 'cols_to_group'
         def concat_cols(x):
-            result=''
+            result = ''
             for col in cols_to_group:
                 result += x[col] + '-'
             return result.rstrip('-')
@@ -125,7 +125,7 @@ class QualityAssessments:
 
         return error_message
     
-    def boosted_function_qa(self,paid_df, organic_df, gsheet_name,tab_name='OrganicWithBigImpressions',impressions_threshold = 100000):
+    def boosted_function_qa(self, paid_df, organic_df, gsheet_name, tab_name='OrganicWithBigImpressions', impressions_threshold=100000):
         """Takes in organic data and paid data and reports how many are mislabelled as boosted
             
         Args:
@@ -148,7 +148,7 @@ class QualityAssessments:
 
         if (missing_boosted) != 0:
             error_message = error_message + '  ' + \
-                f'There are {missing_boosted}({round(missing_boosted*100/paid_boosted_count,2)}%) posts mislabelled as Pure Organic\n'
+                f'There are {missing_boosted}({round(missing_boosted*100/paid_boosted_count, 2)}%) posts mislabelled as Pure Organic\n'
             logger.warning(error_message)
 
         # A post that is labelled as organic but has impressions over the impressions_threshold may actually be boosted 
@@ -161,15 +161,15 @@ class QualityAssessments:
             error_message = error_message + '  ' + \
                 f'There are {len(misslabelled_og_rows.index.values)} Pure Organic posts with over {impressions_threshold} impressions or video views\n'
             logger.warning(error_message)
-            self.util.write_to_gsheet(gsheet_name,tab_name, misslabelled_og_rows)
+            self.util.write_to_gsheet(gsheet_name, tab_name, misslabelled_og_rows)
         # return TT or IG values with empty message field
         # for the date function exlude the dates we paused for the queen
 
         logger.warning(error_message)
         return error_message
     
-    def comparison_with_previous_data(self,df,name_of_df,cols_to_check=['impressions','likes'],perc_increase_threshold=20,
-                                   perc_decrease_threshold=0.5, check_cols_set=True,raise_exceptions=False):
+    def comparison_with_previous_data(self, df, name_of_df, cols_to_check=['impressions','likes'], perc_increase_threshold=20,
+                                   perc_decrease_threshold=0.5, check_cols_set=True, raise_exceptions=False):
         """ This function stores the high level sums for a datatable from the previous run of the script
         and if they have reduced or increased too sharply an error is raised.
 
@@ -205,15 +205,15 @@ class QualityAssessments:
         if os.path.isdir('Historic df Comparison (Do Not Delete)') == False:
             os.mkdir('Historic df Comparison (Do Not Delete)')
         if os.path.exists(f'Historic df Comparison (Do Not Delete)/{name_of_df}_previous_totals.json') ==False:
-            self.util.write_json(new_dict,f'{name_of_df}_previous_totals',file_type='append',folder='Historic df Comparison (Do Not Delete)/')
+            self.util.write_json(new_dict, f'{name_of_df}_previous_totals', file_type='append', folder='Historic df Comparison (Do Not Delete)/')
             logger.info(f"Creation of {name_of_df}_previous_totals")
             logger.info(new_dict)
             return error_message
         else:
-            #old_dict = self.util.unpickle_data(f'{name_of_df}_previous_totals',folder='Historic df Comparison (Do Not Delete)')
-            old_dict_file = self.util.read_json(f'{name_of_df}_previous_totals',folder='Historic df Comparison (Do Not Delete)',
+            #old_dict = self.util.unpickle_data(f'{name_of_df}_previous_totals', folder='Historic df Comparison (Do Not Delete)')
+            old_dict_file = self.util.read_json(f'{name_of_df}_previous_totals', folder='Historic df Comparison (Do Not Delete)',
                                                     file_type='append')
-            old_dict = old_dict_file[-1] #Grab the lastest entry in the json file, descending date order
+            old_dict = old_dict_file[-1] # Grab the lastest entry in the json file, descending date order
         
         for key, value in old_dict.items():
             if key == 'Columns':
@@ -232,22 +232,22 @@ class QualityAssessments:
                                         f' Prev Value = {old_dict[key]} , New Value = {new_dict[key]}\n'
             elif new_dict[key] > value*(1 +perc_increase_threshold/100):
                 error_occured = True
-                error_message = error_message + '  ' +f'The total of {key} has increased by more than\n'\
+                error_message = error_message + '  ' + f'The total of {key} has increased by more than\n'\
                                     f'{perc_increase_threshold}% from last time\n'\
-                                        f' Prev Value = {old_dict[key]} , New Value = {new_dict[key]}\n'
+                                        f' Prev Value = {old_dict[key]}, New Value = {new_dict[key]}\n'
 
         if error_occured:
             error_message = f'Comparison with historic df {name_of_df}: ' + error_message +'\n'
-            logger.info('ERROR' + error_message) #if error messages has been added to then log it
+            logger.info('ERROR' + error_message) # If error messages has been added to then log it
         if raise_exceptions and error_occured:
             raise Exception(error_message)
-        #self.util.pickle_data(new_dict,f'{name_of_df}_previous_totals',folder='Historic df Comparison (Do Not Delete)/')
-        self.util.write_json(new_dict,f'{name_of_df}_previous_totals',file_type='append',
+        #self.util.pickle_data(new_dict, f'{name_of_df}_previous_totals', folder='Historic df Comparison (Do Not Delete)/')
+        self.util.write_json(new_dict, f'{name_of_df}_previous_totals', file_type='append',
                              folder='Historic df Comparison (Do Not Delete)/')
         
         return error_message
     
-    def duplicates_qa(self, df: pd.DataFrame, df_name: str,subset= None, drop_duplicates: bool = True):
+    def duplicates_qa(self, df: pd.DataFrame, df_name: str, subset= None, drop_duplicates: bool = True):
         """Checks for duplicates and optionally drops duplicates in a dataframe.
         
         Args:
@@ -267,7 +267,7 @@ class QualityAssessments:
         return df
     
     def duplicates_qa_plus(self, df, name_of_df, perc_dupes_thresh=3, cols_to_check=None, 
-                        cols_to_add=None, return_type='duplicates',raise_exceptions=True):
+                        cols_to_add=None, return_type='duplicates', raise_exceptions=True):
         """Checks for duplicates in a dataframe and returns the duplicates or the dataframe without duplicates.
 
         The function first checks to see whether the input dataframe is paid or organic data. If it is paid data then the columns to check for duplicates are
@@ -304,21 +304,21 @@ class QualityAssessments:
         logger.info(f'Num of rows in {name_of_df} = {num_rows}')
         paid_or_organic = self.util.identify_paid_or_organic(df)
         
-        if cols_to_check ==None:
+        if cols_to_check == None:
             if paid_or_organic == 'Paid':
                 #Include date in paid duplicate check because the same ad is repeated across consequitve days
                 #Spend is a good indicator of duplicates in paid data
-                cols_to_check = ['date','platform','country','media_type','cohort','message','ad_name','spend']
+                cols_to_check = ['date', 'platform', 'country', 'media_type', 'cohort', 'message', 'ad_name', 'spend']
                 
             elif paid_or_organic == 'Organic':
-                cols_to_check = ['platform', 'country','media_type' ,'message','url']
+                cols_to_check = ['platform', 'country', 'media_type' , 'message', 'url']
                 if 'date_row_added' in df.columns:
                     cols_to_check.append('date_row_added')
         
         if cols_to_add != None:
             cols_to_check = cols_to_check + cols_to_add
         
-        for i in range(2,len(cols_to_check)+1):
+        for i in range(2, len(cols_to_check)+1):
             num_duplicates = df.duplicated(subset=cols_to_check[:i]).sum()
             logger.info(f'{num_duplicates} - {name_of_df} - {cols_to_check[:i]}')
         
@@ -333,13 +333,13 @@ class QualityAssessments:
             raise Exception(error_message)
         
         elif return_type == 'duplicates': 
-            return df[df.duplicated(subset=cols_to_check,keep=False)].sort_values(by=cols_to_check)
+            return df[df.duplicated(subset=cols_to_check, keep=False)].sort_values(by=cols_to_check)
 
         elif return_type == 'duplicates_removed':
-            return df.drop_duplicates(subset=cols_to_check,inplace=False), error_message
+            return df.drop_duplicates(subset=cols_to_check, inplace=False), error_message
 
     
-    def check_impressions_no_engagements(self,df,gsheet_name,tab_name='NoImpressionsButEngagements',raise_exceptions=False):
+    def check_impressions_no_engagements(self, df, gsheet_name, tab_name='NoImpressionsButEngagements', raise_exceptions=False):
         """Function to check if a row item has engagements but no impressions and no video views. 
         This shouldn't happen and is indicative of an error with Tracer but can be valid as some 
         platforms count viral engagements differently.
@@ -391,9 +391,9 @@ class QualityAssessments:
         
         return error_message
 
-    def naming_convention_checker(self, df,gsheet_name,naming_convention,campaignname_dict=None, adgroupname_dict=None, 
-                                    adname_dict=None,campaign_col='campaign_name',adgroup_col='group_name',adname_col='name',
-                                    start_char='_',middle_char=':',end_char='_'):
+    def naming_convention_checker(self, df, gsheet_name, naming_convention, campaignname_dict=None, adgroupname_dict=None, 
+                                    adname_dict=None, campaign_col='campaign_name', adgroup_col='group_name', adname_col='name',
+                                    start_char='_', middle_char=':', end_char='_'):
         """Checks for naming convention errors in a given DataFrame and outputs the errors to a Google Sheet.
 
         The function takes in a DataFrame containing paid data with columns for campaign name, ad group name, and ad name, 
@@ -422,19 +422,19 @@ class QualityAssessments:
         Returns:
             Writes to a Google Sheet a table with the index being a unique instance of the campaign."""
         
-        conv_level_tuple = ((campaignname_dict,campaign_col,'CampaignNameErrors'),(adgroupname_dict,adgroup_col,'AdGroupNameErrors'),
-                            (adname_dict,adname_col,'AdNameErrors'))
+        conv_level_tuple = ((campaignname_dict, campaign_col, 'CampaignNameErrors'), (adgroupname_dict, adgroup_col, 'AdGroupNameErrors'),
+                            (adname_dict, adname_col, 'AdNameErrors'))
         # df = clean.clean_column_names(df)
         #Obtain the column names of all the Keys available in the convention tracker sheet
         #https://docs.google.com/spreadsheets/d/1Wtwd6xT9zRLhPICWSWDNZ2mXBy74_xszLVX2ZqO_odo/edit#gid=605935420
-        key_values_conv_cols = [x.replace(' Key','') for x in naming_convention.columns if ' Key' in x]
+        key_values_conv_cols = [x.replace(' Key', '') for x in naming_convention.columns if ' Key' in x]
 
         def remove_empties_from_list(input_list):
             '''Obtaining a list of keys from the tracker sheet column often results in multiple empty
                 strings, this function removes them from the list'''
-            return list(filter(lambda x: x != '',input_list))
+            return list(filter(lambda x: x != '', input_list))
 
-        def return_value(string,tag,acceptable_values):
+        def return_value(string, tag, acceptable_values):
             """This checks for each campaign, group_name or ad_name string, for a certain tag e.g.'pl'
             whether the tag is even present and if so whether a correct value is present"""
             search_string = f'{start_char}{tag}{middle_char}(.*?){end_char}'
@@ -457,6 +457,6 @@ class QualityAssessments:
                 #For each label and tag in the required set 
                 if label in key_values_conv_cols:
                     acceptable_values= remove_empties_from_list(naming_convention[label+' Key'].str.upper().unique().tolist())
-                    output_df[f'{label} ("{tag}")'] = output_df[level[1]].apply(lambda x: return_value(x,tag,acceptable_values))
-            self.util.write_to_gsheet(workbook_name = gsheet_name,sheet_name= level[2],df = output_df)
+                    output_df[f'{label} ("{tag}")'] = output_df[level[1]].apply(lambda x: return_value(x, tag, acceptable_values))
+            self.util.write_to_gsheet(workbook_name = gsheet_name, sheet_name= level[2], df = output_df)
     
