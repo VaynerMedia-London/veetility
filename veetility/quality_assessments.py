@@ -397,8 +397,8 @@ class QualityAssessments:
         return error_message
 
     def naming_convention_checker(self, df, gsheet_name, naming_convention, campaignname_dict=None, adgroupname_dict=None, 
-                                    adname_dict=None, campaign_col='campaign_name', adgroup_col='group_name', adname_col='name',
-                                    start_char='_', middle_char=':', end_char='_'):
+                                    adname_dict=None, campaign_col='campaign_name', adgroup_col='group_name', adname_col='ad_name',
+                                    spend_col= 'spend_usd', start_char='_', middle_char=':', end_char='_'):
         """Checks for naming convention errors in a given DataFrame and outputs the errors to a Google Sheet.
 
         The function takes in a DataFrame containing paid data with columns for campaign name, ad group name, and ad name, 
@@ -439,7 +439,7 @@ class QualityAssessments:
                 strings, this function removes them from the list'''
             return list(filter(lambda x: x != '', input_list))
 
-        def return_value(string, tag, acceptable_values):
+        def return_value(string, tag, acceptable_values=None):
             """This checks for each campaign, group_name or ad_name string, for a certain tag e.g.'pl'
             whether the tag is even present and if so whether a correct value is present"""
             search_string = f'{start_char}{tag}{middle_char}(.*?){end_char}'
@@ -449,19 +449,29 @@ class QualityAssessments:
             elif search_result.group(1).strip(' ') == '':
                 return 'NoKey'
             else:
+                if acceptable_values == None:
+                    return "CorrectKeyPresent"
                 if search_result.group(1).upper() in acceptable_values:
                     return "Correct"
                 else:
                     return 'Incorrect Value'
 
+        
         for level in conv_level_tuple:
+            checking_cols = []
             #For each level of the naming convention, i.e. campaign, adgroup, adname
-            output_df = round(df.groupby(level[1])['spend'].sum().reset_index(),1)
+            output_df = round(df.groupby(level[1])[spend_col].sum().reset_index(),1)
             if level[0] == None: continue #no convention dict provided therefore ignore
             for label,tag in level[0].items():
                 #For each label and tag in the required set 
                 if label in key_values_conv_cols:
                     acceptable_values= remove_empties_from_list(naming_convention[label+' Key'].str.upper().unique().tolist())
                     output_df[f'{label} ("{tag}")'] = output_df[level[1]].apply(lambda x: return_value(x, tag, acceptable_values))
+                    checking_cols.append(f'{label} ("{tag}")')
+                else:
+                    output_df[f'{label} ("{tag}")'] = output_df[level[1]].apply(lambda x: return_value(x, tag))
+                    checking_cols.append(f'{label} ("{tag}")')
+                
+            output_df = output_df.sort_values(by=checking_cols, ascending=False)
             self.util.write_to_gsheet(workbook_name = gsheet_name, sheet_name= level[2], df = output_df)
     

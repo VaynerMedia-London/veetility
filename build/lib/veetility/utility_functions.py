@@ -30,6 +30,11 @@ emoji_pattern = re.compile("["
 
 
 class UtilityFunctions():
+    """A general purpose class for performing python pipeline functions such as reading/writing to google sheets, postgreSQL databases
+    storing data as pickle or JSON files, with error handling and automated retries.
+     
+    Also includes more complicated functions such as for merging paid and organic social data using fuzzy matching and regex or 
+    storing cumulative data we receieve as a daily incremental total"""
 
     def __init__(self, client_name, gspread_auth_dict=None, db_user=None, db_password=None, db_host=None,
                         db_port=None, db_name=None, log_name='utility_functions'):

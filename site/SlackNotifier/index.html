@@ -185,7 +185,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CleaningFunction.md" class="md-nav__link">
+      <a href="../CleaningFunctions/" class="md-nav__link">
         Cleaning
       </a>
     </li>
@@ -544,13 +544,7 @@
 
         <details class="quote">
           <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">856</span>
-<span class="normal">857</span>
-<span class="normal">858</span>
-<span class="normal">859</span>
-<span class="normal">860</span>
-<span class="normal">861</span>
-<span class="normal">862</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">862</span>
 <span class="normal">863</span>
 <span class="normal">864</span>
 <span class="normal">865</span>
@@ -651,7 +645,13 @@
 <span class="normal">960</span>
 <span class="normal">961</span>
 <span class="normal">962</span>
-<span class="normal">963</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">SlackNotifier</span><span class="p">:</span>
+<span class="normal">963</span>
+<span class="normal">964</span>
+<span class="normal">965</span>
+<span class="normal">966</span>
+<span class="normal">967</span>
+<span class="normal">968</span>
+<span class="normal">969</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">SlackNotifier</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A class that sends a message to a slack channel given a webhook url and optional url links</span>
 <span class="sd">    Args:</span>
 <span class="sd">        slack_webhook_url (str): The webhook url for the slack channel</span>
@@ -665,8 +665,8 @@
 <span class="sd">        link_4 (str): An optional link to be included in the slack message. Default: &#39;&#39;</span>
 <span class="sd">        link_4_name (str): The name to be displayed for link_4. Default: &#39;No Url&#39;&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slack_webhook_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Update&quot;</span> <span class="p">,</span><span class="n">link_1</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">link_1_name</span><span class="o">=</span><span class="s1">&#39;No Url&#39;</span><span class="p">,</span>
-                    <span class="n">link_2</span> <span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">link_2_name</span> <span class="o">=</span> <span class="s1">&#39;No Url&#39;</span><span class="p">,</span> <span class="n">link_3</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">link_3_name</span> <span class="o">=</span> <span class="s1">&#39;No Url&#39;</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slack_webhook_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Update&quot;</span> <span class="p">,</span><span class="n">link_1</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">link_1_name</span><span class="o">=</span><span class="s1">&#39;No Url&#39;</span><span class="p">,</span>
+                    <span class="n">link_2</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">link_2_name</span><span class="o">=</span><span class="s1">&#39;No Url&#39;</span><span class="p">,</span> <span class="n">link_3</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">link_3_name</span><span class="o">=</span><span class="s1">&#39;No Url&#39;</span><span class="p">,</span>
                     <span class="n">link_4</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">link_4_name</span><span class="o">=</span><span class="s1">&#39;No Url&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initiate slack notifier object</span>
 
@@ -683,8 +683,8 @@
 <span class="sd">            link_4_name (str): The name to be displayed for link_4. Default: &#39;No Url&#39;&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">slack_webhook_url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">slack_webhook_url</span><span class="p">,</span> <span class="n">title</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">link_1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">link_2</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">link_3</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">link_4</span> <span class="o">=</span> <span class="n">link_1</span><span class="p">,</span><span class="n">link_2</span><span class="p">,</span><span class="n">link_3</span><span class="p">,</span><span class="n">link_4</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">link_1_name</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">link_2_name</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">link_3_name</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">link_4_name</span> <span class="o">=</span> <span class="n">link_1_name</span><span class="p">,</span><span class="n">link_2_name</span><span class="p">,</span><span class="n">link_3_name</span><span class="p">,</span><span class="n">link_4_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">link_1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">link_2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">link_3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">link_4</span> <span class="o">=</span> <span class="n">link_1</span><span class="p">,</span> <span class="n">link_2</span><span class="p">,</span> <span class="n">link_3</span><span class="p">,</span> <span class="n">link_4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">link_1_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">link_2_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">link_3_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">link_4_name</span> <span class="o">=</span> <span class="n">link_1_name</span><span class="p">,</span> <span class="n">link_2_name</span><span class="p">,</span> <span class="n">link_3_name</span><span class="p">,</span> <span class="n">link_4_name</span>
 
     <span class="k">def</span> <span class="nf">send_slack_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Sends message to slack channel</span>
@@ -758,7 +758,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">slack_webhook_url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">))</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed To Send Slack messafe </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span><span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed To Send Slack message </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
         </details>
 
@@ -904,13 +904,7 @@
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">870</span>
-<span class="normal">871</span>
-<span class="normal">872</span>
-<span class="normal">873</span>
-<span class="normal">874</span>
-<span class="normal">875</span>
-<span class="normal">876</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">876</span>
 <span class="normal">877</span>
 <span class="normal">878</span>
 <span class="normal">879</span>
@@ -923,8 +917,14 @@
 <span class="normal">886</span>
 <span class="normal">887</span>
 <span class="normal">888</span>
-<span class="normal">889</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slack_webhook_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Update&quot;</span> <span class="p">,</span><span class="n">link_1</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">link_1_name</span><span class="o">=</span><span class="s1">&#39;No Url&#39;</span><span class="p">,</span>
-                <span class="n">link_2</span> <span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">link_2_name</span> <span class="o">=</span> <span class="s1">&#39;No Url&#39;</span><span class="p">,</span> <span class="n">link_3</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">link_3_name</span> <span class="o">=</span> <span class="s1">&#39;No Url&#39;</span><span class="p">,</span>
+<span class="normal">889</span>
+<span class="normal">890</span>
+<span class="normal">891</span>
+<span class="normal">892</span>
+<span class="normal">893</span>
+<span class="normal">894</span>
+<span class="normal">895</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slack_webhook_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Update&quot;</span> <span class="p">,</span><span class="n">link_1</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">link_1_name</span><span class="o">=</span><span class="s1">&#39;No Url&#39;</span><span class="p">,</span>
+                <span class="n">link_2</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">link_2_name</span><span class="o">=</span><span class="s1">&#39;No Url&#39;</span><span class="p">,</span> <span class="n">link_3</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">link_3_name</span><span class="o">=</span><span class="s1">&#39;No Url&#39;</span><span class="p">,</span>
                 <span class="n">link_4</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">link_4_name</span><span class="o">=</span><span class="s1">&#39;No Url&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initiate slack notifier object</span>
 
@@ -941,8 +941,8 @@
 <span class="sd">        link_4_name (str): The name to be displayed for link_4. Default: &#39;No Url&#39;&quot;&quot;&quot;</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">slack_webhook_url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">slack_webhook_url</span><span class="p">,</span> <span class="n">title</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">link_1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">link_2</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">link_3</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">link_4</span> <span class="o">=</span> <span class="n">link_1</span><span class="p">,</span><span class="n">link_2</span><span class="p">,</span><span class="n">link_3</span><span class="p">,</span><span class="n">link_4</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">link_1_name</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">link_2_name</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">link_3_name</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">link_4_name</span> <span class="o">=</span> <span class="n">link_1_name</span><span class="p">,</span><span class="n">link_2_name</span><span class="p">,</span><span class="n">link_3_name</span><span class="p">,</span><span class="n">link_4_name</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">link_1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">link_2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">link_3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">link_4</span> <span class="o">=</span> <span class="n">link_1</span><span class="p">,</span> <span class="n">link_2</span><span class="p">,</span> <span class="n">link_3</span><span class="p">,</span> <span class="n">link_4</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">link_1_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">link_2_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">link_3_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">link_4_name</span> <span class="o">=</span> <span class="n">link_1_name</span><span class="p">,</span> <span class="n">link_2_name</span><span class="p">,</span> <span class="n">link_3_name</span><span class="p">,</span> <span class="n">link_4_name</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
@@ -989,13 +989,7 @@
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">891</span>
-<span class="normal">892</span>
-<span class="normal">893</span>
-<span class="normal">894</span>
-<span class="normal">895</span>
-<span class="normal">896</span>
-<span class="normal">897</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">897</span>
 <span class="normal">898</span>
 <span class="normal">899</span>
 <span class="normal">900</span>
@@ -1061,7 +1055,13 @@
 <span class="normal">960</span>
 <span class="normal">961</span>
 <span class="normal">962</span>
-<span class="normal">963</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">send_slack_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
+<span class="normal">963</span>
+<span class="normal">964</span>
+<span class="normal">965</span>
+<span class="normal">966</span>
+<span class="normal">967</span>
+<span class="normal">968</span>
+<span class="normal">969</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">send_slack_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Sends message to slack channel</span>
 <span class="sd">    Args:</span>
 <span class="sd">        message (str): the message to be sent to the slack channel&quot;&quot;&quot;</span>
@@ -1133,7 +1133,7 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">slack_webhook_url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">))</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed To Send Slack messafe </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span><span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed To Send Slack message </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>

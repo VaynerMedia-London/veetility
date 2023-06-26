@@ -32,8 +32,8 @@ class QualityAssessments:
         if util_object != None:
             self.util = util_object
     
-    def null_values_checker(self, df, cols_to_group, cols_to_ignore, gsheet_name, tab_name,
-                    null_definitions=[np.nan, 'N/A', '', 'None'], output_method='gsheet'):
+    def null_values_checker(self,df,cols_to_group,gsheet_name,tab_name,cols_to_ignore=None,
+                            null_definitions=[np.nan,'N/A','','None'],output_method='gsheet'):
         """Takes in a dataframe and columns to groupby and checks how many null values or null equivalents
         there are in the rest of the columns.
             
@@ -41,8 +41,7 @@ class QualityAssessments:
             df (pandas.DataFrame): The Input Dataframe of any type where you want to check for nulls.
             cols_to_group (list of str): The list of columns to perform a groupby operation with the null 
                                         percentage counts will be a percentage of nulls in these groupbys.
-            cols_to_ignore (list of str): The list of columns to not count nulls in, to make the output 
-                                        dataframe smaller perhaps.
+            cols_to_ignore (list of str): The list of columns to ignore when checking for nulls. Default is None.
             gsheet_name (str): The name of the google sheet workbook to pass to the google sheet function.
             tab_name (str): The name of the tab in the google sheet workbook to pass to the google sheet function.
                                             The google sheet must be setup with this tab already created.
@@ -53,6 +52,9 @@ class QualityAssessments:
         Returns:
             null_count_df (pandas.DataFrame): Dataframe showing the percentage of nulls in each column grouped 
                                            by the 'cols_to_group'."""
+        
+        if cols_to_ignore == None:
+            cols_to_ignore = []
 
         for null in null_definitions: 
             df = df.replace(null, 'NullValue')
@@ -322,10 +324,13 @@ class QualityAssessments:
             num_duplicates = df.duplicated(subset=cols_to_check[:i]).sum()
             logger.info(f'{num_duplicates} - {name_of_df} - {cols_to_check[:i]}')
         
-        exceed_thresh = df.duplicated(subset=cols_to_check).sum()*100 / num_rows > perc_dupes_thresh
+        perc_dupes = df.duplicated(subset=cols_to_check).sum()*100 / num_rows
+        exceed_thresh = perc_dupes > perc_dupes_thresh
+
+        logger.info(f'% Dupes of whole subset - {name_of_df} = {perc_dupes}')
 
         if exceed_thresh:
-            error_message = f'Number of duplicates in {name_of_df} exceeds {perc_dupes_thresh}%'
+            error_message = f'% Dupes in {name_of_df} exceeds {perc_dupes_thresh}%'
         else:
             error_message = ''
 
@@ -392,8 +397,8 @@ class QualityAssessments:
         return error_message
 
     def naming_convention_checker(self, df, gsheet_name, naming_convention, campaignname_dict=None, adgroupname_dict=None, 
-                                    adname_dict=None, campaign_col='campaign_name', adgroup_col='group_name', adname_col='name',
-                                    start_char='_', middle_char=':', end_char='_'):
+                                    adname_dict=None, campaign_col='campaign_name', adgroup_col='group_name', adname_col='ad_name',
+                                    spend_col= 'spend_usd', start_char='_', middle_char=':', end_char='_'):
         """Checks for naming convention errors in a given DataFrame and outputs the errors to a Google Sheet.
 
         The function takes in a DataFrame containing paid data with columns for campaign name, ad group name, and ad name, 
@@ -434,7 +439,7 @@ class QualityAssessments:
                 strings, this function removes them from the list'''
             return list(filter(lambda x: x != '', input_list))
 
-        def return_value(string, tag, acceptable_values):
+        def return_value(string, tag, acceptable_values=None):
             """This checks for each campaign, group_name or ad_name string, for a certain tag e.g.'pl'
             whether the tag is even present and if so whether a correct value is present"""
             search_string = f'{start_char}{tag}{middle_char}(.*?){end_char}'
@@ -444,19 +449,29 @@ class QualityAssessments:
             elif search_result.group(1).strip(' ') == '':
                 return 'NoKey'
             else:
+                if acceptable_values == None:
+                    return "CorrectKeyPresent"
                 if search_result.group(1).upper() in acceptable_values:
                     return "Correct"
                 else:
                     return 'Incorrect Value'
 
+        
         for level in conv_level_tuple:
+            checking_cols = []
             #For each level of the naming convention, i.e. campaign, adgroup, adname
-            output_df = round(df.groupby(level[1])['spend'].sum().reset_index(),1)
+            output_df = round(df.groupby(level[1])[spend_col].sum().reset_index(),1)
             if level[0] == None: continue #no convention dict provided therefore ignore
             for label,tag in level[0].items():
                 #For each label and tag in the required set 
                 if label in key_values_conv_cols:
                     acceptable_values= remove_empties_from_list(naming_convention[label+' Key'].str.upper().unique().tolist())
                     output_df[f'{label} ("{tag}")'] = output_df[level[1]].apply(lambda x: return_value(x, tag, acceptable_values))
+                    checking_cols.append(f'{label} ("{tag}")')
+                else:
+                    output_df[f'{label} ("{tag}")'] = output_df[level[1]].apply(lambda x: return_value(x, tag))
+                    checking_cols.append(f'{label} ("{tag}")')
+                
+            output_df = output_df.sort_values(by=checking_cols, ascending=False)
             self.util.write_to_gsheet(workbook_name = gsheet_name, sheet_name= level[2], df = output_df)
     

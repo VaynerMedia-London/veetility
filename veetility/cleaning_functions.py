@@ -66,7 +66,7 @@ def clean_column_names(df, name_of_df,hardcode_col_dict = {},errors= 'ignore',co
             column = 'reach'
         elif ('campaign'in column) and ('name' in column):
             column = 'campaign_name'
-        elif (('adset' in column) or ('group' in column)) and ('name' in column):
+        elif (('set' in column) or ('group' in column)) and ('name' in column):
             column = 'group_name'
         elif ('ad' in column) and ('name' in column):
             column = 'ad_name' # for TikTok organic
@@ -78,10 +78,25 @@ def clean_column_names(df, name_of_df,hardcode_col_dict = {},errors= 'ignore',co
             column = 'shares'
         elif (('conversion' in column) or ('lifetime'in column)) and ('save' in column): #_1d_click_onsite_conversion_post_save in fb_ig_paid data
             column = 'saved'
+        
+        elif ('video' in column) and ('view' in column) and not any(x in column for x in ['0', '5','2','3','6']): #don't include column with 25,50,75% completion
+            column = 'video_views'
+        elif ('video' in column) and ('25' in column):
+            column = 'ad_video_views_p_25'
+        elif ('video' in column) and ('50' in column):
+            column = 'ad_video_views_p_50'
+        elif ('video' in column) and ('75' in column):
+            column = 'ad_video_views_p_75'
         elif ('video' in column) and (('100' in column) or ('complet' in column) or('full' in column)):
             column = 'video_completions'
-        elif ('video' in column) and ('view' in column) and ('0' not in column) and ('5' not in column): #don't include column with 25,50,75% completion
-            column = 'video_views'
+        elif ('video' in column) and ('2' in column):
+            column = 'ad_video_watched_2_s'
+        elif ('video' in column) and ('3' in column):
+            column = 'ad_video_watched_3_s'
+        elif ('video' in column) and ('6' in column):
+            column = 'ad_video_watched_6_s'
+
+        
         elif ('organic' in column) and ('boosted' in column) or ( 'workstream' in column):
             column = 'workstream'
         elif 'currency' in column:
@@ -120,8 +135,9 @@ def clean_column_names(df, name_of_df,hardcode_col_dict = {},errors= 'ignore',co
 
         new_columns.append(column)
     if len(new_columns) != len(set(new_columns)):
-        cleaning_logger.logger.exception(f'Duplicate column names in {name_of_df} : {[item for item, count in Counter(new_columns).items() if count > 1]}')
-        raise ValueError
+        error = f'Duplicate column names in {name_of_df} : {[item for item, count in Counter(new_columns).items() if count > 1]}'
+        cleaning_logger.logger.exception(error)
+        raise ValueError(error)
     df.columns = new_columns
 
     return df
@@ -363,17 +379,53 @@ def extract_columns_twitter_2(df):
         lambda x: extract_after_nth_occurrence(x, 'TW'))
     return df
 
-# -----------------------------
-#  Checks for Duplicates, boosted Labelling
-# -----------------------------
-def video_len_toseconds(len_string):
-    """Video lengths come through tracer in the format 'minute:seconds', e.g. '1:20' or 80 seconds
-        This function converts it into just seconds"""
+
+def video_len_toseconds(video_length) -> int:
+    """Convert video length in format from Tracer usually "1:20" to seconds (80 seconds in this case)
+
+    Args:
+        video_length (str or int): A string representing video length, 
+            which can be in the format of 'minutes:seconds' or 'minutes.seconds', 
+            or an integer representing the video length in seconds. 
+
+    Returns:
+        int: The video length in seconds.
+            Returns None if the input does not make sense 
+            (for example, negative times, or strings that don't match the expected formats).
+    
+    Examples:
+        >>> video_len_toseconds('1:20')
+        80
+        >>> video_len_toseconds('0.20')
+        20
+        >>> video_len_toseconds('20')
+        20
+        >>> video_len_toseconds(30)
+        30
+    """
+
+    if isinstance(video_length, int):
+        if video_length < 0:
+            return None
+        return video_length
+
+    video_length = video_length.strip()
+
     try:
-        if ':' not in len_string:
-            return len_string
-        minutes = int(len_string.split(":")[0])
-        seconds = int(len_string.split(":")[1])
-        return (minutes * 60) + seconds
-    except:
+        # Check if the string contains a ":"
+        if ':' in video_length:
+            minutes, seconds = map(int, video_length.split(':'))
+        # Check if the string contains a "."
+        elif '.' in video_length:
+            minutes, seconds = map(int, video_length.split('.'))
+        # If no ":" or "." are present, then it's just seconds
+        else:
+            seconds = int(video_length)
+            minutes = 0
+    except ValueError:
         return None
+
+    if minutes < 0 or seconds < 0:
+        return None
+
+    return minutes * 60 + seconds

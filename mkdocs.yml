@@ -9,11 +9,9 @@ plugins:
 nav:
   - Getting Started: index.md
   - Utility Functions : UtilityFunctions.md
-  - Cleaning : CleaningFunction.md
+  - Cleaning : CleaningFunctions.md
   - Quality Assessment: QAFunctions.md
   - View Through Rate: ViewThroughRate.md
   - Slack Notifier: SlackNotifier.md
   - Snowflake : snowflake.md
-  - V Lift:  V_lift.md
-  - Logger : Logger.md
   - Tutorials: tutorials.md

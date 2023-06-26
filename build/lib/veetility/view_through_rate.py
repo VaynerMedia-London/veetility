@@ -7,48 +7,73 @@ import os
 
 class VTRConversion:
 
-    def __init__():
+    def __init__(self):
         pass
 
     def create_seconds_vtr_metrics(self,ads_df):
         ads_df = self.calc_vtr_rates(ads_df)
         ads_df = self.convert_video_len_to_seconds(ads_df)
+        #self.ads_df = ads_df
         return ads_df
 
     def create_grouped_vtr_metrics(self,ads_df, groupby_cols):
         # ads_df = self.create_seconds_vtr_metrics(ads_df)
-        ads_df_grouped = ads_df.groupby(groupby_cols).apply(self.tiktok_group_by_asset).reset_index()
+        ads_df_grouped = ads_df.groupby(groupby_cols).apply(self.group_by_asset).reset_index()
+        #self.ads_df_grouped = ads_df_grouped
         return ads_df_grouped
 
 
-    def convert_video_len_to_seconds(self, df):
-        df['video_length'] = df.apply(lambda x: clean.video_len_toseconds(x['video_length__tags']), axis=1)
+    def convert_video_len_to_seconds(self, df,video_len_col='video_length__tags'):
+        df['video_length'] = df.apply(lambda x: clean.video_len_toseconds(x[video_len_col]), axis=1)
         df = df[(df['video_length']!='n/a')&(df['video_length']!='None')&(df['video_length']!='Undefined')]
-        df['video_length'] = df['video_length'].astype(int)
         return df
 
-    def tiktok_calc_vtr_rates(self,df):
-        df['engagements'] = df['likes'] + df['comments'] + df['shares']
-        df['engagement_rate'] = round(df['engagements'] * 100 / df['impressions'], 2)
-        df['2s%VTR'] = round(df['ad_video_watched_2_s'] * 100 / df['impressions'], 2)
-        df['6s%VTR'] = round(df['ad_video_watched_6_s'] * 100 / df['impressions'], 2)
+    def calc_vtr_rates(self,df):
+        if 'likes' in df.columns:
+            df['engagements'] = df['likes'] + df['comments'] + df['shares']
+            df['engagement_rate'] = round(df['engagements'] * 100 / df['impressions'], 2)
+        if 'ad_video_watched_2_s' in df.columns:
+            df['2s%VTR'] = round(df['ad_video_watched_2_s'] * 100 / df['impressions'], 2)
+        if 'ad_video_watched_3_s' in df.columns:
+            df['3s%VTR'] = round(df['ad_video_watched_3_s'] * 100 / df['impressions'], 2)
+        if '6s%VTR' in df.columns:
+            df['6s%VTR'] = round(df['ad_video_watched_6_s'] * 100 / df['impressions'], 2)
         df['25%VTR'] = round(df['ad_video_views_p_25'] * 100 / df['impressions'], 2)
         df['50%VTR'] = round(df['ad_video_views_p_50'] * 100 / df['impressions'], 2)
         df['75%VTR'] = round(df['ad_video_views_p_75'] * 100 / df['impressions'], 2)
         df['100%VTR'] = round(df['video_completions'] * 100 / df['impressions'], 2)
         return df
     
-    def tiktok_group_by_asset(self,x):
-        """"""
+    
+    def group_by_asset(self,x):
+        """Create metrics at the asset level, averaging the %VTR metrics across all days the Ad is run
+        
+        Args:
+            x (pd.DataFrame): DataFrame of Ads grouped by asset_id
+        
+        Returns:
+            pd.DataFrame: DataFrame of Ads grouped by asset_id with metrics at the asset level such as 
+            average %VTR, average engagement rate, and coordinates of points for the VTR curve """
         d = {}
+        coordinates_list = []
         if 'message' in x.columns:
             d['message'] = x['message'].iloc[0]
         d['num_days_ran'] = x.shape[0]
-        d['engagements'] = x['engagements'].sum()
         d['impressions'] = x['impressions'].sum()
-        d['engagement_rate'] = round(d['engagements'] * 100 / d['impressions'], 2)
-        d['2s%VTR'] = round(x['2s%VTR'].mean(), 2)
-        d['6s%VTR'] = round(x['6s%VTR'].mean(), 2)
+        
+        if 'engagements' in x.columns:
+            d['engagements'] = x['engagements'].sum()
+            d['engagement_rate'] = round(d['engagements'] * 100 / d['impressions'], 2)
+        if '2s%VTR' in x.columns:
+            d['2s%VTR'] = round(x['2s%VTR'].mean(), 2)
+            coordinates_list.append((2, d['2s%VTR']))
+        if '3s%VTR' in x.columns:
+            d['3s%VTR'] = round(x['3s%VTR'].mean(), 2)
+            coordinates_list.append((3, d['3s%VTR']))
+        if '6s%VTR' in x.columns:
+            d['6s%VTR'] = round(x['6s%VTR'].mean(), 2)
+            coordinates_list.append((6, d['6s%VTR']))
+
         d['25%VTR'] = round(x['25%VTR'].mean(), 2)
         d['50%VTR'] = round(x['50%VTR'].mean(), 2)
         d['75%VTR'] = round(x['75%VTR'].mean(), 2)
@@ -58,13 +83,16 @@ class VTRConversion:
         perc_25_in_secs = round(x['video_length'].iloc[0] * 0.25, 2)
         perc_50_in_secs = round(x['video_length'].iloc[0] * 0.5, 2)
         perc_75_in_secs = round(x['video_length'].iloc[0] * 0.75, 2)
-        coordinates = np.array([(2, d['2s%VTR']),(6, d['6s%VTR']),
-                            (perc_25_in_secs, d['25%VTR']), (perc_50_in_secs, d['50%VTR']), 
-                            (perc_75_in_secs, d['75%VTR']), (d['video_length'], d['100%VTR'])])
+
+        coordinates_list.append([(perc_25_in_secs, d['25%VTR']), (perc_50_in_secs, d['50%VTR']), 
+                                (perc_75_in_secs, d['75%VTR']), (d['video_length'], d['100%VTR'])])
+        
+        coordinates = np.array([coordinates_list])
         points_indices = np.argsort(coordinates[:,0])
         d['coordinates'] = coordinates[points_indices]
 
         return pd.Series(d, index=list(d.keys()))
+
 
     def run_ml_on_each_video(self,row):
         """Run a linear regression on the VTR data for each video.
@@ -106,13 +134,3 @@ class VTRConversion:
 
         return pd.Series(d,index=list(d.keys()))
     
-def pickle_data(data, filename,folder="Pickled Files"):
-    """Pickle data and save it to a file.
-    Args:
-        data (Object): The data to be pickled.
-        filename (str): The name of the file to save the pickled data to.
-        folder (str, optional): The folder to save the pickled file to. Defaults to "Pickled Files"."""
-
-    if os.path.isdir(folder) == False:
-        os.mkdir(folder)
-    pickle.dump(data, open(folder + '/' + filename, "wb"))
