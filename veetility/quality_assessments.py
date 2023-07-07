@@ -171,83 +171,90 @@ class QualityAssessments:
         return error_message
     
     def comparison_with_previous_data(self, df, name_of_df, cols_to_check=['impressions','likes'], perc_increase_threshold=20,
-                                   perc_decrease_threshold=0.5, check_cols_set=True, raise_exceptions=False):
-        """ This function stores the high level sums for a datatable from the previous run of the script
-        and if they have reduced or increased too sharply an error is raised.
+                                    perc_decrease_threshold=0.5, check_cols_set=True, raise_exceptions=False):
+            """ This function stores the high level sums for a datatable from the previous run of the script
+            and if they have reduced or increased too sharply an error is raised.
 
-        A JSON file is created which stores historical data about the dataframe, the columns present and the
-        sum of the columns specified in cols_to_check. This can then be used for reference purposes to see if any changes in the totals are
-        caused by code changes or errors. 
+            A JSON file is created which stores historical data about the dataframe, the columns present and the
+            sum of the columns specified in cols_to_check. This can then be used for reference purposes to see if any changes in the totals are
+            caused by code changes or errors. 
 
-        Args:
-            df (pd.DataFrame): Input dataframe that the historic checks are going to be performed on.
-            name_of_df (str): Name of the dataframe, this will be used to name a file to save for future comparison.
-            cols_to_check (List[str]): A list of strings that detail the columns to be totaled which will then 
-                be compared with previous data.
-            perc_increase_threshold (float): A number between 0 and 100, the percentage increase threshold above 
-                which it is deemed that the totals have raised too rapidly and an error has occured.
-            perc_decrease_threshold (float): A number between 0 and 100, the percentage decrease threshold below 
-                which it is deemed that the totals decreased and an error has occured.
-            check_cols_set (bool): If true, store the set of columns present for comparison to see if any new 
-                columns have been added or removed next time, in which case it is deemed an error has occured.
-            raise_exceptions (bool): If true, then raise an exception if an error has occured instead of just returning an error message.
+            Args:
+                df (pd.DataFrame): Input dataframe that the historic checks are going to be performed on.
+                name_of_df (str): Name of the dataframe, this will be used to name a file to save for future comparison.
+                cols_to_check (List[str]): A list of strings that detail the columns to be totaled which will then 
+                    be compared with previous data.
+                perc_increase_threshold (float): A number between 0 and 100, the percentage increase threshold above 
+                    which it is deemed that the totals have raised too rapidly and an error has occured.
+                perc_decrease_threshold (float): A number between 0 and 100, the percentage decrease threshold below 
+                    which it is deemed that the totals decreased and an error has occured.
+                check_cols_set (bool): If true, store the set of columns present for comparison to see if any new 
+                    columns have been added or removed next time, in which case it is deemed an error has occured.
+                raise_exceptions (bool): If true, then raise an exception if an error has occured instead of just returning an error message.
 
-        Returns:
-            error_message (str): String detailing what the error is so that it can be passed to a notification service like slack."""
-        
-        error_message, error_occured = '', False
-        new_dict = {}
-        new_dict['datetime'] = str(datetime.now())
-        for col in cols_to_check:
-            new_dict[col] = int(df[col].sum())
+            Returns:
+                error_message (str): String detailing what the error is so that it can be passed to a notification service like slack."""
+            
+            error_message, error_occured = '', False
 
-        if check_cols_set == True:
-            new_dict['Columns'] = df.columns.tolist()
+            # Create a dictionary of the sums of the columns specified in cols_to_check
+            new_dict = {}
+            new_dict['Date'] = str(datetime.now())
+            for col in cols_to_check:
+                new_dict[col] = int(df[col].sum())
+            if check_cols_set == True:
+                new_dict['Columns'] = df.columns.tolist()
+            
+            # Check if the historic database already exists, if not create it
+            client_name = self.util.client_name.lower()
+            if self.util.table_exists(f'{client_name}_{name_of_df}_previous_totals'):
+                historic_db = self.util.read_from_postgresql(f'{client_name}_{name_of_df}_previous_totals', clean_date=False)
+                historic_db.drop(columns=['DateWrittenToDB'], inplace=True) # This column is not needed for comparison, it gets created when writing to the db
+                historic_db = historic_db.reset_index(drop=True)
 
-        if os.path.isdir('Historic df Comparison (Do Not Delete)') == False:
-            os.mkdir('Historic df Comparison (Do Not Delete)')
-        if os.path.exists(f'Historic df Comparison (Do Not Delete)/{name_of_df}_previous_totals.json') ==False:
-            self.util.write_json(new_dict, f'{name_of_df}_previous_totals', file_type='append', folder='Historic df Comparison (Do Not Delete)/')
-            logger.info(f"Creation of {name_of_df}_previous_totals")
-            logger.info(new_dict)
-            return error_message
-        else:
-            #old_dict = self.util.unpickle_data(f'{name_of_df}_previous_totals', folder='Historic df Comparison (Do Not Delete)')
-            old_dict_file = self.util.read_json(f'{name_of_df}_previous_totals', folder='Historic df Comparison (Do Not Delete)',
-                                                    file_type='append')
-            old_dict = old_dict_file[-1] # Grab the lastest entry in the json file, descending date order
-        
-        for key, value in old_dict.items():
-            if key == 'Columns':
-                if set(value) != set(new_dict['Columns']):
+            else:
+                historic_db = pd.DataFrame([new_dict])
+                self.util.write_to_postgresql(historic_db, f'{client_name}_{name_of_df}_previous_totals', if_exists='replace')
+                return error_message
+            
+            #Turn the most recent entry in the historic db into a dict
+            old_dict = historic_db.sort_values(by='Date', ascending=False).iloc[0].to_dict()
+
+            # for each key in the old dict, check if it is in the new dict and if it is, check if it has increased or decreased too much
+            for key, value in old_dict.items():
+
+                if key == 'Columns':
+                    value = value.replace('{', '').replace('}', '')
+                    value = [part.strip() for part in value.split(',')]
+                    if set(value) != set(new_dict['Columns']):
+                        #error_occured = True
+                        columns_removed = list(set(value) - set(new_dict['Columns']))
+                        columns_added = list(set(new_dict['Columns']) - set(value))
+                        error_message = error_message + '  ' + f'The columns seems to have changed from last time,\n'\
+                                                f' Columns that were added = {columns_added}\n' \
+                                                f' Columns that were removed = {columns_removed}\n'
+                elif key == 'Date':
+                    continue
+                elif new_dict[key] * (1 + perc_decrease_threshold/100) < value:
                     error_occured = True
-                    columns_removed = list(set(value) - set(new_dict['Columns']))
-                    columns_added = list(set(new_dict['Columns']) - set(value))
-                    error_message = error_message + '  ' + f'The columns seems to have changed from last time,\n'\
-                                            f' Columns that were added = {columns_added}\n' \
-                                            f' Columns that were removed = {columns_removed}\n'
-            elif key == 'datetime':
-                continue
-            elif new_dict[key] *(1+perc_decrease_threshold/100) < value:
-                error_occured = True
-                error_message = error_message + '  ' + f'The total of {key} seems to have decreased from last time\n'\
-                                        f' Prev Value = {old_dict[key]} , New Value = {new_dict[key]}\n'
-            elif new_dict[key] > value*(1 +perc_increase_threshold/100):
-                error_occured = True
-                error_message = error_message + '  ' + f'The total of {key} has increased by more than\n'\
-                                    f'{perc_increase_threshold}% from last time\n'\
-                                        f' Prev Value = {old_dict[key]}, New Value = {new_dict[key]}\n'
+                    error_message = error_message + '  ' + f'The total of {key} seems to have decreased from last time\n'\
+                                            f' Prev Value = {old_dict[key]} , New Value = {new_dict[key]}\n'
+                elif new_dict[key] > value * (1 + perc_increase_threshold/100):
+                    error_occured = True
+                    error_message = error_message + '  ' + f'The total of {key} has increased by more than\n'\
+                                        f'{perc_increase_threshold}% from last time\n'\
+                                            f' Prev Value = {old_dict[key]}, New Value = {new_dict[key]}\n'
 
-        if error_occured:
-            error_message = f'Comparison with historic df {name_of_df}: ' + error_message +'\n'
-            logger.info('ERROR' + error_message) # If error messages has been added to then log it
-        if raise_exceptions and error_occured:
-            raise Exception(error_message)
-        #self.util.pickle_data(new_dict, f'{name_of_df}_previous_totals', folder='Historic df Comparison (Do Not Delete)/')
-        self.util.write_json(new_dict, f'{name_of_df}_previous_totals', file_type='append',
-                             folder='Historic df Comparison (Do Not Delete)/')
-        
-        return error_message
+            if error_occured:
+                error_message = f'Comparison with historic df {name_of_df}: ' + error_message +'\n'
+                logger.info('ERROR' + error_message) # If error messages has been added to then log it
+            if raise_exceptions and error_occured:
+                raise Exception(error_message)
+            
+            db_with_new_row = pd.concat([historic_db, pd.DataFrame([new_dict])], ignore_index=True)
+            self.util.write_to_postgresql(db_with_new_row, f'{client_name}_{name_of_df}_previous_totals', if_exists='append')
+            
+            return error_message
     
     def duplicates_qa(self, df: pd.DataFrame, df_name: str, subset= None, drop_duplicates: bool = True):
         """Checks for duplicates and optionally drops duplicates in a dataframe.
@@ -310,7 +317,11 @@ class QualityAssessments:
             if paid_or_organic == 'Paid':
                 #Include date in paid duplicate check because the same ad is repeated across consequitve days
                 #Spend is a good indicator of duplicates in paid data
-                cols_to_check = ['date', 'platform', 'country', 'media_type', 'cohort', 'message', 'ad_name', 'spend']
+                if 'spend_usd' in df.columns:
+                    spend_col = 'spend_usd'
+                else:
+                    spend_col = 'spend'
+                cols_to_check = ['date', 'platform', 'country', 'media_type', 'cohort', 'message', 'ad_name', spend_col]
                 
             elif paid_or_organic == 'Organic':
                 cols_to_check = ['platform', 'country', 'media_type' , 'message', 'url']
@@ -459,8 +470,12 @@ class QualityAssessments:
         
         for level in conv_level_tuple:
             checking_cols = []
+            if 'video_views' in df.columns:
+                cols_to_sum = [spend_col, 'video_views']
+            else:
+                cols_to_sum = spend_col
             #For each level of the naming convention, i.e. campaign, adgroup, adname
-            output_df = round(df.groupby(level[1])[spend_col].sum().reset_index(),1)
+            output_df = round(df.groupby(level[1])[cols_to_sum].sum().reset_index(),1)
             if level[0] == None: continue #no convention dict provided therefore ignore
             for label,tag in level[0].items():
                 #For each label and tag in the required set 

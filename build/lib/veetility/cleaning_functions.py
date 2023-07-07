@@ -42,103 +42,107 @@ def clean_column_names(df, name_of_df,hardcode_col_dict = {},errors= 'ignore',co
     Returns:
         DataFrame: Output dataframe with the column names standardized."""
     
-    new_columns = []
+    new_columns = {}
     for column in df.columns:
         column = column.lower()
         hardcode_col_dict = {k.lower():v for k, v in hardcode_col_dict.items()} #make sure the keys are lowercase
         #hardcoded columns, for those unusual columns
         if column in hardcode_col_dict.keys():
-            column = hardcode_col_dict[column]
+            new_columns[column] = hardcode_col_dict[column]
+            continue
         if 'day' == column:
-            column = 'date'
+            new_columns[column] = 'date'
         #Columns not to be changed and that don't get called similar things
         elif column in cols_no_change:
-            column = column
+            new_columns[column] = column
+            continue
         elif ('created' in column) and (('date' in column) or ('time' in column) or ('video' in column)):
-            column = 'date'  # for organic
+            new_columns[column] = 'date'  # for organic
         elif ('video_create_time' in column):
-            column = 'post_timestamp'  # TikTok organic
+            new_columns[column] = 'post_timestamp'  # TikTok organic
         elif ('like' in column) or ('favorite' in column) or ('reaction' in column):
-            column = 'likes'
+            new_columns[column] = 'likes'
         elif ('video' not in column) and ('impression' in column) and ('unique' not in column):
-            column = 'impressions'
+            new_columns[column] = 'impressions'
         elif (column == 'reach') or (('impressions' in column) and ('unique' in column)):
-            column = 'reach'
-        elif ('campaign'in column) and ('name' in column):
-            column = 'campaign_name'
+            new_columns[column] = 'reach'
+        elif ('campaign' in column) and ('name' in column):
+            new_columns[column] = 'campaign_name'
         elif (('set' in column) or ('group' in column)) and ('name' in column):
-            column = 'group_name'
+            new_columns[column] = 'group_name'
         elif ('ad' in column) and ('name' in column):
-            column = 'ad_name' # for TikTok organic
+            new_columns[column] = 'ad_name' # for TikTok organic
         elif ('creative' in column) and ('name' in column):
-            column = 'creative_name'
+            new_columns[column] = 'creative_name'
         elif ('video' in column) and ('impression' in column):                       
-            column = 'video_impressions'
+            new_columns[column] = 'video_impressions'
         elif ('shares' in column) or ('retweet' in column):
-            column = 'shares'
+            new_columns[column] = 'shares'
         elif (('conversion' in column) or ('lifetime'in column)) and ('save' in column): #_1d_click_onsite_conversion_post_save in fb_ig_paid data
-            column = 'saved'
+            new_columns[column] = 'saved'
         
         elif ('video' in column) and ('view' in column) and not any(x in column for x in ['0', '5','2','3','6']): #don't include column with 25,50,75% completion
-            column = 'video_views'
+            new_columns[column] = 'video_views'
         elif ('video' in column) and ('25' in column):
-            column = 'ad_video_views_p_25'
+            new_columns[column] = 'ad_video_views_p_25'
         elif ('video' in column) and ('50' in column):
-            column = 'ad_video_views_p_50'
+            new_columns[column] = 'ad_video_views_p_50'
         elif ('video' in column) and ('75' in column):
-            column = 'ad_video_views_p_75'
+            new_columns[column] = 'ad_video_views_p_75'
         elif ('video' in column) and (('100' in column) or ('complet' in column) or('full' in column)):
-            column = 'video_completions'
+            new_columns[column] = 'video_completions'
         elif ('video' in column) and ('2' in column):
-            column = 'ad_video_watched_2_s'
+            new_columns[column] = 'ad_video_watched_2_s'
         elif ('video' in column) and ('3' in column):
-            column = 'ad_video_watched_3_s'
+            new_columns[column] = 'ad_video_watched_3_s'
         elif ('video' in column) and ('6' in column):
-            column = 'ad_video_watched_6_s'
-
+            new_columns[column] = 'ad_video_watched_6_s'
         
         elif ('organic' in column) and ('boosted' in column) or ( 'workstream' in column):
-            column = 'workstream'
+            new_columns[column] = 'workstream'
         elif 'currency' in column:
-            column = 'currency'
+            new_columns[column] = 'currency'
         elif 'country' in column:
-            column = 'country'
+            new_columns[column] = 'country'
         elif ('replies' in column) or ('comment' in column):
-            column = 'comments'
+            new_columns[column] = 'comments'
         elif (('page' in column) and('id' not in column)) or (column == 'profile') or ('business' in column) \
             or (('account' in column) and ('name' in column)) or (column == 'post_username'):
-            column = 'account_name'  # for twitter organic
+            new_columns[column] = 'account_name'  # for twitter organic
         elif ('caption' in column) or ('text' in column) or ('copy' in column) or ('message' in column) or(column == 'post') or (column == 'video_name'):
-            column = 'message'
+            new_columns[column] = 'message'
         elif (column == 'video_id') or ('post_id' in column) or ('ad_id' in column):
-            column = 'post_id'
+            new_columns[column] = 'post_id'
         elif ('url' in column) or (('link' in column) and ('clicks' not in column)):
-            column = 'url'
+            new_columns[column] = 'url'
         elif ('clicks' in column) and ('link' in column): #this is also equivalent to a swipe in Snapchat
-            column = 'link_clicks'  # for all_plats_paid
+            new_columns[column] = 'link_clicks'  # for all_plats_paid
         elif ('clicks' in column) and ('link' not in column):
-            column = 'clicks'  # for all_plats_paid
+            new_columns[column] = 'clicks'  # for all_plats_paid
         elif ('network' in column) or ('platform' in column):
-            column = 'platform'  # for li_tt_igStories_organic
+            new_columns[column] = 'platform'  # for li_tt_igStories_organic
         elif (('media' in column) and ('product' in column) and ('type' in column)) or ('placement' in column):
-            column = 'placement'
+            new_columns[column] = 'placement'
         elif (('type' in column) & ('post' in column)) or (('media' in column) and ('type' in column)) \
             or (('content' in column) and ('category' in column)): #creative media type for fb_ig_paid
-            column = 'media_type'
+            new_columns[column] = 'media_type'
         elif('cohort' in column):
-            column = 'cohort'
+            new_columns[column] = 'cohort'
         else:
             message = f'Column "{column}" in {name_of_df} not cleaned'
+            new_columns[column] = column
             if errors == 'raise':
                 raise Exception(message)
             cleaning_logger.logger.info(message)
 
-        new_columns.append(column)
-    if len(new_columns) != len(set(new_columns)):
-        error = f'Duplicate column names in {name_of_df} : {[item for item, count in Counter(new_columns).items() if count > 1]}'
+    duplicated_cols = [item for item,count in Counter(list(new_columns.values())).items() if count > 1]
+    cleaning_logger.logger.info(f"{name_of_df} : {new_columns}")
+    if len(duplicated_cols) > 0:
+        error = f'Duplicate column names in {name_of_df} : {[f"{key} -> {value}" for key, value in new_columns.items() if value in duplicated_cols]}'
+        # error = f'Duplicate column names in {name_of_df} : {[item for item, count in Counter(new_columns).items() if count > 1]}'
         cleaning_logger.logger.exception(error)
         raise ValueError(error)
-    df.columns = new_columns
+    df.columns = list(new_columns.values())
 
     return df
 

@@ -694,8 +694,9 @@ class UtilityFunctions():
         # Make columns to check lower case so can work on
         # Columns that have or haven't been cleaned
         col_list = [x.lower() for x in df.columns]
-        if 'spend' in col_list:
-            paid_or_organic = 'Paid'
+        # Check to see whether "spend" or "spend_usd" is in the column list
+        if 'spend' in col_list or 'spend_usd' in col_list:
+            paid_or_organic = 'Paid'    
         return paid_or_organic
 
     def pickle_data(self, data, filename, folder="Pickled Files"):
