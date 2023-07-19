@@ -171,7 +171,7 @@ class QualityAssessments:
         return error_message
     
     def comparison_with_previous_data(self, df, name_of_df, cols_to_check=['impressions','likes'], perc_increase_threshold=20,
-                                    perc_decrease_threshold=0.5, check_cols_set=True, raise_exceptions=False):
+                                    perc_decrease_threshold=0.5, check_cols_set=True, raise_exceptions=True):
             """ This function stores the high level sums for a datatable from the previous run of the script
             and if they have reduced or increased too sharply an error is raised.
 
@@ -196,6 +196,8 @@ class QualityAssessments:
                 error_message (str): String detailing what the error is so that it can be passed to a notification service like slack."""
             
             error_message, error_occured = '', False
+            client_name = self.util.client_name.lower()
+            name_of_table = f'previous_totals_check_{client_name}_{name_of_df}'
 
             # Create a dictionary of the sums of the columns specified in cols_to_check
             new_dict = {}
@@ -206,15 +208,14 @@ class QualityAssessments:
                 new_dict['Columns'] = df.columns.tolist()
             
             # Check if the historic database already exists, if not create it
-            client_name = self.util.client_name.lower()
-            if self.util.table_exists(f'{client_name}_{name_of_df}_previous_totals'):
-                historic_db = self.util.read_from_postgresql(f'{client_name}_{name_of_df}_previous_totals', clean_date=False)
+            if self.util.table_exists(name_of_table):
+                historic_db = self.util.read_from_postgresql(name_of_table, clean_date=False)
                 historic_db.drop(columns=['DateWrittenToDB'], inplace=True) # This column is not needed for comparison, it gets created when writing to the db
                 historic_db = historic_db.reset_index(drop=True)
 
             else:
                 historic_db = pd.DataFrame([new_dict])
-                self.util.write_to_postgresql(historic_db, f'{client_name}_{name_of_df}_previous_totals', if_exists='replace')
+                self.util.write_to_postgresql(historic_db, name_of_table, if_exists='replace')
                 return error_message
             
             #Turn the most recent entry in the historic db into a dict
@@ -251,8 +252,9 @@ class QualityAssessments:
             if raise_exceptions and error_occured:
                 raise Exception(error_message)
             
-            db_with_new_row = pd.concat([historic_db, pd.DataFrame([new_dict])], ignore_index=True)
-            self.util.write_to_postgresql(db_with_new_row, f'{client_name}_{name_of_df}_previous_totals', if_exists='append')
+            if not error_occured:
+                db_with_new_row = pd.concat([historic_db, pd.DataFrame([new_dict])], ignore_index=True)
+                self.util.write_to_postgresql(db_with_new_row, name_of_table, if_exists='replace')
             
             return error_message
     
@@ -287,8 +289,8 @@ class QualityAssessments:
         You can specify other columns to check for duplicates by passing a list to the cols_to_check argument. You can also add to the standard columns by passing
         a list to the cols_to_add argument.
 
-        You can specify whether to return the original dataframe with duplicates removed or just the duplicates by passing 'duplicates' or 'duplicates_removed' to the
-        return_type argument.
+        You can specify whether to return the original df, the df with duplicates removed or just the duplicates by passing 'original', 
+        'duplicates' or 'duplicates_removed' to the return_type argument.
 
         If the return type is duplicates_removed, an error message will also be returned, with the error message being blank if no duplicates are found. This can be passed
         to a notification function for example.
@@ -307,7 +309,7 @@ class QualityAssessments:
             Exception: If raise_exceptions = True and duplicates are found
         
         Returns:
-            pd.DataFrame: Returns the duplicates or the dataframe without duplicates depending on the return_type"""
+            pd.DataFrame: Returns the duplicates,the df without duplicates or the original df depending on the return_type"""
 
         num_rows = len(df)
         logger.info(f'Num of rows in {name_of_df} = {num_rows}')
@@ -331,6 +333,12 @@ class QualityAssessments:
         if cols_to_add != None:
             cols_to_check = cols_to_check + cols_to_add
         
+        #detect whether a column has the word 'age' in it and if so add that column to the cols_to_check
+        age_columns = [x for x in df.columns if ('age' in x) and ('message' not in x)]
+        if len(age_columns) > 0:
+            logger.info(f'Age columns detected: {age_columns}')
+            cols_to_check = cols_to_check + age_columns
+        
         for i in range(2, len(cols_to_check)+1):
             num_duplicates = df.duplicated(subset=cols_to_check[:i]).sum()
             logger.info(f'{num_duplicates} - {name_of_df} - {cols_to_check[:i]}')
@@ -353,6 +361,9 @@ class QualityAssessments:
 
         elif return_type == 'duplicates_removed':
             return df.drop_duplicates(subset=cols_to_check, inplace=False), error_message
+        
+        elif return_type == 'original':
+            return df
 
     
     def check_impressions_no_engagements(self, df, gsheet_name, tab_name='NoImpressionsButEngagements', raise_exceptions=False):
@@ -407,9 +418,9 @@ class QualityAssessments:
         
         return error_message
 
-    def naming_convention_checker(self, df, gsheet_name, naming_convention, campaignname_dict=None, adgroupname_dict=None, 
+    def naming_convention_checker(self,df, gsheet_name, naming_convention, campaignname_dict=None, adgroupname_dict=None, 
                                     adname_dict=None, campaign_col='campaign_name', adgroup_col='group_name', adname_col='ad_name',
-                                    spend_col= 'spend_usd', start_char='_', middle_char=':', end_char='_'):
+                                    spend_col= 'spend_usd', start_char='_', middle_char=':', end_char='_',platform_col='platform', check_meta_platform=True):
         """Checks for naming convention errors in a given DataFrame and outputs the errors to a Google Sheet.
 
         The function takes in a DataFrame containing paid data with columns for campaign name, ad group name, and ad name, 
@@ -466,16 +477,34 @@ class QualityAssessments:
                     return "Correct"
                 else:
                     return 'Incorrect Value'
-
         
-        for level in conv_level_tuple:
+        for i,level in enumerate(conv_level_tuple):
             checking_cols = []
             if 'video_views' in df.columns:
                 cols_to_sum = [spend_col, 'video_views']
             else:
                 cols_to_sum = spend_col
+            
+            if i == 2:
+                agg_dict = {col: 'sum' for col in cols_to_sum}
+                agg_dict[platform_col] = 'first'
+                output_df = round(df.groupby(level[1]).agg(agg_dict).reset_index(),1)
+
+                if check_meta_platform:
+                    checking_cols.append('platform_meta_check')
+                    def check_meta_platform_function(row):
+                        if row[platform_col] == 'Facebook':
+                            if f'{middle_char}IG{end_char}' in row[adname_col]:
+                                return 'IG in ad name but platform is Facebook'
+                        elif row[platform_col] == 'Instagram':
+                            if f'{middle_char}FB{end_char}' in row[adname_col]:
+                                return 'FB in ad name but platform is Instagram'
+                    
+                    output_df['platform_meta_check'] = output_df.apply(lambda x: check_meta_platform_function(x), axis=1)
             #For each level of the naming convention, i.e. campaign, adgroup, adname
-            output_df = round(df.groupby(level[1])[cols_to_sum].sum().reset_index(),1)
+            else:
+                output_df = round(df.groupby(level[1])[cols_to_sum].sum().reset_index(),1)
+
             if level[0] == None: continue #no convention dict provided therefore ignore
             for label,tag in level[0].items():
                 #For each label and tag in the required set 
@@ -488,5 +517,7 @@ class QualityAssessments:
                     checking_cols.append(f'{label} ("{tag}")')
                 
             output_df = output_df.sort_values(by=checking_cols, ascending=False)
-            self.util.write_to_gsheet(workbook_name = gsheet_name, sheet_name= level[2], df = output_df)
+            
+                
+            util.write_to_gsheet(workbook_name = gsheet_name, sheet_name= level[2], df = output_df)
     

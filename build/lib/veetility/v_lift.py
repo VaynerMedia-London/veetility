@@ -2,6 +2,9 @@ import pandas as pd
 # import psycopg2
 import numpy as np
 
+"""Vayner Lift (V_Lift) functions for calculating an advert of organic social posts performance by taking into account
+    The relative importance of the different enagagment metrics. For example if Likes are 5 times more prevelant than comments
+    over whole instance of a client's data then we will want to lower the importance of likes in the final score."""
 
 def add_on_weight_v2(x,inflection,w):
     """Calculate the add-on weight of the engagement metric using beta hill function
@@ -14,8 +17,8 @@ def add_on_weight_v2(x,inflection,w):
     
     Returns:
         w_value (float): the add-on weight of the engagement metric"""
+    
     hill=1
-    #print(f'inflection: {inflection}, w: {w}, x: {x}')
 
     if x==0:
         w_value=0
