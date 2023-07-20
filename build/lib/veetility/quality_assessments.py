@@ -519,5 +519,5 @@ class QualityAssessments:
             output_df = output_df.sort_values(by=checking_cols, ascending=False)
             
                 
-            self.util.write_to_gsheet(workbook_name = gsheet_name, sheet_name= level[2], df = output_df)
+            util.write_to_gsheet(workbook_name = gsheet_name, sheet_name= level[2], df = output_df)
     
