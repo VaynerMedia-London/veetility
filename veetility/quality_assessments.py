@@ -258,26 +258,7 @@ class QualityAssessments:
             
             return error_message
     
-    def duplicates_qa(self, df: pd.DataFrame, df_name: str, subset= None, drop_duplicates: bool = True):
-        """Checks for duplicates and optionally drops duplicates in a dataframe.
-        
-        Args:
-            df (pd.DataFrame): The Dataframe to be checked for duplicates
-            df_name (str): The name of the dataframe to be used for logging purposes
-            subset (Optional[Union[list, str]], optional): Only consider certain columns for identifying duplicates, by default use all of the columns
-            drop_duplicates (bool, optional): If true remove duplicate values
-            
-        Returns:
-            df (pd.DataFrame): Returns original dataframe without duplicates if 'drop_duplicates' = True"""
-
-        num_duplicates = df.duplicated(subset=subset).sum()
-        if num_duplicates >= 0:
-            logger.warning(f'{num_duplicates} duplicates found in the {df_name}. Subset = {subset}')
-            if drop_duplicates:
-                df.drop_duplicates(subset=subset, inplace=True)
-        return df
-    
-    def duplicates_qa_plus(self, df, name_of_df, perc_dupes_thresh=3, cols_to_check=None, 
+    def duplicates_qa(self, df, name_of_df, perc_dupes_thresh=3, cols_to_check=None, 
                         cols_to_add=None, return_type='duplicates', raise_exceptions=True):
         """Checks for duplicates in a dataframe and returns the duplicates or the dataframe without duplicates.
 
@@ -289,8 +270,8 @@ class QualityAssessments:
         You can specify other columns to check for duplicates by passing a list to the cols_to_check argument. You can also add to the standard columns by passing
         a list to the cols_to_add argument.
 
-        You can specify whether to return the original df, the df with duplicates removed or just the duplicates by passing 'original', 
-        'duplicates' or 'duplicates_removed' to the return_type argument.
+        You can specify whether to return the original df, the df with duplicates removed or just the duplicates or nothing by passing 'original', 
+        'duplicates' or 'duplicates_removed' or 'nothing' to the return_type argument.
 
         If the return type is duplicates_removed, an error message will also be returned, with the error message being blank if no duplicates are found. This can be passed
         to a notification function for example.
@@ -364,6 +345,9 @@ class QualityAssessments:
         
         elif return_type == 'original':
             return df
+        
+        elif return_type == 'nothing':
+            return 
 
     
     def check_impressions_no_engagements(self, df, gsheet_name, tab_name='NoImpressionsButEngagements', raise_exceptions=False):

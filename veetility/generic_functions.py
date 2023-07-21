@@ -6,10 +6,8 @@ import mimetypes
 from io import BytesIO
 import pandas as pd
 # import generic_credentials
-from snowflake.snowpark import Session
-from airflow.models import Variablepip install vayner-clean --upgrade
-pip install veetility --upgrade
-pip install vaynerqualityassessments --upgrade
+#from snowflake.snowpark import Session
+from airflow.models import Variable
 from airflow.hooks.base_hook import BaseHook
 from airflow.providers.slack.operators.slack_webhook import SlackWebhookOperator
 
