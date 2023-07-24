@@ -256,29 +256,50 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#veetility.view_through_rate.VTRConversion" class="md-nav__link">
-    VTRConversion
+  <a href="#veetility.view_through_rate.ViewThroughRateAnalysis" class="md-nav__link">
+    ViewThroughRateAnalysis
   </a>
   
-    <nav class="md-nav" aria-label="VTRConversion">
+    <nav class="md-nav" aria-label="ViewThroughRateAnalysis">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#veetility.view_through_rate.VTRConversion.run_ml_on_each_video" class="md-nav__link">
-    run_ml_on_each_video()
+  <a href="#veetility.view_through_rate.ViewThroughRateAnalysis.calc_vtr_rates" class="md-nav__link">
+    calc_vtr_rates()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veetility.view_through_rate.ViewThroughRateAnalysis.convert_video_len_to_seconds" class="md-nav__link">
+    convert_video_len_to_seconds()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veetility.view_through_rate.ViewThroughRateAnalysis.group_assets_secs_again" class="md-nav__link">
+    group_assets_secs_again()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veetility.view_through_rate.ViewThroughRateAnalysis.group_by_vtr_calcs" class="md-nav__link">
+    group_by_vtr_calcs()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veetility.view_through_rate.ViewThroughRateAnalysis.run_ml_on_each_creative" class="md-nav__link">
+    run_ml_on_each_creative()
   </a>
   
 </li>
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#veetility.view_through_rate.pickle_data" class="md-nav__link">
-    pickle_data()
-  </a>
   
 </li>
       
@@ -320,51 +341,6 @@
   
 
     
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../V_lift.md" class="md-nav__link">
-        V Lift
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Logger.md" class="md-nav__link">
-        Logger
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tutorials/" class="md-nav__link">
-        Tutorials
-      </a>
-    </li>
-  
-
-    
   </ul>
 </nav>
                   </div>
@@ -399,29 +375,50 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#veetility.view_through_rate.VTRConversion" class="md-nav__link">
-    VTRConversion
+  <a href="#veetility.view_through_rate.ViewThroughRateAnalysis" class="md-nav__link">
+    ViewThroughRateAnalysis
   </a>
   
-    <nav class="md-nav" aria-label="VTRConversion">
+    <nav class="md-nav" aria-label="ViewThroughRateAnalysis">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#veetility.view_through_rate.VTRConversion.run_ml_on_each_video" class="md-nav__link">
-    run_ml_on_each_video()
+  <a href="#veetility.view_through_rate.ViewThroughRateAnalysis.calc_vtr_rates" class="md-nav__link">
+    calc_vtr_rates()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veetility.view_through_rate.ViewThroughRateAnalysis.convert_video_len_to_seconds" class="md-nav__link">
+    convert_video_len_to_seconds()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veetility.view_through_rate.ViewThroughRateAnalysis.group_assets_secs_again" class="md-nav__link">
+    group_assets_secs_again()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veetility.view_through_rate.ViewThroughRateAnalysis.group_by_vtr_calcs" class="md-nav__link">
+    group_by_vtr_calcs()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veetility.view_through_rate.ViewThroughRateAnalysis.run_ml_on_each_creative" class="md-nav__link">
+    run_ml_on_each_creative()
   </a>
   
 </li>
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#veetility.view_through_rate.pickle_data" class="md-nav__link">
-    pickle_data()
-  </a>
   
 </li>
       
@@ -465,8 +462,8 @@
 
 
 
-<h2 id="veetility.view_through_rate.VTRConversion" class="doc doc-heading">
-        <code>VTRConversion</code>
+<h2 id="veetility.view_through_rate.ViewThroughRateAnalysis" class="doc doc-heading">
+        <code>ViewThroughRateAnalysis</code>
 
 
 </h2>
@@ -474,6 +471,16 @@
 
   <div class="doc doc-contents ">
 
+  
+      <p>Class for analysing View Through Rate (VTR) metrics of Video Ads from Social Media platforms such as TikTok and Meta.</p>
+<p>The platforms provide the VTR metrics in terms of the number of people who viewed 25%, 50%, 75% and 100% of the video. This is inconvenient
+because the videos are at greatly varying lengths. This class converts the percentages to seconds of the video watched.</p>
+<p>Once the VTR% at different points of time is calculated we can then fit a point to point regression model to the data to predict the VTR% at any point in time.
+This is used to create decay curves and also %VTR rate at a defined time (e.g. 15 seconds) consistent across videos of different lengths. </p>
+<p>This 15 second VTR rate can then be used as an engagement metric which we have shown in studies is not correlated to standard engagement metrics such
+as likes per impressions and therefore provides a completely different perspective on the performance of the Ad. It appears a large proportion of people
+watch the video for a large amount of time but just don't like or comment etc on the video. This captures the "hidden engagement" of the video.</p>
+<p>This 15second VTR rate has also been shown to not be correlated to video length and therefore can be used to compare videos of different lengths.</p>
 
 
         <details class="quote">
@@ -577,106 +584,324 @@
 <span class="normal">104</span>
 <span class="normal">105</span>
 <span class="normal">106</span>
-<span class="normal">107</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">VTRConversion</span><span class="p">:</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ViewThroughRateAnalysis</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for analysing View Through Rate (VTR) metrics of Video Ads from Social Media platforms such as TikTok and Meta.</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">():</span>
+<span class="sd">    The platforms provide the VTR metrics in terms of the number of people who viewed 25%, 50%, 75% and 100% of the video. This is inconvenient</span>
+<span class="sd">    because the videos are at greatly varying lengths. This class converts the percentages to seconds of the video watched.</span>
+
+<span class="sd">    Once the VTR% at different points of time is calculated we can then fit a point to point regression model to the data to predict the VTR% at any point in time.</span>
+<span class="sd">    This is used to create decay curves and also %VTR rate at a defined time (e.g. 15 seconds) consistent across videos of different lengths. </span>
+
+<span class="sd">    This 15 second VTR rate can then be used as an engagement metric which we have shown in studies is not correlated to standard engagement metrics such</span>
+<span class="sd">    as likes per impressions and therefore provides a completely different perspective on the performance of the Ad. It appears a large proportion of people</span>
+<span class="sd">    watch the video for a large amount of time but just don&#39;t like or comment etc on the video. This captures the &quot;hidden engagement&quot; of the video.</span>
+
+<span class="sd">    This 15second VTR rate has also been shown to not be correlated to video length and therefore can be used to compare videos of different lengths.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
 
-    <span class="k">def</span> <span class="nf">create_seconds_vtr_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ads_df</span><span class="p">):</span>
-        <span class="n">ads_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_vtr_rates</span><span class="p">(</span><span class="n">ads_df</span><span class="p">)</span>
-        <span class="n">ads_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_video_len_to_seconds</span><span class="p">(</span><span class="n">ads_df</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">ads_df</span>
+    <span class="k">def</span> <span class="nf">convert_video_len_to_seconds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span><span class="n">video_len_col</span><span class="o">=</span><span class="s1">&#39;video_length__tags&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert video length in format from Tracer usually &quot;1:20&quot; to seconds (80 seconds in this case)</span>
 
-    <span class="k">def</span> <span class="nf">create_grouped_vtr_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ads_df</span><span class="p">,</span> <span class="n">groupby_cols</span><span class="p">):</span>
-        <span class="c1"># ads_df = self.create_seconds_vtr_metrics(ads_df)</span>
-        <span class="n">ads_df_grouped</span> <span class="o">=</span> <span class="n">ads_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">groupby_cols</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tiktok_group_by_asset</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">ads_df_grouped</span>
+<span class="sd">        Args:</span>
+<span class="sd">            df (pd.DataFrame): DataFrame of Ads with a column of video lengths (named video_len_col) in the format &quot;1:20&quot;</span>
 
+<span class="sd">        Returns:</span>
+<span class="sd">            pd.DataFrame: DataFrame of Ads with a column of video lengths in seconds (named video_len_col) in the format 80&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">convert_video_len_to_seconds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
-        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">clean</span><span class="o">.</span><span class="n">video_len_toseconds</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;video_length__tags&#39;</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">clean</span><span class="o">.</span><span class="n">video_len_toseconds</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">video_len_col</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span><span class="o">!=</span><span class="s1">&#39;n/a&#39;</span><span class="p">)</span><span class="o">&amp;</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span><span class="o">!=</span><span class="s1">&#39;None&#39;</span><span class="p">)</span><span class="o">&amp;</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span><span class="o">!=</span><span class="s1">&#39;Undefined&#39;</span><span class="p">)]</span>
-        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">df</span>
 
-    <span class="k">def</span> <span class="nf">tiktok_calc_vtr_rates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">):</span>
-        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;engagements&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;likes&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;comments&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;shares&#39;</span><span class="p">]</span>
-        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;engagement_rate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;engagements&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;2s%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;ad_video_watched_2_s&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;6s%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;ad_video_watched_6_s&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">calc_vtr_rates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate VTR metrics for each Ad by converting the absolute values of the metrics to percentages</span>
+
+<span class="sd">        The Social media platforms such as TikTok and Meta report the VTR metrics as absolute values.I.e. 324 people watched 25% of the video.</span>
+<span class="sd">        This function converts the absolute values to percentages. e.g. 324 people watched 25% of the video out of 1000 impressions, therefore</span>
+<span class="sd">        the 25%VTR is 32.4%. </span>
+<span class="sd">        The platform also sometimes provide the absolute number of people who made it to 2,3 or 6 seconds into the video. This function converts</span>
+<span class="sd">        those absolute values to percentages as well.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pd.DataFrame): DataFrame of Ads</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pd.DataFrame: DataFrame of Ads with VTR metrics as percentages as extra columns&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;likes&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;engagements&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;likes&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;comments&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;shares&#39;</span><span class="p">]</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;engagement_rate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;engagements&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;video_plays&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;0s%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;video_plays&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;ad_video_watched_2_s&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;2s%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;ad_video_watched_2_s&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;ad_video_watched_3_s&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;3s%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;ad_video_watched_3_s&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;6s%VTR&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;6s%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;ad_video_watched_6_s&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
         <span class="n">df</span><span class="p">[</span><span class="s1">&#39;25%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;ad_video_views_p_25&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
         <span class="n">df</span><span class="p">[</span><span class="s1">&#39;50%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;ad_video_views_p_50&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
         <span class="n">df</span><span class="p">[</span><span class="s1">&#39;75%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;ad_video_views_p_75&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
         <span class="n">df</span><span class="p">[</span><span class="s1">&#39;100%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;video_completions&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">df</span>
 
-    <span class="k">def</span> <span class="nf">tiktok_group_by_asset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">group_by_vtr_calcs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span> <span class="n">cols_to_keep</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">ad_id_col</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create metrics at the asset level, averaging the %VTR metrics across all of the rows for each asset_id</span>
+
+<span class="sd">        Social media platforms such as TikTok and Meta provide the VTR metrics at the ad level but with each day existing on a separate row.</span>
+<span class="sd">        This function groups the rows by asset_id and calculates the average %VTR metrics for each asset_id. It also calculates the average</span>
+<span class="sd">        engagement rate for each asset_id.</span>
+
+<span class="sd">        This function also creates a coordinates column for each asset_id. The coordinates column is a list of tuples of the form (x,y) where</span>
+<span class="sd">        x is the number of seconds into the video and y is the %VTR at that point in time. This can be used to create the VTR curve for each asset_id.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x (pd.DataFrame): DataFrame of Ads grouped by asset_id</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pd.DataFrame: DataFrame of Ads grouped by asset_id with metrics at the asset level such as </span>
+<span class="sd">                average %VTR, average engagement rate, and coordinates of points for the VTR curve &quot;&quot;&quot;</span>
+
         <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">if</span> <span class="s1">&#39;message&#39;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="n">d</span><span class="p">[</span><span class="s1">&#39;message&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;message&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;num_days_ran&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;engagements&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;engagements&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">coordinates_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="n">cols_to_keep</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols_to_keep</span><span class="p">:</span>
+                <span class="n">d</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;num_rows&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">ad_id_col</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">d</span><span class="p">[</span><span class="s1">&#39;num_ad_ids&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">ad_id_col</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
         <span class="n">d</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;engagement_rate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;engagements&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;2s%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;2s%VTR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;6s%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;6s%VTR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s1">&#39;engagements&#39;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">d</span><span class="p">[</span><span class="s1">&#39;engagements&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;engagements&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="n">d</span><span class="p">[</span><span class="s1">&#39;engagement_rate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;engagements&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;0s%VTR&#39;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">d</span><span class="p">[</span><span class="s1">&#39;0s%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;0s%VTR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">coordinates_list</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;0s%VTR&#39;</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="s1">&#39;2s%VTR&#39;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">d</span><span class="p">[</span><span class="s1">&#39;2s%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;2s%VTR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">coordinates_list</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;2s%VTR&#39;</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="s1">&#39;3s%VTR&#39;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">d</span><span class="p">[</span><span class="s1">&#39;3s%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;3s%VTR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">coordinates_list</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;3s%VTR&#39;</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="s1">&#39;6s%VTR&#39;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">d</span><span class="p">[</span><span class="s1">&#39;6s%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;6s%VTR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">coordinates_list</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mi">6</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;6s%VTR&#39;</span><span class="p">]))</span>
+
         <span class="n">d</span><span class="p">[</span><span class="s1">&#39;25%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;25%VTR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
         <span class="n">d</span><span class="p">[</span><span class="s1">&#39;50%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;50%VTR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
         <span class="n">d</span><span class="p">[</span><span class="s1">&#39;75%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;75%VTR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
         <span class="n">d</span><span class="p">[</span><span class="s1">&#39;100%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;100%VTR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
         <span class="n">d</span><span class="p">[</span><span class="s1">&#39;50%VTR_std&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;50%VTR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">perc_25_in_secs</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="n">perc_50_in_secs</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="n">perc_75_in_secs</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="n">coordinates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="mi">2</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;2s%VTR&#39;</span><span class="p">]),(</span><span class="mi">6</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;6s%VTR&#39;</span><span class="p">]),</span>
-                            <span class="p">(</span><span class="n">perc_25_in_secs</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;25%VTR&#39;</span><span class="p">]),</span> <span class="p">(</span><span class="n">perc_50_in_secs</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;50%VTR&#39;</span><span class="p">]),</span> 
-                            <span class="p">(</span><span class="n">perc_75_in_secs</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;75%VTR&#39;</span><span class="p">]),</span> <span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;100%VTR&#39;</span><span class="p">])])</span>
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+        <span class="n">perc_25_in_secs</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">perc_50_in_secs</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">perc_75_in_secs</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">coordinates_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([(</span><span class="n">perc_25_in_secs</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;25%VTR&#39;</span><span class="p">]),</span> <span class="p">(</span><span class="n">perc_50_in_secs</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;50%VTR&#39;</span><span class="p">]),</span> 
+                                <span class="p">(</span><span class="n">perc_75_in_secs</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;75%VTR&#39;</span><span class="p">]),</span> <span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;100%VTR&#39;</span><span class="p">])])</span>
+
+        <span class="n">coordinates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coordinates_list</span><span class="p">)</span>
+
         <span class="n">points_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">coordinates</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">d</span><span class="p">[</span><span class="s1">&#39;coordinates&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coordinates</span><span class="p">[</span><span class="n">points_indices</span><span class="p">]</span>
 
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
 
-    <span class="k">def</span> <span class="nf">run_ml_on_each_video</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">row</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run a linear regression on the VTR data for each video.</span>
+    <span class="k">def</span> <span class="nf">run_ml_on_each_creative</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">seconds_list</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run a point-to-point linear regression on each asset_id to predict the %VTR at multiple points in time</span>
+
+<span class="sd">        Given we have the coordinates of the VTR curve for each asset_id, for example %View through rate at 3s, 6s, 9s,</span>
+<span class="sd">        this function will predict the %VTR at the seconds specified in &quot;seconds_list&quot; using a point-to-point linear regression model</span>
+
+<span class="sd">        A dataframe will be returned with a coordinates column for each asset_id. The coordinates column is a list of tuples of the form (x,y) where</span>
+<span class="sd">        x is the number of seconds into the video and y is the %VTR at that point in time. This can be used to create the VTR curve for each asset_id.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            row (pandas.Series): A pandas Series containing the VTR data for a single video.</span>
+<span class="sd">            x (pd.DataFrame): DataFrame of Ads grouped by asset_id</span>
+<span class="sd">            seconds_list (list): List of seconds into the video to predict the %VTR at. Defaults to [5,10,15,20,25,30]</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            pandas.Series: A pandas Series containing the VTR data for a single video, with the ML model predictions.&quot;&quot;&quot;</span>
+<span class="sd">            pd.DataFrame: DataFrame of Ads grouped by asset_id with a coordinates column for each asset_id. The coordinates column is a list of tuples of the form (x,y) where&quot;&quot;&quot;</span>
+        <span class="n">coordinates_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">seconds_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">seconds_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">30</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">seconds_milestone_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;coordinates&#39;</span><span class="p">])[:,</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">percentage_reached_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;coordinates&#39;</span><span class="p">])[:,</span><span class="mi">1</span><span class="p">]</span>
 
-        <span class="n">seconds_milestone_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;coordinates&#39;</span><span class="p">])[:,</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">percentage_reached_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;coordinates&#39;</span><span class="p">])[:,</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">point_to_point_linear_model</span> <span class="o">=</span> <span class="n">ptp</span><span class="o">.</span><span class="n">PointToPointRegressor</span><span class="p">()</span>
+            <span class="n">point_to_point_linear_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">seconds_milestone_array</span><span class="p">,</span> <span class="n">percentage_reached_array</span><span class="p">)</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">video_length</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span>
+            <span class="n">d</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">video_length</span>
 
-        <span class="n">point_to_point_linear_model</span> <span class="o">=</span> <span class="n">utility_functions</span><span class="o">.</span><span class="n">PointToPointRegressor</span><span class="p">()</span>
-        <span class="n">point_to_point_linear_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">seconds_milestone_array</span><span class="p">,</span> <span class="n">percentage_reached_array</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">seconds</span> <span class="ow">in</span> <span class="n">seconds_list</span><span class="p">:</span>
+                <span class="n">d</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">seconds</span><span class="si">}</span><span class="s1">secVTR%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                <span class="k">if</span> <span class="n">video_length</span> <span class="o">&gt;=</span> <span class="n">seconds</span><span class="p">:</span>
+                    <span class="n">d</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">seconds</span><span class="si">}</span><span class="s1">secVTR%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">point_to_point_linear_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">seconds</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
+                    <span class="n">coordinates_list</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">seconds</span><span class="p">,</span><span class="nb">round</span><span class="p">(</span><span class="n">point_to_point_linear_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">seconds</span><span class="p">),</span><span class="mi">2</span><span class="p">)])</span>
+
+            <span class="n">coordinates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coordinates_list</span><span class="p">)</span>
+            <span class="n">points_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">coordinates</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">d</span><span class="p">[</span><span class="s1">&#39;coordinates&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coordinates</span><span class="p">[</span><span class="n">points_indices</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">group_assets_secs_again</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span> <span class="n">cols_to_keep</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">ad_id_col</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">video_length_col</span><span class="o">=</span><span class="s1">&#39;video_length&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function groups the data again after first grouping by asset, for example if you want to group all assets from a certain </span>
+<span class="sd">        country or campaign together and calculate the average VTR metrics for that country. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x (pd.DataFrame): DataFrame of Ads grouped by asset_id</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pd.DataFrame: DataFrame of Ads grouped by asset_id with metrics at the asset level such as </span>
+<span class="sd">            average %VTR, average engagement rate, and coordinates of points for the VTR curve &quot;&quot;&quot;</span>
         <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">video_length</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span>
-        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">video_length</span>
-        <span class="c1">#point_to_point_linear_model.plot()</span>
-        <span class="c1">#Set default values</span>
-        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;5secVTR%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;10secVTR%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;15secVTR%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;20secVTR%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;25secVTR%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;30secVTR%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-        <span class="k">if</span> <span class="n">video_length</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">:</span>
-            <span class="n">d</span><span class="p">[</span><span class="s1">&#39;5secVTR%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">point_to_point_linear_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">video_length</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="p">:</span>
-            <span class="n">d</span><span class="p">[</span><span class="s1">&#39;10secVTR%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">point_to_point_linear_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">video_length</span> <span class="o">&gt;=</span> <span class="mi">15</span><span class="p">:</span>
-            <span class="n">d</span><span class="p">[</span><span class="s1">&#39;15secVTR%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">point_to_point_linear_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="mi">15</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">video_length</span> <span class="o">&gt;=</span> <span class="mi">20</span><span class="p">:</span>
-            <span class="n">d</span><span class="p">[</span><span class="s1">&#39;20secVTR%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">point_to_point_linear_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">video_length</span> <span class="o">&gt;=</span> <span class="mi">25</span><span class="p">:</span>
-            <span class="n">d</span><span class="p">[</span><span class="s1">&#39;25secVTR%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">point_to_point_linear_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="mi">25</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">video_length</span> <span class="o">&gt;=</span> <span class="mi">30</span><span class="p">:</span>
-            <span class="n">d</span><span class="p">[</span><span class="s1">&#39;30secVTR%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">point_to_point_linear_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">coordinates_list</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+        <span class="k">if</span> <span class="n">cols_to_keep</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols_to_keep</span><span class="p">:</span>
+                <span class="n">d</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;num_rows&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">ad_id_col</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">d</span><span class="p">[</span><span class="s1">&#39;num_ad_ids&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">ad_id_col</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">video_length_col</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">d</span><span class="p">[</span><span class="s1">&#39;avg_video_length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">video_length_col</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+        <span class="n">secs_vtr_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s1">&#39;secVTR%&#39;</span> <span class="ow">in</span> <span class="n">col</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">secs_vtr_cols</span><span class="p">:</span>
+            <span class="n">d</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">coordinates_list</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;sec&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">d</span><span class="p">[</span><span class="n">col</span><span class="p">]))</span>
+
+
+        <span class="n">coordinates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coordinates_list</span><span class="p">)</span>
+        <span class="n">points_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">coordinates</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;coordinates&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coordinates</span><span class="p">[</span><span class="n">points_indices</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
 </code></pre></div></td></tr></table></div>
         </details>
 
@@ -696,15 +921,20 @@
 
 
 
-<h3 id="veetility.view_through_rate.VTRConversion.run_ml_on_each_video" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">run_ml_on_each_video</span><span class="p">(</span><span class="n">row</span><span class="p">)</span></code>
+<h3 id="veetility.view_through_rate.ViewThroughRateAnalysis.calc_vtr_rates" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">calc_vtr_rates</span><span class="p">(</span><span class="n">df</span><span class="p">)</span></code>
 
 </h3>
 
 
   <div class="doc doc-contents ">
   
-      <p>Run a linear regression on the VTR data for each video.</p>
+      <p>Calculate VTR metrics for each Ad by converting the absolute values of the metrics to percentages</p>
+<p>The Social media platforms such as TikTok and Meta report the VTR metrics as absolute values.I.e. 324 people watched 25% of the video.
+This function converts the absolute values to percentages. e.g. 324 people watched 25% of the video out of 1000 impressions, therefore
+the 25%VTR is 32.4%. 
+The platform also sometimes provide the absolute number of people who made it to 2,3 or 6 seconds into the video. This function converts
+those absolute values to percentages as well.</p>
 
   <p><strong>Parameters:</strong></p>
   <table>
@@ -718,11 +948,11 @@
     </thead>
     <tbody>
         <tr>
-          <td><code>row</code></td>
+          <td><code>df</code></td>
           <td>
-                <code>pandas.<span title="pandas.Series">Series</span></code>
+                <code><span title="pandas">pd</span>.<span title="pandas.DataFrame">DataFrame</span></code>
           </td>
-          <td><p>A pandas Series containing the VTR data for a single video.</p></td>
+          <td><p>DataFrame of Ads</p></td>
           <td>
               <em>required</em>
           </td>
@@ -742,17 +972,372 @@
         <tr>
           <td>
           </td>
-          <td><p>pandas.Series: A pandas Series containing the VTR data for a single video, with the ML model predictions.</p></td>
+          <td><p>pd.DataFrame: DataFrame of Ads with VTR metrics as percentages as extra columns</p></td>
         </tr>
     </tbody>
   </table>
 
       <details class="quote">
         <summary>Source code in <code>veetility/view_through_rate.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 69</span>
-<span class="normal"> 70</span>
-<span class="normal"> 71</span>
-<span class="normal"> 72</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">calc_vtr_rates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate VTR metrics for each Ad by converting the absolute values of the metrics to percentages</span>
+
+<span class="sd">    The Social media platforms such as TikTok and Meta report the VTR metrics as absolute values.I.e. 324 people watched 25% of the video.</span>
+<span class="sd">    This function converts the absolute values to percentages. e.g. 324 people watched 25% of the video out of 1000 impressions, therefore</span>
+<span class="sd">    the 25%VTR is 32.4%. </span>
+<span class="sd">    The platform also sometimes provide the absolute number of people who made it to 2,3 or 6 seconds into the video. This function converts</span>
+<span class="sd">    those absolute values to percentages as well.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pd.DataFrame): DataFrame of Ads</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: DataFrame of Ads with VTR metrics as percentages as extra columns&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s1">&#39;likes&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;engagements&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;likes&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;comments&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;shares&#39;</span><span class="p">]</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;engagement_rate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;engagements&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;video_plays&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;0s%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;video_plays&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;ad_video_watched_2_s&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;2s%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;ad_video_watched_2_s&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;ad_video_watched_3_s&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;3s%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;ad_video_watched_3_s&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;6s%VTR&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;6s%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;ad_video_watched_6_s&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;25%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;ad_video_views_p_25&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;50%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;ad_video_views_p_50&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;75%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;ad_video_views_p_75&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;100%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;video_completions&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="veetility.view_through_rate.ViewThroughRateAnalysis.convert_video_len_to_seconds" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">convert_video_len_to_seconds</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">video_len_col</span><span class="o">=</span><span class="s1">&#39;video_length__tags&#39;</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Convert video length in format from Tracer usually "1:20" to seconds (80 seconds in this case)</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>df</code></td>
+          <td>
+                <code><span title="pandas">pd</span>.<span title="pandas.DataFrame">DataFrame</span></code>
+          </td>
+          <td><p>DataFrame of Ads with a column of video lengths (named video_len_col) in the format "1:20"</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+          </td>
+          <td><p>pd.DataFrame: DataFrame of Ads with a column of video lengths in seconds (named video_len_col) in the format 80</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>veetility/view_through_rate.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">convert_video_len_to_seconds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span><span class="n">video_len_col</span><span class="o">=</span><span class="s1">&#39;video_length__tags&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert video length in format from Tracer usually &quot;1:20&quot; to seconds (80 seconds in this case)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pd.DataFrame): DataFrame of Ads with a column of video lengths (named video_len_col) in the format &quot;1:20&quot;</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: DataFrame of Ads with a column of video lengths in seconds (named video_len_col) in the format 80&quot;&quot;&quot;</span>
+
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">clean</span><span class="o">.</span><span class="n">video_len_toseconds</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">video_len_col</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span><span class="o">!=</span><span class="s1">&#39;n/a&#39;</span><span class="p">)</span><span class="o">&amp;</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span><span class="o">!=</span><span class="s1">&#39;None&#39;</span><span class="p">)</span><span class="o">&amp;</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span><span class="o">!=</span><span class="s1">&#39;Undefined&#39;</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">df</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="veetility.view_through_rate.ViewThroughRateAnalysis.group_assets_secs_again" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">group_assets_secs_again</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cols_to_keep</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ad_id_col</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">video_length_col</span><span class="o">=</span><span class="s1">&#39;video_length&#39;</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>This function groups the data again after first grouping by asset, for example if you want to group all assets from a certain 
+country or campaign together and calculate the average VTR metrics for that country. </p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>x</code></td>
+          <td>
+                <code><span title="pandas">pd</span>.<span title="pandas.DataFrame">DataFrame</span></code>
+          </td>
+          <td><p>DataFrame of Ads grouped by asset_id</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+          </td>
+          <td><p>pd.DataFrame: DataFrame of Ads grouped by asset_id with metrics at the asset level such as </p></td>
+        </tr>
+        <tr>
+          <td>
+          </td>
+          <td><p>average %VTR, average engagement rate, and coordinates of points for the VTR curve</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>veetility/view_through_rate.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">group_assets_secs_again</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span> <span class="n">cols_to_keep</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">ad_id_col</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">video_length_col</span><span class="o">=</span><span class="s1">&#39;video_length&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This function groups the data again after first grouping by asset, for example if you want to group all assets from a certain </span>
+<span class="sd">    country or campaign together and calculate the average VTR metrics for that country. </span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x (pd.DataFrame): DataFrame of Ads grouped by asset_id</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: DataFrame of Ads grouped by asset_id with metrics at the asset level such as </span>
+<span class="sd">        average %VTR, average engagement rate, and coordinates of points for the VTR curve &quot;&quot;&quot;</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">coordinates_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="n">cols_to_keep</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols_to_keep</span><span class="p">:</span>
+            <span class="n">d</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">d</span><span class="p">[</span><span class="s1">&#39;num_rows&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">ad_id_col</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;num_ad_ids&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">ad_id_col</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">video_length_col</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;avg_video_length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">video_length_col</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+    <span class="n">d</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+    <span class="n">secs_vtr_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s1">&#39;secVTR%&#39;</span> <span class="ow">in</span> <span class="n">col</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">secs_vtr_cols</span><span class="p">:</span>
+        <span class="n">d</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">coordinates_list</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;sec&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">d</span><span class="p">[</span><span class="n">col</span><span class="p">]))</span>
+
+
+    <span class="n">coordinates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coordinates_list</span><span class="p">)</span>
+    <span class="n">points_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">coordinates</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">d</span><span class="p">[</span><span class="s1">&#39;coordinates&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coordinates</span><span class="p">[</span><span class="n">points_indices</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="veetility.view_through_rate.ViewThroughRateAnalysis.group_by_vtr_calcs" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">group_by_vtr_calcs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cols_to_keep</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ad_id_col</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Create metrics at the asset level, averaging the %VTR metrics across all of the rows for each asset_id</p>
+<p>Social media platforms such as TikTok and Meta provide the VTR metrics at the ad level but with each day existing on a separate row.
+This function groups the rows by asset_id and calculates the average %VTR metrics for each asset_id. It also calculates the average
+engagement rate for each asset_id.</p>
+<p>This function also creates a coordinates column for each asset_id. The coordinates column is a list of tuples of the form (x,y) where
+x is the number of seconds into the video and y is the %VTR at that point in time. This can be used to create the VTR curve for each asset_id.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>x</code></td>
+          <td>
+                <code><span title="pandas">pd</span>.<span title="pandas.DataFrame">DataFrame</span></code>
+          </td>
+          <td><p>DataFrame of Ads grouped by asset_id</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+          </td>
+          <td><p>pd.DataFrame: DataFrame of Ads grouped by asset_id with metrics at the asset level such as 
+average %VTR, average engagement rate, and coordinates of points for the VTR curve</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>veetility/view_through_rate.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 72</span>
 <span class="normal"> 73</span>
 <span class="normal"> 74</span>
 <span class="normal"> 75</span>
@@ -787,73 +1372,121 @@
 <span class="normal">104</span>
 <span class="normal">105</span>
 <span class="normal">106</span>
-<span class="normal">107</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">run_ml_on_each_video</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">row</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run a linear regression on the VTR data for each video.</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">group_by_vtr_calcs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span> <span class="n">cols_to_keep</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">ad_id_col</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create metrics at the asset level, averaging the %VTR metrics across all of the rows for each asset_id</span>
+
+<span class="sd">    Social media platforms such as TikTok and Meta provide the VTR metrics at the ad level but with each day existing on a separate row.</span>
+<span class="sd">    This function groups the rows by asset_id and calculates the average %VTR metrics for each asset_id. It also calculates the average</span>
+<span class="sd">    engagement rate for each asset_id.</span>
+
+<span class="sd">    This function also creates a coordinates column for each asset_id. The coordinates column is a list of tuples of the form (x,y) where</span>
+<span class="sd">    x is the number of seconds into the video and y is the %VTR at that point in time. This can be used to create the VTR curve for each asset_id.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        row (pandas.Series): A pandas Series containing the VTR data for a single video.</span>
+<span class="sd">        x (pd.DataFrame): DataFrame of Ads grouped by asset_id</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        pandas.Series: A pandas Series containing the VTR data for a single video, with the ML model predictions.&quot;&quot;&quot;</span>
+<span class="sd">        pd.DataFrame: DataFrame of Ads grouped by asset_id with metrics at the asset level such as </span>
+<span class="sd">            average %VTR, average engagement rate, and coordinates of points for the VTR curve &quot;&quot;&quot;</span>
 
-    <span class="n">seconds_milestone_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;coordinates&#39;</span><span class="p">])[:,</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">percentage_reached_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;coordinates&#39;</span><span class="p">])[:,</span><span class="mi">1</span><span class="p">]</span>
-
-    <span class="n">point_to_point_linear_model</span> <span class="o">=</span> <span class="n">utility_functions</span><span class="o">.</span><span class="n">PointToPointRegressor</span><span class="p">()</span>
-    <span class="n">point_to_point_linear_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">seconds_milestone_array</span><span class="p">,</span> <span class="n">percentage_reached_array</span><span class="p">)</span>
     <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">video_length</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span>
-    <span class="n">d</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">video_length</span>
-    <span class="c1">#point_to_point_linear_model.plot()</span>
-    <span class="c1">#Set default values</span>
-    <span class="n">d</span><span class="p">[</span><span class="s1">&#39;5secVTR%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-    <span class="n">d</span><span class="p">[</span><span class="s1">&#39;10secVTR%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-    <span class="n">d</span><span class="p">[</span><span class="s1">&#39;15secVTR%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-    <span class="n">d</span><span class="p">[</span><span class="s1">&#39;20secVTR%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-    <span class="n">d</span><span class="p">[</span><span class="s1">&#39;25secVTR%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-    <span class="n">d</span><span class="p">[</span><span class="s1">&#39;30secVTR%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-    <span class="k">if</span> <span class="n">video_length</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">:</span>
-        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;5secVTR%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">point_to_point_linear_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">video_length</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="p">:</span>
-        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;10secVTR%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">point_to_point_linear_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">video_length</span> <span class="o">&gt;=</span> <span class="mi">15</span><span class="p">:</span>
-        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;15secVTR%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">point_to_point_linear_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="mi">15</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">video_length</span> <span class="o">&gt;=</span> <span class="mi">20</span><span class="p">:</span>
-        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;20secVTR%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">point_to_point_linear_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">video_length</span> <span class="o">&gt;=</span> <span class="mi">25</span><span class="p">:</span>
-        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;25secVTR%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">point_to_point_linear_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="mi">25</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">video_length</span> <span class="o">&gt;=</span> <span class="mi">30</span><span class="p">:</span>
-        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;30secVTR%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">point_to_point_linear_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">coordinates_list</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+    <span class="k">if</span> <span class="n">cols_to_keep</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols_to_keep</span><span class="p">:</span>
+            <span class="n">d</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">d</span><span class="p">[</span><span class="s1">&#39;num_rows&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">ad_id_col</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;num_ad_ids&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">ad_id_col</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
+    <span class="n">d</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="s1">&#39;engagements&#39;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;engagements&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;engagements&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;engagement_rate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;engagements&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;0s%VTR&#39;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;0s%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;0s%VTR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">coordinates_list</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;0s%VTR&#39;</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="s1">&#39;2s%VTR&#39;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;2s%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;2s%VTR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">coordinates_list</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;2s%VTR&#39;</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="s1">&#39;3s%VTR&#39;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;3s%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;3s%VTR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">coordinates_list</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;3s%VTR&#39;</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="s1">&#39;6s%VTR&#39;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;6s%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;6s%VTR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">coordinates_list</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mi">6</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;6s%VTR&#39;</span><span class="p">]))</span>
+
+    <span class="n">d</span><span class="p">[</span><span class="s1">&#39;25%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;25%VTR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">d</span><span class="p">[</span><span class="s1">&#39;50%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;50%VTR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">d</span><span class="p">[</span><span class="s1">&#39;75%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;75%VTR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">d</span><span class="p">[</span><span class="s1">&#39;100%VTR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;100%VTR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">d</span><span class="p">[</span><span class="s1">&#39;50%VTR_std&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;50%VTR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">d</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+    <span class="n">perc_25_in_secs</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">perc_50_in_secs</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">perc_75_in_secs</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">coordinates_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([(</span><span class="n">perc_25_in_secs</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;25%VTR&#39;</span><span class="p">]),</span> <span class="p">(</span><span class="n">perc_50_in_secs</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;50%VTR&#39;</span><span class="p">]),</span> 
+                            <span class="p">(</span><span class="n">perc_75_in_secs</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;75%VTR&#39;</span><span class="p">]),</span> <span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;100%VTR&#39;</span><span class="p">])])</span>
+
+    <span class="n">coordinates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coordinates_list</span><span class="p">)</span>
+
+    <span class="n">points_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">coordinates</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">d</span><span class="p">[</span><span class="s1">&#39;coordinates&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coordinates</span><span class="p">[</span><span class="n">points_indices</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
 
 </div>
 
-
-
-  </div>
-
-  </div>
-
-</div>
-
-
 <div class="doc doc-object doc-function">
 
 
 
-<h2 id="veetility.view_through_rate.pickle_data" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">pickle_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="s1">&#39;Pickled Files&#39;</span><span class="p">)</span></code>
+<h3 id="veetility.view_through_rate.ViewThroughRateAnalysis.run_ml_on_each_creative" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">run_ml_on_each_creative</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">seconds_list</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
-</h2>
+</h3>
 
 
   <div class="doc doc-contents ">
   
-      <p>Pickle data and save it to a file.</p>
+      <p>Run a point-to-point linear regression on each asset_id to predict the %VTR at multiple points in time</p>
+<p>Given we have the coordinates of the VTR curve for each asset_id, for example %View through rate at 3s, 6s, 9s,
+this function will predict the %VTR at the seconds specified in "seconds_list" using a point-to-point linear regression model</p>
+<p>A dataframe will be returned with a coordinates column for each asset_id. The coordinates column is a list of tuples of the form (x,y) where
+x is the number of seconds into the video and y is the %VTR at that point in time. This can be used to create the VTR curve for each asset_id.</p>
 
   <p><strong>Parameters:</strong></p>
   <table>
@@ -867,64 +1500,142 @@
     </thead>
     <tbody>
         <tr>
-          <td><code>data</code></td>
+          <td><code>x</code></td>
           <td>
-                <code>Object</code>
+                <code><span title="pandas">pd</span>.<span title="pandas.DataFrame">DataFrame</span></code>
           </td>
-          <td><p>The data to be pickled.</p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr>
-          <td><code>filename</code></td>
-          <td>
-                <code>str</code>
-          </td>
-          <td><p>The name of the file to save the pickled data to.</p></td>
+          <td><p>DataFrame of Ads grouped by asset_id</p></td>
           <td>
               <em>required</em>
           </td>
         </tr>
         <tr>
-          <td><code>folder</code></td>
+          <td><code>seconds_list</code></td>
           <td>
-                <code>str</code>
+                <code>list</code>
           </td>
-          <td><p>The folder to save the pickled file to. Defaults to "Pickled Files".</p></td>
+          <td><p>List of seconds into the video to predict the %VTR at. Defaults to [5,10,15,20,25,30]</p></td>
           <td>
-                <code>&#39;Pickled Files&#39;</code>
+                <code>None</code>
           </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+          </td>
+          <td><p>pd.DataFrame: DataFrame of Ads grouped by asset_id with a coordinates column for each asset_id. The coordinates column is a list of tuples of the form (x,y) where</p></td>
         </tr>
     </tbody>
   </table>
 
       <details class="quote">
         <summary>Source code in <code>veetility/view_through_rate.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">pickle_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span><span class="n">folder</span><span class="o">=</span><span class="s2">&quot;Pickled Files&quot;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pickle data and save it to a file.</span>
-<span class="sd">    Args:</span>
-<span class="sd">        data (Object): The data to be pickled.</span>
-<span class="sd">        filename (str): The name of the file to save the pickled data to.</span>
-<span class="sd">        folder (str, optional): The folder to save the pickled file to. Defaults to &quot;Pickled Files&quot;.&quot;&quot;&quot;</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">run_ml_on_each_creative</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">seconds_list</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run a point-to-point linear regression on each asset_id to predict the %VTR at multiple points in time</span>
 
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
-    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">folder</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">))</span>
+<span class="sd">    Given we have the coordinates of the VTR curve for each asset_id, for example %View through rate at 3s, 6s, 9s,</span>
+<span class="sd">    this function will predict the %VTR at the seconds specified in &quot;seconds_list&quot; using a point-to-point linear regression model</span>
+
+<span class="sd">    A dataframe will be returned with a coordinates column for each asset_id. The coordinates column is a list of tuples of the form (x,y) where</span>
+<span class="sd">    x is the number of seconds into the video and y is the %VTR at that point in time. This can be used to create the VTR curve for each asset_id.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x (pd.DataFrame): DataFrame of Ads grouped by asset_id</span>
+<span class="sd">        seconds_list (list): List of seconds into the video to predict the %VTR at. Defaults to [5,10,15,20,25,30]</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: DataFrame of Ads grouped by asset_id with a coordinates column for each asset_id. The coordinates column is a list of tuples of the form (x,y) where&quot;&quot;&quot;</span>
+    <span class="n">coordinates_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">seconds_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">seconds_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">30</span><span class="p">]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">seconds_milestone_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;coordinates&#39;</span><span class="p">])[:,</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">percentage_reached_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;coordinates&#39;</span><span class="p">])[:,</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">point_to_point_linear_model</span> <span class="o">=</span> <span class="n">ptp</span><span class="o">.</span><span class="n">PointToPointRegressor</span><span class="p">()</span>
+        <span class="n">point_to_point_linear_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">seconds_milestone_array</span><span class="p">,</span> <span class="n">percentage_reached_array</span><span class="p">)</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">video_length</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span>
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;video_length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">video_length</span>
+
+        <span class="k">for</span> <span class="n">seconds</span> <span class="ow">in</span> <span class="n">seconds_list</span><span class="p">:</span>
+            <span class="n">d</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">seconds</span><span class="si">}</span><span class="s1">secVTR%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="k">if</span> <span class="n">video_length</span> <span class="o">&gt;=</span> <span class="n">seconds</span><span class="p">:</span>
+                <span class="n">d</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">seconds</span><span class="si">}</span><span class="s1">secVTR%&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">point_to_point_linear_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">seconds</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
+                <span class="n">coordinates_list</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">seconds</span><span class="p">,</span><span class="nb">round</span><span class="p">(</span><span class="n">point_to_point_linear_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">seconds</span><span class="p">),</span><span class="mi">2</span><span class="p">)])</span>
+
+        <span class="n">coordinates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coordinates_list</span><span class="p">)</span>
+        <span class="n">points_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">coordinates</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;coordinates&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coordinates</span><span class="p">[</span><span class="n">points_indices</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">pass</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
 
 </div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
 
 
 
