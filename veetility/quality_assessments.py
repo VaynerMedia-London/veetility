@@ -170,8 +170,8 @@ class QualityAssessments:
         logger.warning(error_message)
         return error_message
     
-    def comparison_with_previous_data(self, df, name_of_df, cols_to_check=['impressions','likes'], perc_increase_threshold=20,
-                                    perc_decrease_threshold=0.5, check_cols_set=True, raise_exceptions=True):
+    def comparison_with_previous_data(self,df, name_of_df, cols_to_check=['impressions','likes'], perc_increase_threshold=20,
+                                    perc_decrease_threshold=0.5, check_cols_set=True,unique_id_cols=None,cols_to_group=None,raise_exceptions=True, manual_override=False):
             """ This function stores the high level sums for a datatable from the previous run of the script
             and if they have reduced or increased too sharply an error is raised.
 
@@ -206,6 +206,8 @@ class QualityAssessments:
                 new_dict[col] = int(df[col].sum())
             if check_cols_set == True:
                 new_dict['Columns'] = df.columns.tolist()
+            if unique_id_cols != None:
+                new_dict['num_unique_ids'] = df[unique_id_cols].apply(lambda row: '-'.join(row.values.astype(str)),axis=1).nunique()
             
             # Check if the historic database already exists, if not create it
             if self.util.table_exists(name_of_table):
@@ -234,7 +236,7 @@ class QualityAssessments:
                         error_message = error_message + '  ' + f'The columns seems to have changed from last time,\n'\
                                                 f' Columns that were added = {columns_added}\n' \
                                                 f' Columns that were removed = {columns_removed}\n'
-                elif key == 'Date':
+                elif key in ['Date','manual_override','info']:
                     continue
                 elif new_dict[key] * (1 + perc_decrease_threshold/100) < value:
                     error_occured = True
@@ -245,18 +247,44 @@ class QualityAssessments:
                     error_message = error_message + '  ' + f'The total of {key} has increased by more than\n'\
                                         f'{perc_increase_threshold}% from last time\n'\
                                             f' Prev Value = {old_dict[key]}, New Value = {new_dict[key]}\n'
+                    
+            # If cols_to_group is specified, then group by those columns and store the info in the dict
+            if cols_to_group != None:
+                new_dict['info'] = df.groupby(cols_to_group)[cols_to_check].sum().reset_index().to_json(orient='records')
+            else:
+                new_dict['info'] = 'cols_to_group not specified, therefore no info stored'
+            
+            #The "Columns" and the "info" columns take up a low of space, so we only keep the last 5 entries in the db
+            if check_cols_set == True: 
+                cols_to_reduce_data = ['info','Columns']
 
-            if error_occured:
-                error_message = f'Comparison with historic df {name_of_df}: ' + error_message +'\n'
-                logger.info('ERROR' + error_message) # If error messages has been added to then log it
-            if raise_exceptions and error_occured:
-                raise Exception(error_message)
-            
-            if not error_occured:
-                db_with_new_row = pd.concat([historic_db, pd.DataFrame([new_dict])], ignore_index=True)
-                self.util.write_to_postgresql(db_with_new_row, name_of_table, if_exists='replace')
-            
+            if not manual_override:
+                if error_occured:
+                    error_message = f'Comparison with historic df {name_of_df}: ' + error_message + '\n'
+                    logger.info('ERROR' + error_message) # If error messages has been added to then log it
+                if raise_exceptions and error_occured:
+                    raise Exception(error_message)
+                if not error_occured:
+                    new_dict['manual_override'] = False
+                    db_with_new_row = pd.concat([historic_db, pd.DataFrame([new_dict])], ignore_index=True)
+                    db_with_new_row.loc[db_with_new_row.iloc[:-5].index,cols_to_reduce_data] = np.nan
+                    self.util.write_to_postgresql(db_with_new_row, name_of_table, if_exists='replace')
+
+            else: # If manual override is set to True, then add a new row to the historic db with the new values
+                #If the previous entry was not a manual override, then add a new row with the new "correct" value
+                if old_dict['manual_override'] == False:
+                    logger.info('Manual Override set to True, adding new row to historic db with different values now deemed to be correct') 
+                    new_dict['manual_override'] = True
+                    db_with_new_row = pd.concat([historic_db, pd.DataFrame([new_dict])], ignore_index=True)
+                    
+                    db_with_new_row.loc[db_with_new_row.iloc[:-5].index,cols_to_reduce_data] = np.nan
+                    self.util.write_to_postgresql(db_with_new_row, name_of_table, if_exists='replace')
+
+                elif old_dict['manual_override'] == True:# If the previous entry was a manual override, don't let multiple overrides happen in a row to stop someone forgetting they put manual override on and leaving it running in the script
+                    raise Exception('Manual override already in place, not adding another row, please check the new value is'\
+                                     'correct and set manual override back to False')
             return error_message
+
     
     def duplicates_qa(self, df, name_of_df, perc_dupes_thresh=3, cols_to_check=None, 
                         cols_to_add=None, return_type='duplicates', raise_exceptions=True):
@@ -503,5 +531,5 @@ class QualityAssessments:
             output_df = output_df.sort_values(by=checking_cols, ascending=False)
             
                 
-            util.write_to_gsheet(workbook_name = gsheet_name, sheet_name= level[2], df = output_df)
+            self.util.write_to_gsheet(workbook_name = gsheet_name, sheet_name= level[2], df = output_df)
     

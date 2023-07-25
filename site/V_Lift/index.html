@@ -248,51 +248,6 @@
   
 
     
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../V_lift.md" class="md-nav__link">
-        V Lift
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Logger.md" class="md-nav__link">
-        Logger
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tutorials/" class="md-nav__link">
-        Tutorials
-      </a>
-    </li>
-  
-
-    
   </ul>
 </nav>
                   </div>
@@ -456,10 +411,7 @@ if the value is higher than the threshold, return the logit transformed weight, 
 
       <details class="quote">
         <summary>Source code in <code>veetility/v_lift.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 9</span>
 <span class="normal">10</span>
 <span class="normal">11</span>
 <span class="normal">12</span>
@@ -474,7 +426,10 @@ if the value is higher than the threshold, return the logit transformed weight, 
 <span class="normal">21</span>
 <span class="normal">22</span>
 <span class="normal">23</span>
-<span class="normal">24</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">add_on_weight_v2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">inflection</span><span class="p">,</span><span class="n">w</span><span class="p">):</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">add_on_weight_v2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">inflection</span><span class="p">,</span><span class="n">w</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the add-on weight of the engagement metric using beta hill function</span>
 <span class="sd">    if the value is higher than the threshold, return the logit transformed weight, else return 0</span>
 
@@ -485,8 +440,8 @@ if the value is higher than the threshold, return the logit transformed weight, 
 
 <span class="sd">    Returns:</span>
 <span class="sd">        w_value (float): the add-on weight of the engagement metric&quot;&quot;&quot;</span>
+
     <span class="n">hill</span><span class="o">=</span><span class="mi">1</span>
-    <span class="c1">#print(f&#39;inflection: {inflection}, w: {w}, x: {x}&#39;)</span>
 
     <span class="k">if</span> <span class="n">x</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
         <span class="n">w_value</span><span class="o">=</span><span class="mi">0</span>
@@ -578,10 +533,7 @@ Return a dataframe with all original columns and three results columns: ER, Scor
 
       <details class="quote">
         <summary>Source code in <code>veetility/v_lift.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">30</span>
 <span class="normal">31</span>
 <span class="normal">32</span>
 <span class="normal">33</span>
@@ -616,7 +568,10 @@ Return a dataframe with all original columns and three results columns: ER, Scor
 <span class="normal">62</span>
 <span class="normal">63</span>
 <span class="normal">64</span>
-<span class="normal">65</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">v_lift</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">metric_list</span><span class="p">,</span><span class="n">impression_weight</span><span class="p">):</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">v_lift</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">metric_list</span><span class="p">,</span><span class="n">impression_weight</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the lift value for the engagement columns, </span>
 <span class="sd">    Return a dataframe with all original columns and three results columns: ER, Score and V_lift</span>
 

@@ -384,51 +384,6 @@
   
 
     
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../V_lift.md" class="md-nav__link">
-        V Lift
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Logger.md" class="md-nav__link">
-        Logger
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tutorials/" class="md-nav__link">
-        Tutorials
-      </a>
-    </li>
-  
-
-    
   </ul>
 </nav>
                   </div>
@@ -785,7 +740,27 @@ then other functions in other libraries can work with the dataset.</p>
 <span class="normal">124</span>
 <span class="normal">125</span>
 <span class="normal">126</span>
-<span class="normal">127</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clean_column_names</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">name_of_df</span><span class="p">,</span><span class="n">hardcode_col_dict</span> <span class="o">=</span> <span class="p">{},</span><span class="n">errors</span><span class="o">=</span> <span class="s1">&#39;ignore&#39;</span><span class="p">,</span><span class="n">cols_no_change</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;spend&#39;</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;currency&#39;</span><span class="p">,</span> 
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clean_column_names</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">name_of_df</span><span class="p">,</span><span class="n">hardcode_col_dict</span> <span class="o">=</span> <span class="p">{},</span><span class="n">errors</span><span class="o">=</span> <span class="s1">&#39;ignore&#39;</span><span class="p">,</span><span class="n">cols_no_change</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;spend&#39;</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;currency&#39;</span><span class="p">,</span> 
                             <span class="s1">&#39;cohort&#39;</span><span class="p">,</span> <span class="s1">&#39;creative_name&#39;</span><span class="p">,</span> <span class="s1">&#39;group_id&#39;</span><span class="p">,</span> <span class="s1">&#39;engagements&#39;</span><span class="p">,</span> <span class="s1">&#39;created&#39;</span><span class="p">,</span> <span class="s1">&#39;ad_id&#39;</span><span class="p">,</span>
                             <span class="s1">&#39;plays&#39;</span><span class="p">,</span> <span class="s1">&#39;saved&#39;</span><span class="p">,</span> <span class="s1">&#39;post_hastags&#39;</span><span class="p">,</span> <span class="s1">&#39;content_type&#39;</span><span class="p">,</span> <span class="s1">&#39;linked_content&#39;</span><span class="p">,</span> <span class="s1">&#39;post_id&#39;</span><span class="p">,</span>
                             <span class="s1">&#39;video_duration&#39;</span><span class="p">,</span> <span class="s1">&#39;average_time_watched&#39;</span><span class="p">,</span> <span class="s1">&#39;total_time_watched&#39;</span><span class="p">,</span>
@@ -807,87 +782,107 @@ then other functions in other libraries can work with the dataset.</p>
 <span class="sd">    Returns:</span>
 <span class="sd">        DataFrame: Output dataframe with the column names standardized.&quot;&quot;&quot;</span>
 
-    <span class="n">new_columns</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">new_columns</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="n">column</span> <span class="o">=</span> <span class="n">column</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="n">hardcode_col_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">hardcode_col_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span> <span class="c1">#make sure the keys are lowercase</span>
         <span class="c1">#hardcoded columns, for those unusual columns</span>
         <span class="k">if</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">hardcode_col_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="n">hardcode_col_dict</span><span class="p">[</span><span class="n">column</span><span class="p">]</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">hardcode_col_dict</span><span class="p">[</span><span class="n">column</span><span class="p">]</span>
+            <span class="k">continue</span>
         <span class="k">if</span> <span class="s1">&#39;day&#39;</span> <span class="o">==</span> <span class="n">column</span><span class="p">:</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;date&#39;</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;date&#39;</span>
         <span class="c1">#Columns not to be changed and that don&#39;t get called similar things</span>
         <span class="k">elif</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">cols_no_change</span><span class="p">:</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="n">column</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">column</span>
+            <span class="k">continue</span>
         <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;created&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">((</span><span class="s1">&#39;date&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;time&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;video&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)):</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;date&#39;</span>  <span class="c1"># for organic</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;date&#39;</span>  <span class="c1"># for organic</span>
         <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;video_create_time&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;post_timestamp&#39;</span>  <span class="c1"># TikTok organic</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;post_timestamp&#39;</span>  <span class="c1"># TikTok organic</span>
         <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;like&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;favorite&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;reaction&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;likes&#39;</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;likes&#39;</span>
         <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;video&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;impression&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;unique&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;impressions&#39;</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;impressions&#39;</span>
         <span class="k">elif</span> <span class="p">(</span><span class="n">column</span> <span class="o">==</span> <span class="s1">&#39;reach&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">((</span><span class="s1">&#39;impressions&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;unique&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)):</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;reach&#39;</span>
-        <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;campaign&#39;</span><span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;name&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;campaign_name&#39;</span>
-        <span class="k">elif</span> <span class="p">((</span><span class="s1">&#39;adset&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;group&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;name&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;group_name&#39;</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;reach&#39;</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;campaign&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;name&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;campaign_name&#39;</span>
+        <span class="k">elif</span> <span class="p">((</span><span class="s1">&#39;set&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;group&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;name&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;group_name&#39;</span>
         <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;ad&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;name&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;ad_name&#39;</span> <span class="c1"># for TikTok organic</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;ad_name&#39;</span> <span class="c1"># for TikTok organic</span>
         <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;creative&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;name&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;creative_name&#39;</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;creative_name&#39;</span>
         <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;video&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;impression&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>                       
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;video_impressions&#39;</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;video_impressions&#39;</span>
         <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;shares&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;retweet&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;shares&#39;</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;shares&#39;</span>
         <span class="k">elif</span> <span class="p">((</span><span class="s1">&#39;conversion&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;lifetime&#39;</span><span class="ow">in</span> <span class="n">column</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;save&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span> <span class="c1">#_1d_click_onsite_conversion_post_save in fb_ig_paid data</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;saved&#39;</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;saved&#39;</span>
+
+        <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;video&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;view&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">x</span> <span class="ow">in</span> <span class="n">column</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="s1">&#39;2&#39;</span><span class="p">,</span><span class="s1">&#39;3&#39;</span><span class="p">,</span><span class="s1">&#39;6&#39;</span><span class="p">]):</span> <span class="c1">#don&#39;t include column with 25,50,75% completion</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;video_views&#39;</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;video&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;25&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;ad_video_views_p_25&#39;</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;video&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;50&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;ad_video_views_p_50&#39;</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;video&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;75&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;ad_video_views_p_75&#39;</span>
         <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;video&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">((</span><span class="s1">&#39;100&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;complet&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">or</span><span class="p">(</span><span class="s1">&#39;full&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)):</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;video_completions&#39;</span>
-        <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;video&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;view&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;0&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;5&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span> <span class="c1">#don&#39;t include column with 25,50,75% completion</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;video_views&#39;</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;video_completions&#39;</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;video&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;2&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;ad_video_watched_2_s&#39;</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;video&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;3&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;ad_video_watched_3_s&#39;</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;video&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;6&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;ad_video_watched_6_s&#39;</span>
+
         <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;organic&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;boosted&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span> <span class="s1">&#39;workstream&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;workstream&#39;</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;workstream&#39;</span>
         <span class="k">elif</span> <span class="s1">&#39;currency&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">:</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;currency&#39;</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;currency&#39;</span>
         <span class="k">elif</span> <span class="s1">&#39;country&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">:</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;country&#39;</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;country&#39;</span>
         <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;replies&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;comment&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;comments&#39;</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;comments&#39;</span>
         <span class="k">elif</span> <span class="p">((</span><span class="s1">&#39;page&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span><span class="p">(</span><span class="s1">&#39;id&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">column</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="n">column</span> <span class="o">==</span> <span class="s1">&#39;profile&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;business&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> \
             <span class="ow">or</span> <span class="p">((</span><span class="s1">&#39;account&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;name&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="n">column</span> <span class="o">==</span> <span class="s1">&#39;post_username&#39;</span><span class="p">):</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;account_name&#39;</span>  <span class="c1"># for twitter organic</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;account_name&#39;</span>  <span class="c1"># for twitter organic</span>
         <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;caption&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;text&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;copy&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;message&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">or</span><span class="p">(</span><span class="n">column</span> <span class="o">==</span> <span class="s1">&#39;post&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">column</span> <span class="o">==</span> <span class="s1">&#39;video_name&#39;</span><span class="p">):</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;message&#39;</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;message&#39;</span>
         <span class="k">elif</span> <span class="p">(</span><span class="n">column</span> <span class="o">==</span> <span class="s1">&#39;video_id&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;post_id&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;ad_id&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;post_id&#39;</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;post_id&#39;</span>
         <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;url&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">or</span> <span class="p">((</span><span class="s1">&#39;link&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;clicks&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)):</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;url&#39;</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;url&#39;</span>
         <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;clicks&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;link&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span> <span class="c1">#this is also equivalent to a swipe in Snapchat</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;link_clicks&#39;</span>  <span class="c1"># for all_plats_paid</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;link_clicks&#39;</span>  <span class="c1"># for all_plats_paid</span>
         <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;clicks&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;link&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;clicks&#39;</span>  <span class="c1"># for all_plats_paid</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;clicks&#39;</span>  <span class="c1"># for all_plats_paid</span>
         <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;network&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;platform&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;platform&#39;</span>  <span class="c1"># for li_tt_igStories_organic</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;platform&#39;</span>  <span class="c1"># for li_tt_igStories_organic</span>
         <span class="k">elif</span> <span class="p">((</span><span class="s1">&#39;media&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;product&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;type&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;placement&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;placement&#39;</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;placement&#39;</span>
         <span class="k">elif</span> <span class="p">((</span><span class="s1">&#39;type&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="s1">&#39;post&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">))</span> <span class="ow">or</span> <span class="p">((</span><span class="s1">&#39;media&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;type&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">))</span> \
             <span class="ow">or</span> <span class="p">((</span><span class="s1">&#39;content&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;category&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">)):</span> <span class="c1">#creative media type for fb_ig_paid</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;media_type&#39;</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;media_type&#39;</span>
         <span class="k">elif</span><span class="p">(</span><span class="s1">&#39;cohort&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">):</span>
-            <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;cohort&#39;</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;cohort&#39;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Column &quot;</span><span class="si">{</span><span class="n">column</span><span class="si">}</span><span class="s1">&quot; in </span><span class="si">{</span><span class="n">name_of_df</span><span class="si">}</span><span class="s1"> not cleaned&#39;</span>
+            <span class="n">new_columns</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">column</span>
             <span class="k">if</span> <span class="n">errors</span> <span class="o">==</span> <span class="s1">&#39;raise&#39;</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
             <span class="n">cleaning_logger</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
-        <span class="n">new_columns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_columns</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">new_columns</span><span class="p">)):</span>
-        <span class="n">cleaning_logger</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Duplicate column names in </span><span class="si">{</span><span class="n">name_of_df</span><span class="si">}</span><span class="s1"> : </span><span class="si">{</span><span class="p">[</span><span class="n">item</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">item</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">Counter</span><span class="p">(</span><span class="n">new_columns</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span>
-    <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">new_columns</span>
+    <span class="n">duplicated_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span><span class="p">,</span><span class="n">count</span> <span class="ow">in</span> <span class="n">Counter</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">new_columns</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">cleaning_logger</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name_of_df</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">new_columns</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">duplicated_cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Duplicate column names in </span><span class="si">{</span><span class="n">name_of_df</span><span class="si">}</span><span class="s1"> : </span><span class="si">{</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">new_columns</span><span class="o">.</span><span class="n">items</span><span class="p">()</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">duplicated_cols</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="c1"># error = f&#39;Duplicate column names in {name_of_df} : {[item for item, count in Counter(new_columns).items() if count &gt; 1]}&#39;</span>
+        <span class="n">cleaning_logger</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">new_columns</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
     <span class="k">return</span> <span class="n">df</span>
 </code></pre></div></td></tr></table></div>
@@ -912,32 +907,32 @@ then other functions in other libraries can work with the dataset.</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">255</span>
-<span class="normal">256</span>
-<span class="normal">257</span>
-<span class="normal">258</span>
-<span class="normal">259</span>
-<span class="normal">260</span>
-<span class="normal">261</span>
-<span class="normal">262</span>
-<span class="normal">263</span>
-<span class="normal">264</span>
-<span class="normal">265</span>
-<span class="normal">266</span>
-<span class="normal">267</span>
-<span class="normal">268</span>
-<span class="normal">269</span>
-<span class="normal">270</span>
-<span class="normal">271</span>
-<span class="normal">272</span>
-<span class="normal">273</span>
-<span class="normal">274</span>
-<span class="normal">275</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">275</span>
 <span class="normal">276</span>
 <span class="normal">277</span>
 <span class="normal">278</span>
 <span class="normal">279</span>
-<span class="normal">280</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clean_media_type</span><span class="p">(</span><span class="n">media_type</span><span class="p">):</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clean_media_type</span><span class="p">(</span><span class="n">media_type</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Clean the media type into a standardised version of media type&quot;&quot;&quot;</span>
     <span class="n">media_type</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">media_type</span><span class="p">)</span>
     <span class="c1"># replace multiple underscores with a single space</span>
@@ -1027,23 +1022,23 @@ then other functions in other libraries can work with the dataset.</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">283</span>
-<span class="normal">284</span>
-<span class="normal">285</span>
-<span class="normal">286</span>
-<span class="normal">287</span>
-<span class="normal">288</span>
-<span class="normal">289</span>
-<span class="normal">290</span>
-<span class="normal">291</span>
-<span class="normal">292</span>
-<span class="normal">293</span>
-<span class="normal">294</span>
-<span class="normal">295</span>
-<span class="normal">296</span>
-<span class="normal">297</span>
-<span class="normal">298</span>
-<span class="normal">299</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clean_placement</span><span class="p">(</span><span class="n">placement</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clean_placement</span><span class="p">(</span><span class="n">placement</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Clean a placement string into a standardised placement</span>
 <span class="sd">    Args:</span>
 <span class="sd">        placement (str): A string representing the placement of the post </span>
@@ -1085,18 +1080,18 @@ presented as having a capital letter midway through the word.</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">205</span>
-<span class="normal">206</span>
-<span class="normal">207</span>
-<span class="normal">208</span>
-<span class="normal">209</span>
-<span class="normal">210</span>
-<span class="normal">211</span>
-<span class="normal">212</span>
-<span class="normal">213</span>
-<span class="normal">214</span>
-<span class="normal">215</span>
-<span class="normal">216</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clean_platform_name</span><span class="p">(</span><span class="n">platform</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clean_platform_name</span><span class="p">(</span><span class="n">platform</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Cleans platform name, deals with the fact that most platforms </span>
 <span class="sd">    are in the &#39;title&#39; case, i.e. First letter of each word is capitalised</span>
 <span class="sd">    However there are some platforms that have are one word but are usually </span>
@@ -1133,21 +1128,21 @@ This removes the utm parameters</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">218</span>
-<span class="normal">219</span>
-<span class="normal">220</span>
-<span class="normal">221</span>
-<span class="normal">222</span>
-<span class="normal">223</span>
-<span class="normal">224</span>
-<span class="normal">225</span>
-<span class="normal">226</span>
-<span class="normal">227</span>
-<span class="normal">228</span>
-<span class="normal">229</span>
-<span class="normal">230</span>
-<span class="normal">231</span>
-<span class="normal">232</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clean_url</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clean_url</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Clean the url of the post to produce a string with just</span>
 <span class="sd">        the important information for matching</span>
 <span class="sd">        In he case of Tiktok remove everything after and including the ?</span>
@@ -1184,12 +1179,12 @@ This removes the utm parameters</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">306</span>
-<span class="normal">307</span>
-<span class="normal">308</span>
-<span class="normal">309</span>
-<span class="normal">310</span>
-<span class="normal">311</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">extract_after_nth_occurrence</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">char</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">extract_after_nth_occurrence</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">char</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts the string between the nth and n+1th occurrence of the character&quot;&quot;&quot;</span>
     <span class="n">extract</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">char</span><span class="p">)[</span><span class="n">n</span><span class="p">]</span>
     <span class="n">extract</span> <span class="o">=</span> <span class="n">extract</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
@@ -1270,27 +1265,7 @@ country Tag abbreviation mostly following the ISO 3166-1 alpha-2 format</p></td>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span>
-<span class="normal">132</span>
-<span class="normal">133</span>
-<span class="normal">134</span>
-<span class="normal">135</span>
-<span class="normal">136</span>
-<span class="normal">137</span>
-<span class="normal">138</span>
-<span class="normal">139</span>
-<span class="normal">140</span>
-<span class="normal">141</span>
-<span class="normal">142</span>
-<span class="normal">143</span>
-<span class="normal">144</span>
-<span class="normal">145</span>
-<span class="normal">146</span>
-<span class="normal">147</span>
-<span class="normal">148</span>
-<span class="normal">149</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">149</span>
 <span class="normal">150</span>
 <span class="normal">151</span>
 <span class="normal">152</span>
@@ -1309,7 +1284,27 @@ country Tag abbreviation mostly following the ISO 3166-1 alpha-2 format</p></td>
 <span class="normal">165</span>
 <span class="normal">166</span>
 <span class="normal">167</span>
-<span class="normal">168</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">extract_country_from_string</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">client_name</span><span class="p">,</span> <span class="n">hardcode_dict</span><span class="p">):</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">extract_country_from_string</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">client_name</span><span class="p">,</span> <span class="n">hardcode_dict</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a string containing info identifying a certain </span>
 <span class="sd">    Args:</span>
 <span class="sd">        string : str </span>
@@ -1371,10 +1366,10 @@ country Tag abbreviation mostly following the ISO 3166-1 alpha-2 format</p></td>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">301</span>
-<span class="normal">302</span>
-<span class="normal">303</span>
-<span class="normal">304</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">extract_quarter_from_date</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">extract_quarter_from_date</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts the quarter from the date&quot;&quot;&quot;</span>
     <span class="n">date</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">date</span><span class="o">.</span><span class="n">quarter</span>
@@ -1456,31 +1451,31 @@ None</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">178</span>
-<span class="normal">179</span>
-<span class="normal">180</span>
-<span class="normal">181</span>
-<span class="normal">182</span>
-<span class="normal">183</span>
-<span class="normal">184</span>
-<span class="normal">185</span>
-<span class="normal">186</span>
-<span class="normal">187</span>
-<span class="normal">188</span>
-<span class="normal">189</span>
-<span class="normal">190</span>
-<span class="normal">191</span>
-<span class="normal">192</span>
-<span class="normal">193</span>
-<span class="normal">194</span>
-<span class="normal">195</span>
-<span class="normal">196</span>
-<span class="normal">197</span>
-<span class="normal">198</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">198</span>
 <span class="normal">199</span>
 <span class="normal">200</span>
 <span class="normal">201</span>
-<span class="normal">202</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">extract_region_from_country</span><span class="p">(</span><span class="n">country</span><span class="p">):</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">extract_region_from_country</span><span class="p">(</span><span class="n">country</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts the region from the given country.</span>
 
 <span class="sd">    Args:</span>
@@ -1529,13 +1524,13 @@ are essentially the same but one just has a whitespace</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">170</span>
-<span class="normal">171</span>
-<span class="normal">172</span>
-<span class="normal">173</span>
-<span class="normal">174</span>
-<span class="normal">175</span>
-<span class="normal">176</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">strip_object_columns</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">strip_object_columns</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Strips leading and trailing whitespaces in columns containing strings. </span>
 <span class="sd">        This stops effective duplications when two categories in a column </span>
 <span class="sd">        are essentially the same but one just has a whitespace&quot;&quot;&quot;</span>
@@ -1566,22 +1561,22 @@ the highest amount of 'impressions' or 'video views'</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">335</span>
-<span class="normal">336</span>
-<span class="normal">337</span>
-<span class="normal">338</span>
-<span class="normal">339</span>
-<span class="normal">340</span>
-<span class="normal">341</span>
-<span class="normal">342</span>
-<span class="normal">343</span>
-<span class="normal">344</span>
-<span class="normal">345</span>
-<span class="normal">346</span>
-<span class="normal">347</span>
-<span class="normal">348</span>
-<span class="normal">349</span>
-<span class="normal">350</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">two_urls_per_post_to_1</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">target_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">two_urls_per_post_to_1</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">target_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Sometimes there are identical posts posted on the same day. </span>
 <span class="sd">    This can be used to return just the url of the post with</span>
 <span class="sd">    the highest amount of &#39;impressions&#39; or &#39;video views&#39;&quot;&quot;&quot;</span>
@@ -1621,26 +1616,26 @@ it is a numerical code, sometimes it is alphanumeric</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">234</span>
-<span class="normal">235</span>
-<span class="normal">236</span>
-<span class="normal">237</span>
-<span class="normal">238</span>
-<span class="normal">239</span>
-<span class="normal">240</span>
-<span class="normal">241</span>
-<span class="normal">242</span>
-<span class="normal">243</span>
-<span class="normal">244</span>
-<span class="normal">245</span>
-<span class="normal">246</span>
-<span class="normal">247</span>
-<span class="normal">248</span>
-<span class="normal">249</span>
-<span class="normal">250</span>
-<span class="normal">251</span>
-<span class="normal">252</span>
-<span class="normal">253</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">updated_value_extract</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">updated_value_extract</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract the unique identifier for a post from the url</span>
 <span class="sd">        This format of this code depends on the platform, sometimes</span>
 <span class="sd">        it is a numerical code, sometimes it is alphanumeric&quot;&quot;&quot;</span>
@@ -1671,39 +1666,171 @@ it is a numerical code, sometimes it is alphanumeric</p>
 
 
 <h2 id="veetility.cleaning_functions.video_len_toseconds" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">video_len_toseconds</span><span class="p">(</span><span class="n">len_string</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">video_len_toseconds</span><span class="p">(</span><span class="n">video_length</span><span class="p">)</span></code>
 
 </h2>
 
 
   <div class="doc doc-contents ">
   
-      <p>Video lengths come through tracer in the format 'minute:seconds', e.g. '1:20' or 80 seconds
-This function converts it into just seconds</p>
+      <p>Convert video length in format from Tracer usually "1:20" to seconds (80 seconds in this case)</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>video_length</code></td>
+          <td>
+                <code>str or int</code>
+          </td>
+          <td><p>A string representing video length, 
+which can be in the format of 'minutes:seconds' or 'minutes.seconds', 
+or an integer representing the video length in seconds. </p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+<td><code>int</code></td>          <td>
+                <code>int</code>
+          </td>
+          <td><p>The video length in seconds.
+Returns None if the input does not make sense 
+(for example, negative times, or strings that don't match the expected formats).</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">video_len_toseconds</span><span class="p">(</span><span class="s1">&#39;1:20&#39;</span><span class="p">)</span>
+<span class="go">80</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">video_len_toseconds</span><span class="p">(</span><span class="s1">&#39;0.20&#39;</span><span class="p">)</span>
+<span class="go">20</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">video_len_toseconds</span><span class="p">(</span><span class="s1">&#39;20&#39;</span><span class="p">)</span>
+<span class="go">20</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">video_len_toseconds</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+<span class="go">30</span>
+</code></pre></div>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">369</span>
-<span class="normal">370</span>
-<span class="normal">371</span>
-<span class="normal">372</span>
-<span class="normal">373</span>
-<span class="normal">374</span>
-<span class="normal">375</span>
-<span class="normal">376</span>
-<span class="normal">377</span>
-<span class="normal">378</span>
-<span class="normal">379</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">video_len_toseconds</span><span class="p">(</span><span class="n">len_string</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Video lengths come through tracer in the format &#39;minute:seconds&#39;, e.g. &#39;1:20&#39; or 80 seconds</span>
-<span class="sd">        This function converts it into just seconds&quot;&quot;&quot;</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">387</span>
+<span class="normal">388</span>
+<span class="normal">389</span>
+<span class="normal">390</span>
+<span class="normal">391</span>
+<span class="normal">392</span>
+<span class="normal">393</span>
+<span class="normal">394</span>
+<span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">video_len_toseconds</span><span class="p">(</span><span class="n">video_length</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert video length in format from Tracer usually &quot;1:20&quot; to seconds (80 seconds in this case)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        video_length (str or int): A string representing video length, </span>
+<span class="sd">            which can be in the format of &#39;minutes:seconds&#39; or &#39;minutes.seconds&#39;, </span>
+<span class="sd">            or an integer representing the video length in seconds. </span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int: The video length in seconds.</span>
+<span class="sd">            Returns None if the input does not make sense </span>
+<span class="sd">            (for example, negative times, or strings that don&#39;t match the expected formats).</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; video_len_toseconds(&#39;1:20&#39;)</span>
+<span class="sd">        80</span>
+<span class="sd">        &gt;&gt;&gt; video_len_toseconds(&#39;0.20&#39;)</span>
+<span class="sd">        20</span>
+<span class="sd">        &gt;&gt;&gt; video_len_toseconds(&#39;20&#39;)</span>
+<span class="sd">        20</span>
+<span class="sd">        &gt;&gt;&gt; video_len_toseconds(30)</span>
+<span class="sd">        30</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">video_length</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">video_length</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">video_length</span>
+
+    <span class="n">video_length</span> <span class="o">=</span> <span class="n">video_length</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">if</span> <span class="s1">&#39;:&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">len_string</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">len_string</span>
-        <span class="n">minutes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">len_string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">seconds</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">len_string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">minutes</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span> <span class="o">+</span> <span class="n">seconds</span>
-    <span class="k">except</span><span class="p">:</span>
+        <span class="c1"># Check if the string contains a &quot;:&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;:&#39;</span> <span class="ow">in</span> <span class="n">video_length</span><span class="p">:</span>
+            <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">video_length</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">))</span>
+        <span class="c1"># Check if the string contains a &quot;.&quot;</span>
+        <span class="k">elif</span> <span class="s1">&#39;.&#39;</span> <span class="ow">in</span> <span class="n">video_length</span><span class="p">:</span>
+            <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">video_length</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">))</span>
+        <span class="c1"># If no &quot;:&quot; or &quot;.&quot; are present, then it&#39;s just seconds</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">seconds</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">video_length</span><span class="p">)</span>
+            <span class="n">minutes</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">minutes</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">seconds</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="n">minutes</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">+</span> <span class="n">seconds</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
