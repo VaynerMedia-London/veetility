@@ -6,7 +6,6 @@ Home-page:
 Author: Vaynermedia
 Author-email: will.butler@vaynermedia.com
 License: MIT
-Platform: UNKNOWN
 Classifier: Intended Audience :: Developers
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Programming Language :: Python
@@ -83,4 +82,3 @@ First pass in the name of the Google Sheet workbook, then the tab of the workboo
 util.write_to_gsheet("Indeed Data Error Tracking","PaidNoBoostedMatch", 
                         paid_no_boosted_match)
 ```
-
