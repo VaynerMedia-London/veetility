@@ -3,7 +3,6 @@
 import pandas as pd
 # from sqlalchemy import create_engine
 # from snowflake.sqlalchemy import URL
-# from snowflake.snowpark import Session
 from snowflake.sqlalchemy import URL
 import snowflake.connector
 from snowflake.connector.pandas_tools import write_pandas
@@ -93,19 +92,6 @@ class Snowflake():
         return df_total
 
     
-    
-    def drop_table(self,table_name,database=None, schema=None):
-        '''Function to drop Snowflake table
-        
-        Args:
-            table_name (str): Name of the table to drop
-            database (str, optional): Name of the database to drop the table from. Defaults to the database specified on class initialisation.
-            schema (str, optional): Name of the schema to drop the table from. Defaults to the schema specified on class initialisation.
-        
-        Returns:
-            None'''
-        pass
-    
     def write_df_to_snowflake(self, df, table_name, database=None, schema=None,
                           auto_create_table=False, overwrite=False, chunk_size=20000):
         '''Function to write Pandas dataframe to Snowflake table
@@ -158,4 +144,41 @@ class Snowflake():
                     print("Connection failed again")
                     print(f'{table_name} error: ' + str(error_message))
                     return f'{table_name} error: ' + str(error_message) 
-# %%
+
+def drop_table(self, table_name, database=None, schema=None):
+        '''Function to drop Snowflake table
+        
+        Args:
+            table_name (str): Name of the table to drop
+            database (str, optional): Name of the database to drop the table from. Defaults to the database specified on class initialisation.
+            schema (str, optional): Name of the schema to drop the table from. Defaults to the schema specified on class initialisation.
+        
+        Returns:
+            Message that the table has been dropped'''
+        
+        # Set default values for database and schema if not provided
+        if schema == None:
+            schema = self.schema
+        if database == None:
+            database = self.database
+        
+        # Create connection to Snowflake
+        with snowflake.connector.connect(
+            user=self.user,
+            password=self.password,
+            account=self.account,
+            warehouse=self.warehouse,
+            database=self.database,
+            schema=schema,
+        ) as conn:
+        
+            # Create cursor
+            with conn.cursor() as cur:
+                
+                # Drop table
+                cur.execute(f"DROP TABLE IF EXISTS {table_name}")
+                
+                # Commit changes
+                conn.commit()
+                
+        return f"Table {table_name} has been dropped."

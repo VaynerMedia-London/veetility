@@ -88,49 +88,6 @@ def write_to_gsheet(service_file_path, spreadsheet_id, sheet_name, data_df):
     if wks_write.rows > 1:
         wks_write.frozen_rows = 1
 
-
-def initiate_snowflake_connection(connection_parameters):
-    '''
-    Define function to build a Snowpark session
-    leveraging environment variables containing
-    Snowflake connection parameters
-    '''
-    snowpark_session = Session.builder.configs(connection_parameters).create()
-    return snowpark_session
-
-
-def select_all_snowflake_view(
-        snowpark_session,
-        connection_parameters,
-        view_name):
-    '''Define function to read Snowflake view using Snowpark'''
-    snowpark_session.sql(
-        f'USE WAREHOUSE {connection_parameters["default_warehouse"]}'
-    ).collect()
-
-    data = snowpark_session.sql(
-        f'SELECT * FROM "{connection_parameters["default_database"]}"."{connection_parameters["default_schema"]}"."{view_name}"'
-    ).to_pandas()
-    return data
-
-
-def select_unmatched_snowflake_view(snowpark_session, connection_parameters, client, view_type):
-    '''Define function to read Snowflake view using Snowpark'''
-    snowpark_session.sql(
-        f'USE WAREHOUSE {connection_parameters["default_warehouse"]}').collect()
-
-    if view_type not in ["vm_unmatched_content", "vm_unmatched_tracer"]:
-        raise ValueError(
-            "Invalid view_type. Choose either 'vm_unmatched_content' or 'vm_unmatched_tracer'.")
-
-    data = snowpark_session.sql(
-        f'SELECT * FROM VM_CORE_DATA.VM_SOC_CORE."{view_type}" WHERE "client" = \'{client}\'').to_pandas()
-
-    # Reindex dataframe
-    data.reset_index(drop=True, inplace=True)
-    return data
-
-
 def send_file_to_slack(
         file_path,
         message,
@@ -185,37 +142,3 @@ def send_file_to_slack(
             f"Request to slack returned an error {response.status_code}, "
             f"the response is:\n{response.text}"
         )
-
-
-
-
-from snowflake.snowpark import Session
-
-def write_table_to_snowflake(data_df, table_name, schema, snowpark_session):
-    """
-    Write a pandas DataFrame to a Snowflake table using Snowpark.
-
-    Args:
-        data_df (pandas.DataFrame): The DataFrame to be written.
-        table_name (str): The name of the Snowflake table.
-        schema (str): The Snowflake schema.
-        snowpark_session (snowflake.snowpark.Session): An existing Snowpark session.
-    """
-    # Use the specified schema
-    snowpark_session.sql(f"USE SCHEMA {schema};").collect()
-
-    # Convert the pandas DataFrame to a Snowpark DataFrame
-    sp_df = snowpark_session.create_dataframe(data_df)
-
-    # Create the table in Snowflake
-    snowpark_session.sql(
-        f"CREATE OR REPLACE TABLE {table_name} ({', '.join([f'{col} VARIANT' for col in data_df.columns])});").collect()
-
-    # Write the Snowpark DataFrame to the Snowflake table
-    sp_df.write \
-        .mode("overwrite") \
-        .format("snowflake") \
-        .option("dbtable", table_name) \
-        .option("schema", schema) \
-        .save()
-
