@@ -947,7 +947,46 @@
 <span class="normal">519</span>
 <span class="normal">520</span>
 <span class="normal">521</span>
-<span class="normal">522</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">QualityAssessments</span><span class="p">:</span>
+<span class="normal">522</span>
+<span class="normal">523</span>
+<span class="normal">524</span>
+<span class="normal">525</span>
+<span class="normal">526</span>
+<span class="normal">527</span>
+<span class="normal">528</span>
+<span class="normal">529</span>
+<span class="normal">530</span>
+<span class="normal">531</span>
+<span class="normal">532</span>
+<span class="normal">533</span>
+<span class="normal">534</span>
+<span class="normal">535</span>
+<span class="normal">536</span>
+<span class="normal">537</span>
+<span class="normal">538</span>
+<span class="normal">539</span>
+<span class="normal">540</span>
+<span class="normal">541</span>
+<span class="normal">542</span>
+<span class="normal">543</span>
+<span class="normal">544</span>
+<span class="normal">545</span>
+<span class="normal">546</span>
+<span class="normal">547</span>
+<span class="normal">548</span>
+<span class="normal">549</span>
+<span class="normal">550</span>
+<span class="normal">551</span>
+<span class="normal">552</span>
+<span class="normal">553</span>
+<span class="normal">554</span>
+<span class="normal">555</span>
+<span class="normal">556</span>
+<span class="normal">557</span>
+<span class="normal">558</span>
+<span class="normal">559</span>
+<span class="normal">560</span>
+<span class="normal">561</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">QualityAssessments</span><span class="p">:</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">util_object</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
@@ -1093,108 +1132,146 @@
         <span class="k">return</span> <span class="n">error_message</span>
 
     <span class="k">def</span> <span class="nf">comparison_with_previous_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">,</span> <span class="n">name_of_df</span><span class="p">,</span> <span class="n">cols_to_check</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">,</span><span class="s1">&#39;likes&#39;</span><span class="p">],</span> <span class="n">perc_increase_threshold</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
-                                    <span class="n">perc_decrease_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">check_cols_set</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raise_exceptions</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">manual_override</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;This function allows you to compare the column totals of a dataframe with the totals calculated on a previous time to detect any changes that could be indicative of an error.</span>
+                                    <span class="n">perc_decrease_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">check_cols_set</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">unique_id_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">cols_to_group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                    <span class="n">raise_exceptions</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">manual_override</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">date_col</span><span class="o">=</span><span class="s1">&#39;date&#39;</span><span class="p">,</span><span class="n">dayfirst</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">yearfirst</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This function allows you to compare the column totals of a dataframe with the totals calculated on a previous time to detect any changes that could be indicative of an error.</span>
 
-<span class="sd">            The historic column totals are stored in a datatable for reference and the function will check the current totals with the most recent previous totals and </span>
-<span class="sd">            raise an exception if the totals have changed by more than the specified thresholds.</span>
+<span class="sd">            The historic column totals are stored in a datatable for reference and the function will check the current totals with the most recent previous totals and raise an exception </span>
+<span class="sd">            if the totals have changed by more than the specified thresholds.</span>
 
 <span class="sd">            The function will also check if the columns in the dataframe have changed from the previous time and raise an exception if they have.</span>
 
-<span class="sd">            If the previous totals were wrong because of an error and the latest values in the dataframe are correct then you can set manual_override to True and the function will</span>
-<span class="sd">            add a new row to the historic db with the new values. This manual override can only be done once in a row to stop someone forgetting they put manual override on and leaving it running in the script</span>
-<span class="sd">            which would mean the function would never pick up any errors.</span>
+<span class="sd">            If the previous totals were wrong because of an error and the latest values in the dataframe are correct then you can set manual_override to True and the function will </span>
+<span class="sd">            add a new row to the historic db with the new values. This manual override can only be done once in a row to stop someone forgetting they put manual override on and </span>
+<span class="sd">            leaving it running in the script which would mean the function would never pick up any errors </span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                df (pd.DataFrame): The dataframe to be checked</span>
-<span class="sd">                name_of_df (str): The name of the dataframe to be used for logging purposes</span>
-<span class="sd">                cols_to_check (Optional[list], optional): The columns to check for changes in totals. Defaults to [&#39;impressions&#39;,&#39;likes&#39;].</span>
-<span class="sd">                perc_increase_threshold (int, optional): The percentage increase threshold for the totals. Defaults to 20.</span>
-<span class="sd">                perc_decrease_threshold (float, optional): The percentage decrease threshold for the totals. Defaults to 0.5.</span>
-<span class="sd">                check_cols_set (bool, optional): If True, checks if the columns in the dataframe have changed from the previous time. Defaults to True.</span>
-<span class="sd">                raise_exceptions (bool, optional): If True, raises an exception if the totals have changed by more than the specified thresholds. Defaults to True.</span>
-<span class="sd">                manual_override (bool, optional): If True, adds a new row to the historic db with the different but now deemed correct new values. Defaults to False.</span>
-
-<span class="sd">            Raises:</span>
-<span class="sd">                Exception: If raise_exceptions = True and the totals have changed by more than the specified thresholds.</span>
+<span class="sd">                df (pd.DataFrame): Input dataframe that the historic checks are going to be performed on.</span>
+<span class="sd">                name_of_df (str): Name of the dataframe, this will be used to name a file to save for future comparison.</span>
+<span class="sd">                cols_to_check (List[str]): A list of strings that detail the columns to be totaled which will then </span>
+<span class="sd">                    be compared with previous data.</span>
+<span class="sd">                perc_increase_threshold (float): The percentage increase threshold above </span>
+<span class="sd">                    which it is deemed that the totals have raised too rapidly and an error has occured.</span>
+<span class="sd">                perc_decrease_threshold (float): The percentage decrease threshold below </span>
+<span class="sd">                    which it is deemed that the totals decreased and an error has occured.</span>
+<span class="sd">                check_cols_set (bool): If true, store the set of columns present for comparison to see if any new </span>
+<span class="sd">                    columns have been added or removed next time, in which case it is deemed an error has occured.</span>
+<span class="sd">                unique_id_cols (List[str]): A list of  the columns that are unique identifiers in order to do a unique ID count to help identify</span>
+<span class="sd">                    any cause of the change in totals of the cols_to_check.   </span>
+<span class="sd">                cols_to_group (List[str]): A list the columns that are to be grouped by, and the cols_to_check will be summed for each group. This will be stored as a string in the data table</span>
+<span class="sd">                    which can be used as a reference to see which groups have caused the change in totals. </span>
+<span class="sd">                raise_exceptions (bool): If true, then raise an exception if an error has occured instead of just returning an error message.</span>
+<span class="sd">                    smanual_override (bool): If true, then add a new row to the historic db with the new values with the new value which is outside the tolerance bounds but is now not considered an error</span>
+<span class="sd">                date_col (str): The name of the date column in the dataframe</span>
+<span class="sd">                dayfirst (bool): If True, parses dates with the day first, eg 10/11/12 is parsed as 2012-11-10. If False, parses dates with the month first, eg 10/11/12 is parsed as 2010-11-12. </span>
+<span class="sd">                    If None, this is set to True if the day is in the first position in the format string, False otherwise. If dayfirst is set to True, parsing will be faster, but will fail for ambiguous dates, such as 01/02/03.</span>
+<span class="sd">                yearfirst (bool): If True parses dates with the year first, eg 10/11/12 is parsed as 2010-11-12. If both dayfirst and yearfirst are True, yearfirst is preceded (same as dateutil). </span>
+<span class="sd">                    If False, parses dates with the month first, eg 10/11/12 is parsed as 2012-11-10. If None, this defaults to False. Setting yearfirst to True is not recommended, as it can result in ambiguous dates.</span>
 
 <span class="sd">            Returns:</span>
-<span class="sd">                error_message (str): String error message describing which columns have changed or which totals have changed by more than the specified thresholds. This message can then be sent</span>
-<span class="sd">                                    to a slack function</span>
-<span class="sd">            &quot;&quot;&quot;</span>
+<span class="sd">                error_message (str): String detailing what the error is so that it can be passed to a notification service like slack.</span>
 
-            <span class="n">error_message</span><span class="p">,</span> <span class="n">error_occured</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="kc">False</span>
-            <span class="n">client_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">client_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-            <span class="n">name_of_table</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;previous_totals_check_</span><span class="si">{</span><span class="n">client_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">name_of_df</span><span class="si">}</span><span class="s1">&#39;</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                Exception: If raise_exceptions = True and an error has occured.&quot;&quot;&quot;</span>
 
-            <span class="c1"># Create a dictionary of the sums of the columns specified in cols_to_check</span>
-            <span class="n">new_dict</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
-            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols_to_check</span><span class="p">:</span>
-                <span class="n">new_dict</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
-            <span class="k">if</span> <span class="n">check_cols_set</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-                <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;Columns&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">error_message</span><span class="p">,</span> <span class="n">error_occured</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="kc">False</span>
+        <span class="n">client_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">client_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">name_of_table</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;previous_totals_check_</span><span class="si">{</span><span class="n">client_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">name_of_df</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">date_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">date_col</span><span class="p">],</span> <span class="n">dayfirst</span><span class="o">=</span><span class="n">dayfirst</span><span class="p">,</span> <span class="n">yearfirst</span><span class="o">=</span><span class="n">yearfirst</span><span class="p">)</span>
 
-            <span class="c1"># Check if the historic database already exists, if not create it</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">table_exists</span><span class="p">(</span><span class="n">name_of_table</span><span class="p">):</span>
-                <span class="n">historic_db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">read_from_postgresql</span><span class="p">(</span><span class="n">name_of_table</span><span class="p">,</span> <span class="n">clean_date</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-                <span class="n">historic_db</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;DateWrittenToDB&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># This column is not needed for comparison, it gets created when writing to the db</span>
-                <span class="n">historic_db</span> <span class="o">=</span> <span class="n">historic_db</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># Create a dictionary of the sums of the columns specified in cols_to_check</span>
+        <span class="n">new_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+        <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;min_date&#39;</span><span class="p">],</span><span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;max_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">date_col</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">df</span><span class="p">[</span><span class="n">date_col</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+        <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;comments&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">historic_db</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">new_dict</span><span class="p">])</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">write_to_postgresql</span><span class="p">(</span><span class="n">historic_db</span><span class="p">,</span> <span class="n">name_of_table</span><span class="p">,</span> <span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">error_message</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols_to_check</span><span class="p">:</span>
+            <span class="n">new_dict</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">check_cols_set</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;Columns&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">unique_id_cols</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;num_unique_ids&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">unique_id_cols</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="s1">&#39;-&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
 
-            <span class="c1">#Turn the most recent entry in the historic db into a dict</span>
-            <span class="n">old_dict</span> <span class="o">=</span> <span class="n">historic_db</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;Date&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="c1"># Check if the historic database already exists, if not create it</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">table_exists</span><span class="p">(</span><span class="n">name_of_table</span><span class="p">):</span>
+            <span class="n">historic_db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">read_from_postgresql</span><span class="p">(</span><span class="n">name_of_table</span><span class="p">,</span> <span class="n">clean_date</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">historic_db</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;DateWrittenToDB&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># This column is not needed for comparison, it gets created when writing to the db</span>
+            <span class="n">historic_db</span> <span class="o">=</span> <span class="n">historic_db</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-            <span class="c1"># for each key in the old dict, check if it is in the new dict and if it is, check if it has increased or decreased too much</span>
-            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">old_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-
-                <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;Columns&#39;</span><span class="p">:</span>
-                    <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;{&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;}&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-                    <span class="n">value</span> <span class="o">=</span> <span class="p">[</span><span class="n">part</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
-                    <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">(</span><span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;Columns&#39;</span><span class="p">]):</span>
-                        <span class="c1">#error_occured = True</span>
-                        <span class="n">columns_removed</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;Columns&#39;</span><span class="p">]))</span>
-                        <span class="n">columns_added</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;Columns&#39;</span><span class="p">])</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
-                        <span class="n">error_message</span> <span class="o">=</span> <span class="n">error_message</span> <span class="o">+</span> <span class="s1">&#39;  &#39;</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;The columns seems to have changed from last time,</span><span class="se">\n</span><span class="s1">&#39;</span>\
-                                                <span class="sa">f</span><span class="s1">&#39; Columns that were added = </span><span class="si">{</span><span class="n">columns_added</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span> \
-                                                <span class="sa">f</span><span class="s1">&#39; Columns that were removed = </span><span class="si">{</span><span class="n">columns_removed</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
-                <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;Date&#39;</span> <span class="ow">or</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;manual_override&#39;</span><span class="p">:</span>
-                    <span class="k">continue</span>
-                <span class="k">elif</span> <span class="n">new_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">perc_decrease_threshold</span><span class="o">/</span><span class="mi">100</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">value</span><span class="p">:</span>
-                    <span class="n">error_occured</span> <span class="o">=</span> <span class="kc">True</span>
-                    <span class="n">error_message</span> <span class="o">=</span> <span class="n">error_message</span> <span class="o">+</span> <span class="s1">&#39;  &#39;</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;The total of </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1"> seems to have decreased from last time</span><span class="se">\n</span><span class="s1">&#39;</span>\
-                                            <span class="sa">f</span><span class="s1">&#39; Prev Value = </span><span class="si">{</span><span class="n">old_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="s1"> , New Value = </span><span class="si">{</span><span class="n">new_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
-                <span class="k">elif</span> <span class="n">new_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">value</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">perc_increase_threshold</span><span class="o">/</span><span class="mi">100</span><span class="p">):</span>
-                    <span class="n">error_occured</span> <span class="o">=</span> <span class="kc">True</span>
-                    <span class="n">error_message</span> <span class="o">=</span> <span class="n">error_message</span> <span class="o">+</span> <span class="s1">&#39;  &#39;</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;The total of </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1"> has increased by more than</span><span class="se">\n</span><span class="s1">&#39;</span>\
-                                        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">perc_increase_threshold</span><span class="si">}</span><span class="s1">% from last time</span><span class="se">\n</span><span class="s1">&#39;</span>\
-                                            <span class="sa">f</span><span class="s1">&#39; Prev Value = </span><span class="si">{</span><span class="n">old_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="s1">, New Value = </span><span class="si">{</span><span class="n">new_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">manual_override</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">error_occured</span><span class="p">:</span>
-                    <span class="n">error_message</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Comparison with historic df </span><span class="si">{</span><span class="n">name_of_df</span><span class="si">}</span><span class="s1">: &#39;</span> <span class="o">+</span> <span class="n">error_message</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;ERROR&#39;</span> <span class="o">+</span> <span class="n">error_message</span><span class="p">)</span> <span class="c1"># If error messages has been added to then log it</span>
-                <span class="k">if</span> <span class="n">raise_exceptions</span> <span class="ow">and</span> <span class="n">error_occured</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">error_occured</span><span class="p">:</span>
-                    <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;manual_override&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
-                    <span class="n">db_with_new_row</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">historic_db</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">new_dict</span><span class="p">])],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">write_to_postgresql</span><span class="p">(</span><span class="n">db_with_new_row</span><span class="p">,</span> <span class="n">name_of_table</span><span class="p">,</span> <span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">)</span>
-
-            <span class="k">else</span><span class="p">:</span> <span class="c1"># If manual override is set to True, then add a new row to the historic db with the new values</span>
-                <span class="c1">#If the previous entry was not a manual override, then add a new row with the new &quot;correct&quot; value</span>
-                <span class="k">if</span> <span class="n">old_dict</span><span class="p">[</span><span class="s1">&#39;manual_override&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Manual Override set to True, adding new row to historic db with different values now deemed to be correct&#39;</span><span class="p">)</span> 
-                    <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;manual_override&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-                    <span class="n">db_with_new_row</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">historic_db</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">new_dict</span><span class="p">])],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">write_to_postgresql</span><span class="p">(</span><span class="n">db_with_new_row</span><span class="p">,</span> <span class="n">name_of_table</span><span class="p">,</span> <span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span><span class="c1"># If the previous entry was a manual override, don&#39;t let multiple overrides happen in a row to stop someone forgetting they put manual override on and leaving it running in the script</span>
-                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Manual override already in place, not adding another row, please check the new value is&#39;</span>\
-                                     <span class="s1">&#39;correct and set manual override back to False&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">historic_db</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">new_dict</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">write_to_postgresql</span><span class="p">(</span><span class="n">historic_db</span><span class="p">,</span> <span class="n">name_of_table</span><span class="p">,</span> <span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">error_message</span>
+
+        <span class="c1">#Turn the most recent entry in the historic db into a dict</span>
+        <span class="n">old_dict</span> <span class="o">=</span> <span class="n">historic_db</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;Date&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+
+        <span class="c1"># for each key in the old dict, check if it is in the new dict and if it is, check if it has increased or decreased too much</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">old_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
+            <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;Columns&#39;</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;{&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;}&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="p">[</span><span class="n">part</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
+                <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">(</span><span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;Columns&#39;</span><span class="p">]):</span>
+                    <span class="c1">#error_occured = True</span>
+                    <span class="n">columns_removed</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;Columns&#39;</span><span class="p">]))</span>
+                    <span class="n">columns_added</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;Columns&#39;</span><span class="p">])</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+                    <span class="n">error_message</span> <span class="o">=</span> <span class="n">error_message</span> <span class="o">+</span> <span class="s1">&#39;  &#39;</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;The columns seems to have changed from last time,</span><span class="se">\n</span><span class="s1">&#39;</span>\
+                                            <span class="sa">f</span><span class="s1">&#39; Columns that were added = </span><span class="si">{</span><span class="n">columns_added</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span> \
+                                            <span class="sa">f</span><span class="s1">&#39; Columns that were removed = </span><span class="si">{</span><span class="n">columns_removed</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="k">elif</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cols_to_check</span><span class="p">:</span> <span class="c1">#If the key is not a numerical type column that needs checking then don&#39;t run the numerical checks</span>
+                <span class="k">continue</span>
+
+            <span class="k">elif</span> <span class="n">new_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">perc_decrease_threshold</span><span class="o">/</span><span class="mi">100</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">value</span><span class="p">:</span>
+                <span class="n">error_occured</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">error_message</span> <span class="o">=</span> <span class="n">error_message</span> <span class="o">+</span> <span class="s1">&#39;  &#39;</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;The total of </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1"> seems to have decreased from last time</span><span class="se">\n</span><span class="s1">&#39;</span>\
+                                        <span class="sa">f</span><span class="s1">&#39; Prev Value = </span><span class="si">{</span><span class="n">old_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="s1"> , New Value = </span><span class="si">{</span><span class="n">new_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="k">elif</span> <span class="n">new_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">value</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">perc_increase_threshold</span><span class="o">/</span><span class="mi">100</span><span class="p">):</span>
+                <span class="n">error_occured</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">error_message</span> <span class="o">=</span> <span class="n">error_message</span> <span class="o">+</span> <span class="s1">&#39;  &#39;</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;The total of </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1"> has increased by more than</span><span class="se">\n</span><span class="s1">&#39;</span>\
+                                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">perc_increase_threshold</span><span class="si">}</span><span class="s1">% from last time</span><span class="se">\n</span><span class="s1">&#39;</span>\
+                                        <span class="sa">f</span><span class="s1">&#39; Prev Value = </span><span class="si">{</span><span class="n">old_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="s1">, New Value = </span><span class="si">{</span><span class="n">new_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+        <span class="c1"># If cols_to_group is specified, then group by those columns and store the info in the dict</span>
+        <span class="k">if</span> <span class="n">cols_to_group</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;info&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">cols_to_group</span><span class="p">)[</span><span class="n">cols_to_check</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s1">&#39;records&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;info&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;cols_to_group not specified, therefore no info stored&#39;</span>
+
+        <span class="c1">#The &quot;Columns&quot; and the &quot;info&quot; columns take up a low of space, so we only keep the last 5 entries in the db</span>
+        <span class="k">if</span> <span class="n">check_cols_set</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span> 
+            <span class="n">cols_to_reduce_data</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;info&#39;</span><span class="p">,</span><span class="s1">&#39;Columns&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cols_to_reduce_data</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;info&#39;</span><span class="p">]</span>
+
+        <span class="c1"># If manual override is set to False, then add a new row to the historic db with the new values</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">manual_override</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">error_occured</span><span class="p">:</span>
+                <span class="n">error_message</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Comparison with historic df </span><span class="si">{</span><span class="n">name_of_df</span><span class="si">}</span><span class="s1">: &#39;</span> <span class="o">+</span> <span class="n">error_message</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;ERROR&#39;</span> <span class="o">+</span> <span class="n">error_message</span><span class="p">)</span> <span class="c1"># If error messages has been added to then log it</span>
+            <span class="k">if</span> <span class="n">raise_exceptions</span> <span class="ow">and</span> <span class="n">error_occured</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">error_occured</span><span class="p">:</span>
+                <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;manual_override&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">db_with_new_row</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">historic_db</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">new_dict</span><span class="p">])],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">db_with_new_row</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">db_with_new_row</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">,</span><span class="n">cols_to_reduce_data</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">write_to_postgresql</span><span class="p">(</span><span class="n">db_with_new_row</span><span class="p">,</span> <span class="n">name_of_table</span><span class="p">,</span> <span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span> <span class="c1"># If manual override is set to True, then add a new row to the historic db with the new values</span>
+            <span class="c1">#If the previous entry was not a manual override, then add a new row with the new &quot;correct&quot; value</span>
+            <span class="k">if</span> <span class="n">old_dict</span><span class="p">[</span><span class="s1">&#39;manual_override&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Manual Override set to True, adding new row to historic db with different values now deemed to be correct&#39;</span><span class="p">)</span> 
+                <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;manual_override&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">db_with_new_row</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">historic_db</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">new_dict</span><span class="p">])],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+                <span class="n">db_with_new_row</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">db_with_new_row</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">,</span><span class="n">cols_to_reduce_data</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">write_to_postgresql</span><span class="p">(</span><span class="n">db_with_new_row</span><span class="p">,</span> <span class="n">name_of_table</span><span class="p">,</span> <span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">old_dict</span><span class="p">[</span><span class="s1">&#39;manual_override&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span><span class="c1"># If the previous entry was a manual override, don&#39;t let multiple overrides happen in a row to stop someone forgetting they put manual override on and leaving it running in the script</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Manual override already in place, not adding another row, please check the new value is&#39;</span>\
+                                    <span class="s1">&#39;correct and set manual override back to False&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">error_message</span>
+
 
     <span class="k">def</span> <span class="nf">duplicates_qa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">name_of_df</span><span class="p">,</span> <span class="n">perc_dupes_thresh</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cols_to_check</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
                         <span class="n">cols_to_add</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;duplicates&#39;</span><span class="p">,</span> <span class="n">raise_exceptions</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -1242,6 +1319,7 @@
                     <span class="n">spend_col</span> <span class="o">=</span> <span class="s1">&#39;spend_usd&#39;</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">spend_col</span> <span class="o">=</span> <span class="s1">&#39;spend&#39;</span>
+
                 <span class="n">cols_to_check</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;platform&#39;</span><span class="p">,</span> <span class="s1">&#39;country&#39;</span><span class="p">,</span> <span class="s1">&#39;media_type&#39;</span><span class="p">,</span> <span class="s1">&#39;cohort&#39;</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="s1">&#39;ad_name&#39;</span><span class="p">,</span> <span class="n">spend_col</span><span class="p">]</span>
 
             <span class="k">elif</span> <span class="n">paid_or_organic</span> <span class="o">==</span> <span class="s1">&#39;Organic&#39;</span><span class="p">:</span>
@@ -1441,7 +1519,7 @@
             <span class="n">output_df</span> <span class="o">=</span> <span class="n">output_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="n">checking_cols</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 
-            <span class="n">util</span><span class="o">.</span><span class="n">write_to_gsheet</span><span class="p">(</span><span class="n">workbook_name</span> <span class="o">=</span> <span class="n">gsheet_name</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span> <span class="n">level</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">df</span> <span class="o">=</span> <span class="n">output_df</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">write_to_gsheet</span><span class="p">(</span><span class="n">workbook_name</span> <span class="o">=</span> <span class="n">gsheet_name</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span> <span class="n">level</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">df</span> <span class="o">=</span> <span class="n">output_df</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
         </details>
 
@@ -1980,46 +2058,7 @@ platforms count viral engagements differently.</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/quality_assessments.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">369</span>
-<span class="normal">370</span>
-<span class="normal">371</span>
-<span class="normal">372</span>
-<span class="normal">373</span>
-<span class="normal">374</span>
-<span class="normal">375</span>
-<span class="normal">376</span>
-<span class="normal">377</span>
-<span class="normal">378</span>
-<span class="normal">379</span>
-<span class="normal">380</span>
-<span class="normal">381</span>
-<span class="normal">382</span>
-<span class="normal">383</span>
-<span class="normal">384</span>
-<span class="normal">385</span>
-<span class="normal">386</span>
-<span class="normal">387</span>
-<span class="normal">388</span>
-<span class="normal">389</span>
-<span class="normal">390</span>
-<span class="normal">391</span>
-<span class="normal">392</span>
-<span class="normal">393</span>
-<span class="normal">394</span>
-<span class="normal">395</span>
-<span class="normal">396</span>
-<span class="normal">397</span>
-<span class="normal">398</span>
-<span class="normal">399</span>
-<span class="normal">400</span>
-<span class="normal">401</span>
-<span class="normal">402</span>
-<span class="normal">403</span>
-<span class="normal">404</span>
-<span class="normal">405</span>
-<span class="normal">406</span>
-<span class="normal">407</span>
-<span class="normal">408</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">408</span>
 <span class="normal">409</span>
 <span class="normal">410</span>
 <span class="normal">411</span>
@@ -2030,7 +2069,46 @@ platforms count viral engagements differently.</p>
 <span class="normal">416</span>
 <span class="normal">417</span>
 <span class="normal">418</span>
-<span class="normal">419</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_impressions_no_engagements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">gsheet_name</span><span class="p">,</span> <span class="n">tab_name</span><span class="o">=</span><span class="s1">&#39;NoImpressionsButEngagements&#39;</span><span class="p">,</span> <span class="n">raise_exceptions</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_impressions_no_engagements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">gsheet_name</span><span class="p">,</span> <span class="n">tab_name</span><span class="o">=</span><span class="s1">&#39;NoImpressionsButEngagements&#39;</span><span class="p">,</span> <span class="n">raise_exceptions</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Function to check if a row item has engagements but no impressions and no video views. </span>
 <span class="sd">    This shouldn&#39;t happen and is indicative of an error with Tracer but can be valid as some </span>
 <span class="sd">    platforms count viral engagements differently.</span>
@@ -2092,7 +2170,7 @@ platforms count viral engagements differently.</p>
 
 
 <h2 id="veetility.quality_assessments.QualityAssessments.comparison_with_previous_data" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">comparison_with_previous_data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">name_of_df</span><span class="p">,</span> <span class="n">cols_to_check</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">,</span> <span class="s1">&#39;likes&#39;</span><span class="p">],</span> <span class="n">perc_increase_threshold</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">perc_decrease_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">check_cols_set</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raise_exceptions</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">manual_override</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">comparison_with_previous_data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">name_of_df</span><span class="p">,</span> <span class="n">cols_to_check</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">,</span> <span class="s1">&#39;likes&#39;</span><span class="p">],</span> <span class="n">perc_increase_threshold</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">perc_decrease_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">check_cols_set</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">unique_id_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cols_to_group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">raise_exceptions</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">manual_override</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">date_col</span><span class="o">=</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="n">dayfirst</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">yearfirst</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 </h2>
 
@@ -2100,12 +2178,12 @@ platforms count viral engagements differently.</p>
   <div class="doc doc-contents ">
   
       <p>This function allows you to compare the column totals of a dataframe with the totals calculated on a previous time to detect any changes that could be indicative of an error.</p>
-<p>The historic column totals are stored in a datatable for reference and the function will check the current totals with the most recent previous totals and 
-raise an exception if the totals have changed by more than the specified thresholds.</p>
+<p>The historic column totals are stored in a datatable for reference and the function will check the current totals with the most recent previous totals and raise an exception 
+if the totals have changed by more than the specified thresholds.</p>
 <p>The function will also check if the columns in the dataframe have changed from the previous time and raise an exception if they have.</p>
-<p>If the previous totals were wrong because of an error and the latest values in the dataframe are correct then you can set manual_override to True and the function will
-add a new row to the historic db with the new values. This manual override can only be done once in a row to stop someone forgetting they put manual override on and leaving it running in the script
-which would mean the function would never pick up any errors.</p>
+<p>If the previous totals were wrong because of an error and the latest values in the dataframe are correct then you can set manual_override to True and the function will 
+add a new row to the historic db with the new values. This manual override can only be done once in a row to stop someone forgetting they put manual override on and 
+leaving it running in the script which would mean the function would never pick up any errors </p>
 
   <p><strong>Parameters:</strong></p>
   <table>
@@ -2123,7 +2201,7 @@ which would mean the function would never pick up any errors.</p>
           <td>
                 <code><span title="pandas">pd</span>.<span title="pandas.DataFrame">DataFrame</span></code>
           </td>
-          <td><p>The dataframe to be checked</p></td>
+          <td><p>Input dataframe that the historic checks are going to be performed on.</p></td>
           <td>
               <em>required</em>
           </td>
@@ -2133,7 +2211,7 @@ which would mean the function would never pick up any errors.</p>
           <td>
                 <code>str</code>
           </td>
-          <td><p>The name of the dataframe to be used for logging purposes</p></td>
+          <td><p>Name of the dataframe, this will be used to name a file to save for future comparison.</p></td>
           <td>
               <em>required</em>
           </td>
@@ -2141,9 +2219,10 @@ which would mean the function would never pick up any errors.</p>
         <tr>
           <td><code>cols_to_check</code></td>
           <td>
-                <code>Optional[list]</code>
+                <code>List[str]</code>
           </td>
-          <td><p>The columns to check for changes in totals. Defaults to ['impressions','likes'].</p></td>
+          <td><p>A list of strings that detail the columns to be totaled which will then 
+be compared with previous data.</p></td>
           <td>
                 <code>[&#39;impressions&#39;, &#39;likes&#39;]</code>
           </td>
@@ -2151,9 +2230,10 @@ which would mean the function would never pick up any errors.</p>
         <tr>
           <td><code>perc_increase_threshold</code></td>
           <td>
-                <code>int</code>
+                <code>float</code>
           </td>
-          <td><p>The percentage increase threshold for the totals. Defaults to 20.</p></td>
+          <td><p>The percentage increase threshold above 
+which it is deemed that the totals have raised too rapidly and an error has occured.</p></td>
           <td>
                 <code>20</code>
           </td>
@@ -2163,7 +2243,8 @@ which would mean the function would never pick up any errors.</p>
           <td>
                 <code>float</code>
           </td>
-          <td><p>The percentage decrease threshold for the totals. Defaults to 0.5.</p></td>
+          <td><p>The percentage decrease threshold below 
+which it is deemed that the totals decreased and an error has occured.</p></td>
           <td>
                 <code>0.5</code>
           </td>
@@ -2173,9 +2254,32 @@ which would mean the function would never pick up any errors.</p>
           <td>
                 <code>bool</code>
           </td>
-          <td><p>If True, checks if the columns in the dataframe have changed from the previous time. Defaults to True.</p></td>
+          <td><p>If true, store the set of columns present for comparison to see if any new 
+columns have been added or removed next time, in which case it is deemed an error has occured.</p></td>
           <td>
                 <code>True</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>unique_id_cols</code></td>
+          <td>
+                <code>List[str]</code>
+          </td>
+          <td><p>A list of  the columns that are unique identifiers in order to do a unique ID count to help identify
+any cause of the change in totals of the cols_to_check.   </p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>cols_to_group</code></td>
+          <td>
+                <code>List[str]</code>
+          </td>
+          <td><p>A list the columns that are to be grouped by, and the cols_to_check will be summed for each group. This will be stored as a string in the data table
+which can be used as a reference to see which groups have caused the change in totals. </p></td>
+          <td>
+                <code>None</code>
           </td>
         </tr>
         <tr>
@@ -2183,38 +2287,43 @@ which would mean the function would never pick up any errors.</p>
           <td>
                 <code>bool</code>
           </td>
-          <td><p>If True, raises an exception if the totals have changed by more than the specified thresholds. Defaults to True.</p></td>
+          <td><p>If true, then raise an exception if an error has occured instead of just returning an error message.
+smanual_override (bool): If true, then add a new row to the historic db with the new values with the new value which is outside the tolerance bounds but is now not considered an error</p></td>
           <td>
                 <code>True</code>
           </td>
         </tr>
         <tr>
-          <td><code>manual_override</code></td>
+          <td><code>date_col</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>The name of the date column in the dataframe</p></td>
+          <td>
+                <code>&#39;date&#39;</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>dayfirst</code></td>
           <td>
                 <code>bool</code>
           </td>
-          <td><p>If True, adds a new row to the historic db with the different but now deemed correct new values. Defaults to False.</p></td>
+          <td><p>If True, parses dates with the day first, eg 10/11/12 is parsed as 2012-11-10. If False, parses dates with the month first, eg 10/11/12 is parsed as 2010-11-12. 
+If None, this is set to True if the day is in the first position in the format string, False otherwise. If dayfirst is set to True, parsing will be faster, but will fail for ambiguous dates, such as 01/02/03.</p></td>
+          <td>
+                <code>True</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>yearfirst</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>If True parses dates with the year first, eg 10/11/12 is parsed as 2010-11-12. If both dayfirst and yearfirst are True, yearfirst is preceded (same as dateutil). 
+If False, parses dates with the month first, eg 10/11/12 is parsed as 2012-11-10. If None, this defaults to False. Setting yearfirst to True is not recommended, as it can result in ambiguous dates.</p></td>
           <td>
                 <code>False</code>
           </td>
-        </tr>
-    </tbody>
-  </table>
-
-  <p><strong>Raises:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td>
-                <code>Exception</code>
-          </td>
-          <td><p>If raise_exceptions = True and the totals have changed by more than the specified thresholds.</p></td>
         </tr>
     </tbody>
   </table>
@@ -2232,8 +2341,25 @@ which would mean the function would never pick up any errors.</p>
 <td><code>error_message</code></td>          <td>
                 <code>str</code>
           </td>
-          <td><p>String error message describing which columns have changed or which totals have changed by more than the specified thresholds. This message can then be sent
-                to a slack function</p></td>
+          <td><p>String detailing what the error is so that it can be passed to a notification service like slack.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Raises:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>Exception</code>
+          </td>
+          <td><p>If raise_exceptions = True and an error has occured.</p></td>
         </tr>
     </tbody>
   </table>
@@ -2342,109 +2468,183 @@ which would mean the function would never pick up any errors.</p>
 <span class="normal">272</span>
 <span class="normal">273</span>
 <span class="normal">274</span>
-<span class="normal">275</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">comparison_with_previous_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">,</span> <span class="n">name_of_df</span><span class="p">,</span> <span class="n">cols_to_check</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">,</span><span class="s1">&#39;likes&#39;</span><span class="p">],</span> <span class="n">perc_increase_threshold</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
-                                <span class="n">perc_decrease_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">check_cols_set</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raise_exceptions</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">manual_override</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function allows you to compare the column totals of a dataframe with the totals calculated on a previous time to detect any changes that could be indicative of an error.</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">comparison_with_previous_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">,</span> <span class="n">name_of_df</span><span class="p">,</span> <span class="n">cols_to_check</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;impressions&#39;</span><span class="p">,</span><span class="s1">&#39;likes&#39;</span><span class="p">],</span> <span class="n">perc_increase_threshold</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+                                <span class="n">perc_decrease_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">check_cols_set</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">unique_id_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">cols_to_group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                <span class="n">raise_exceptions</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">manual_override</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">date_col</span><span class="o">=</span><span class="s1">&#39;date&#39;</span><span class="p">,</span><span class="n">dayfirst</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">yearfirst</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; This function allows you to compare the column totals of a dataframe with the totals calculated on a previous time to detect any changes that could be indicative of an error.</span>
 
-<span class="sd">        The historic column totals are stored in a datatable for reference and the function will check the current totals with the most recent previous totals and </span>
-<span class="sd">        raise an exception if the totals have changed by more than the specified thresholds.</span>
+<span class="sd">        The historic column totals are stored in a datatable for reference and the function will check the current totals with the most recent previous totals and raise an exception </span>
+<span class="sd">        if the totals have changed by more than the specified thresholds.</span>
 
 <span class="sd">        The function will also check if the columns in the dataframe have changed from the previous time and raise an exception if they have.</span>
 
-<span class="sd">        If the previous totals were wrong because of an error and the latest values in the dataframe are correct then you can set manual_override to True and the function will</span>
-<span class="sd">        add a new row to the historic db with the new values. This manual override can only be done once in a row to stop someone forgetting they put manual override on and leaving it running in the script</span>
-<span class="sd">        which would mean the function would never pick up any errors.</span>
+<span class="sd">        If the previous totals were wrong because of an error and the latest values in the dataframe are correct then you can set manual_override to True and the function will </span>
+<span class="sd">        add a new row to the historic db with the new values. This manual override can only be done once in a row to stop someone forgetting they put manual override on and </span>
+<span class="sd">        leaving it running in the script which would mean the function would never pick up any errors </span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            df (pd.DataFrame): The dataframe to be checked</span>
-<span class="sd">            name_of_df (str): The name of the dataframe to be used for logging purposes</span>
-<span class="sd">            cols_to_check (Optional[list], optional): The columns to check for changes in totals. Defaults to [&#39;impressions&#39;,&#39;likes&#39;].</span>
-<span class="sd">            perc_increase_threshold (int, optional): The percentage increase threshold for the totals. Defaults to 20.</span>
-<span class="sd">            perc_decrease_threshold (float, optional): The percentage decrease threshold for the totals. Defaults to 0.5.</span>
-<span class="sd">            check_cols_set (bool, optional): If True, checks if the columns in the dataframe have changed from the previous time. Defaults to True.</span>
-<span class="sd">            raise_exceptions (bool, optional): If True, raises an exception if the totals have changed by more than the specified thresholds. Defaults to True.</span>
-<span class="sd">            manual_override (bool, optional): If True, adds a new row to the historic db with the different but now deemed correct new values. Defaults to False.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            Exception: If raise_exceptions = True and the totals have changed by more than the specified thresholds.</span>
+<span class="sd">            df (pd.DataFrame): Input dataframe that the historic checks are going to be performed on.</span>
+<span class="sd">            name_of_df (str): Name of the dataframe, this will be used to name a file to save for future comparison.</span>
+<span class="sd">            cols_to_check (List[str]): A list of strings that detail the columns to be totaled which will then </span>
+<span class="sd">                be compared with previous data.</span>
+<span class="sd">            perc_increase_threshold (float): The percentage increase threshold above </span>
+<span class="sd">                which it is deemed that the totals have raised too rapidly and an error has occured.</span>
+<span class="sd">            perc_decrease_threshold (float): The percentage decrease threshold below </span>
+<span class="sd">                which it is deemed that the totals decreased and an error has occured.</span>
+<span class="sd">            check_cols_set (bool): If true, store the set of columns present for comparison to see if any new </span>
+<span class="sd">                columns have been added or removed next time, in which case it is deemed an error has occured.</span>
+<span class="sd">            unique_id_cols (List[str]): A list of  the columns that are unique identifiers in order to do a unique ID count to help identify</span>
+<span class="sd">                any cause of the change in totals of the cols_to_check.   </span>
+<span class="sd">            cols_to_group (List[str]): A list the columns that are to be grouped by, and the cols_to_check will be summed for each group. This will be stored as a string in the data table</span>
+<span class="sd">                which can be used as a reference to see which groups have caused the change in totals. </span>
+<span class="sd">            raise_exceptions (bool): If true, then raise an exception if an error has occured instead of just returning an error message.</span>
+<span class="sd">                smanual_override (bool): If true, then add a new row to the historic db with the new values with the new value which is outside the tolerance bounds but is now not considered an error</span>
+<span class="sd">            date_col (str): The name of the date column in the dataframe</span>
+<span class="sd">            dayfirst (bool): If True, parses dates with the day first, eg 10/11/12 is parsed as 2012-11-10. If False, parses dates with the month first, eg 10/11/12 is parsed as 2010-11-12. </span>
+<span class="sd">                If None, this is set to True if the day is in the first position in the format string, False otherwise. If dayfirst is set to True, parsing will be faster, but will fail for ambiguous dates, such as 01/02/03.</span>
+<span class="sd">            yearfirst (bool): If True parses dates with the year first, eg 10/11/12 is parsed as 2010-11-12. If both dayfirst and yearfirst are True, yearfirst is preceded (same as dateutil). </span>
+<span class="sd">                If False, parses dates with the month first, eg 10/11/12 is parsed as 2012-11-10. If None, this defaults to False. Setting yearfirst to True is not recommended, as it can result in ambiguous dates.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            error_message (str): String error message describing which columns have changed or which totals have changed by more than the specified thresholds. This message can then be sent</span>
-<span class="sd">                                to a slack function</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            error_message (str): String detailing what the error is so that it can be passed to a notification service like slack.</span>
 
-        <span class="n">error_message</span><span class="p">,</span> <span class="n">error_occured</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="kc">False</span>
-        <span class="n">client_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">client_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="n">name_of_table</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;previous_totals_check_</span><span class="si">{</span><span class="n">client_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">name_of_df</span><span class="si">}</span><span class="s1">&#39;</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            Exception: If raise_exceptions = True and an error has occured.&quot;&quot;&quot;</span>
 
-        <span class="c1"># Create a dictionary of the sums of the columns specified in cols_to_check</span>
-        <span class="n">new_dict</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
-        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols_to_check</span><span class="p">:</span>
-            <span class="n">new_dict</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
-        <span class="k">if</span> <span class="n">check_cols_set</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;Columns&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">error_message</span><span class="p">,</span> <span class="n">error_occured</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="kc">False</span>
+    <span class="n">client_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">client_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">name_of_table</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;previous_totals_check_</span><span class="si">{</span><span class="n">client_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">name_of_df</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="n">df</span><span class="p">[</span><span class="n">date_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">date_col</span><span class="p">],</span> <span class="n">dayfirst</span><span class="o">=</span><span class="n">dayfirst</span><span class="p">,</span> <span class="n">yearfirst</span><span class="o">=</span><span class="n">yearfirst</span><span class="p">)</span>
 
-        <span class="c1"># Check if the historic database already exists, if not create it</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">table_exists</span><span class="p">(</span><span class="n">name_of_table</span><span class="p">):</span>
-            <span class="n">historic_db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">read_from_postgresql</span><span class="p">(</span><span class="n">name_of_table</span><span class="p">,</span> <span class="n">clean_date</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-            <span class="n">historic_db</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;DateWrittenToDB&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># This column is not needed for comparison, it gets created when writing to the db</span>
-            <span class="n">historic_db</span> <span class="o">=</span> <span class="n">historic_db</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># Create a dictionary of the sums of the columns specified in cols_to_check</span>
+    <span class="n">new_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+    <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;min_date&#39;</span><span class="p">],</span><span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;max_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">date_col</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">df</span><span class="p">[</span><span class="n">date_col</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+    <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;comments&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">historic_db</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">new_dict</span><span class="p">])</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">write_to_postgresql</span><span class="p">(</span><span class="n">historic_db</span><span class="p">,</span> <span class="n">name_of_table</span><span class="p">,</span> <span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">error_message</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols_to_check</span><span class="p">:</span>
+        <span class="n">new_dict</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">check_cols_set</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;Columns&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">unique_id_cols</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;num_unique_ids&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">unique_id_cols</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="s1">&#39;-&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
 
-        <span class="c1">#Turn the most recent entry in the historic db into a dict</span>
-        <span class="n">old_dict</span> <span class="o">=</span> <span class="n">historic_db</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;Date&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+    <span class="c1"># Check if the historic database already exists, if not create it</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">table_exists</span><span class="p">(</span><span class="n">name_of_table</span><span class="p">):</span>
+        <span class="n">historic_db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">read_from_postgresql</span><span class="p">(</span><span class="n">name_of_table</span><span class="p">,</span> <span class="n">clean_date</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">historic_db</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;DateWrittenToDB&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># This column is not needed for comparison, it gets created when writing to the db</span>
+        <span class="n">historic_db</span> <span class="o">=</span> <span class="n">historic_db</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="c1"># for each key in the old dict, check if it is in the new dict and if it is, check if it has increased or decreased too much</span>
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">old_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-
-            <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;Columns&#39;</span><span class="p">:</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;{&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;}&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="p">[</span><span class="n">part</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
-                <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">(</span><span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;Columns&#39;</span><span class="p">]):</span>
-                    <span class="c1">#error_occured = True</span>
-                    <span class="n">columns_removed</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;Columns&#39;</span><span class="p">]))</span>
-                    <span class="n">columns_added</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;Columns&#39;</span><span class="p">])</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
-                    <span class="n">error_message</span> <span class="o">=</span> <span class="n">error_message</span> <span class="o">+</span> <span class="s1">&#39;  &#39;</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;The columns seems to have changed from last time,</span><span class="se">\n</span><span class="s1">&#39;</span>\
-                                            <span class="sa">f</span><span class="s1">&#39; Columns that were added = </span><span class="si">{</span><span class="n">columns_added</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span> \
-                                            <span class="sa">f</span><span class="s1">&#39; Columns that were removed = </span><span class="si">{</span><span class="n">columns_removed</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
-            <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;Date&#39;</span> <span class="ow">or</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;manual_override&#39;</span><span class="p">:</span>
-                <span class="k">continue</span>
-            <span class="k">elif</span> <span class="n">new_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">perc_decrease_threshold</span><span class="o">/</span><span class="mi">100</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">value</span><span class="p">:</span>
-                <span class="n">error_occured</span> <span class="o">=</span> <span class="kc">True</span>
-                <span class="n">error_message</span> <span class="o">=</span> <span class="n">error_message</span> <span class="o">+</span> <span class="s1">&#39;  &#39;</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;The total of </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1"> seems to have decreased from last time</span><span class="se">\n</span><span class="s1">&#39;</span>\
-                                        <span class="sa">f</span><span class="s1">&#39; Prev Value = </span><span class="si">{</span><span class="n">old_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="s1"> , New Value = </span><span class="si">{</span><span class="n">new_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
-            <span class="k">elif</span> <span class="n">new_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">value</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">perc_increase_threshold</span><span class="o">/</span><span class="mi">100</span><span class="p">):</span>
-                <span class="n">error_occured</span> <span class="o">=</span> <span class="kc">True</span>
-                <span class="n">error_message</span> <span class="o">=</span> <span class="n">error_message</span> <span class="o">+</span> <span class="s1">&#39;  &#39;</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;The total of </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1"> has increased by more than</span><span class="se">\n</span><span class="s1">&#39;</span>\
-                                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">perc_increase_threshold</span><span class="si">}</span><span class="s1">% from last time</span><span class="se">\n</span><span class="s1">&#39;</span>\
-                                        <span class="sa">f</span><span class="s1">&#39; Prev Value = </span><span class="si">{</span><span class="n">old_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="s1">, New Value = </span><span class="si">{</span><span class="n">new_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">manual_override</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">error_occured</span><span class="p">:</span>
-                <span class="n">error_message</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Comparison with historic df </span><span class="si">{</span><span class="n">name_of_df</span><span class="si">}</span><span class="s1">: &#39;</span> <span class="o">+</span> <span class="n">error_message</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;ERROR&#39;</span> <span class="o">+</span> <span class="n">error_message</span><span class="p">)</span> <span class="c1"># If error messages has been added to then log it</span>
-            <span class="k">if</span> <span class="n">raise_exceptions</span> <span class="ow">and</span> <span class="n">error_occured</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">error_occured</span><span class="p">:</span>
-                <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;manual_override&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
-                <span class="n">db_with_new_row</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">historic_db</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">new_dict</span><span class="p">])],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">write_to_postgresql</span><span class="p">(</span><span class="n">db_with_new_row</span><span class="p">,</span> <span class="n">name_of_table</span><span class="p">,</span> <span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">)</span>
-
-        <span class="k">else</span><span class="p">:</span> <span class="c1"># If manual override is set to True, then add a new row to the historic db with the new values</span>
-            <span class="c1">#If the previous entry was not a manual override, then add a new row with the new &quot;correct&quot; value</span>
-            <span class="k">if</span> <span class="n">old_dict</span><span class="p">[</span><span class="s1">&#39;manual_override&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Manual Override set to True, adding new row to historic db with different values now deemed to be correct&#39;</span><span class="p">)</span> 
-                <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;manual_override&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-                <span class="n">db_with_new_row</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">historic_db</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">new_dict</span><span class="p">])],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">write_to_postgresql</span><span class="p">(</span><span class="n">db_with_new_row</span><span class="p">,</span> <span class="n">name_of_table</span><span class="p">,</span> <span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span><span class="c1"># If the previous entry was a manual override, don&#39;t let multiple overrides happen in a row to stop someone forgetting they put manual override on and leaving it running in the script</span>
-                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Manual override already in place, not adding another row, please check the new value is&#39;</span>\
-                                 <span class="s1">&#39;correct and set manual override back to False&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">historic_db</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">new_dict</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">write_to_postgresql</span><span class="p">(</span><span class="n">historic_db</span><span class="p">,</span> <span class="n">name_of_table</span><span class="p">,</span> <span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">error_message</span>
+
+    <span class="c1">#Turn the most recent entry in the historic db into a dict</span>
+    <span class="n">old_dict</span> <span class="o">=</span> <span class="n">historic_db</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;Date&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+
+    <span class="c1"># for each key in the old dict, check if it is in the new dict and if it is, check if it has increased or decreased too much</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">old_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;Columns&#39;</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;{&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;}&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="p">[</span><span class="n">part</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
+            <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">(</span><span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;Columns&#39;</span><span class="p">]):</span>
+                <span class="c1">#error_occured = True</span>
+                <span class="n">columns_removed</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;Columns&#39;</span><span class="p">]))</span>
+                <span class="n">columns_added</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;Columns&#39;</span><span class="p">])</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+                <span class="n">error_message</span> <span class="o">=</span> <span class="n">error_message</span> <span class="o">+</span> <span class="s1">&#39;  &#39;</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;The columns seems to have changed from last time,</span><span class="se">\n</span><span class="s1">&#39;</span>\
+                                        <span class="sa">f</span><span class="s1">&#39; Columns that were added = </span><span class="si">{</span><span class="n">columns_added</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span> \
+                                        <span class="sa">f</span><span class="s1">&#39; Columns that were removed = </span><span class="si">{</span><span class="n">columns_removed</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cols_to_check</span><span class="p">:</span> <span class="c1">#If the key is not a numerical type column that needs checking then don&#39;t run the numerical checks</span>
+            <span class="k">continue</span>
+
+        <span class="k">elif</span> <span class="n">new_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">perc_decrease_threshold</span><span class="o">/</span><span class="mi">100</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">value</span><span class="p">:</span>
+            <span class="n">error_occured</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">error_message</span> <span class="o">=</span> <span class="n">error_message</span> <span class="o">+</span> <span class="s1">&#39;  &#39;</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;The total of </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1"> seems to have decreased from last time</span><span class="se">\n</span><span class="s1">&#39;</span>\
+                                    <span class="sa">f</span><span class="s1">&#39; Prev Value = </span><span class="si">{</span><span class="n">old_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="s1"> , New Value = </span><span class="si">{</span><span class="n">new_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="k">elif</span> <span class="n">new_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">value</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">perc_increase_threshold</span><span class="o">/</span><span class="mi">100</span><span class="p">):</span>
+            <span class="n">error_occured</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">error_message</span> <span class="o">=</span> <span class="n">error_message</span> <span class="o">+</span> <span class="s1">&#39;  &#39;</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;The total of </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1"> has increased by more than</span><span class="se">\n</span><span class="s1">&#39;</span>\
+                                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">perc_increase_threshold</span><span class="si">}</span><span class="s1">% from last time</span><span class="se">\n</span><span class="s1">&#39;</span>\
+                                    <span class="sa">f</span><span class="s1">&#39; Prev Value = </span><span class="si">{</span><span class="n">old_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="s1">, New Value = </span><span class="si">{</span><span class="n">new_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+    <span class="c1"># If cols_to_group is specified, then group by those columns and store the info in the dict</span>
+    <span class="k">if</span> <span class="n">cols_to_group</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;info&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">cols_to_group</span><span class="p">)[</span><span class="n">cols_to_check</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s1">&#39;records&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;info&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;cols_to_group not specified, therefore no info stored&#39;</span>
+
+    <span class="c1">#The &quot;Columns&quot; and the &quot;info&quot; columns take up a low of space, so we only keep the last 5 entries in the db</span>
+    <span class="k">if</span> <span class="n">check_cols_set</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span> 
+        <span class="n">cols_to_reduce_data</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;info&#39;</span><span class="p">,</span><span class="s1">&#39;Columns&#39;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cols_to_reduce_data</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;info&#39;</span><span class="p">]</span>
+
+    <span class="c1"># If manual override is set to False, then add a new row to the historic db with the new values</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">manual_override</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">error_occured</span><span class="p">:</span>
+            <span class="n">error_message</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Comparison with historic df </span><span class="si">{</span><span class="n">name_of_df</span><span class="si">}</span><span class="s1">: &#39;</span> <span class="o">+</span> <span class="n">error_message</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;ERROR&#39;</span> <span class="o">+</span> <span class="n">error_message</span><span class="p">)</span> <span class="c1"># If error messages has been added to then log it</span>
+        <span class="k">if</span> <span class="n">raise_exceptions</span> <span class="ow">and</span> <span class="n">error_occured</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">error_occured</span><span class="p">:</span>
+            <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;manual_override&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">db_with_new_row</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">historic_db</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">new_dict</span><span class="p">])],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">db_with_new_row</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">db_with_new_row</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">,</span><span class="n">cols_to_reduce_data</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">write_to_postgresql</span><span class="p">(</span><span class="n">db_with_new_row</span><span class="p">,</span> <span class="n">name_of_table</span><span class="p">,</span> <span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span> <span class="c1"># If manual override is set to True, then add a new row to the historic db with the new values</span>
+        <span class="c1">#If the previous entry was not a manual override, then add a new row with the new &quot;correct&quot; value</span>
+        <span class="k">if</span> <span class="n">old_dict</span><span class="p">[</span><span class="s1">&#39;manual_override&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Manual Override set to True, adding new row to historic db with different values now deemed to be correct&#39;</span><span class="p">)</span> 
+            <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;manual_override&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">db_with_new_row</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">historic_db</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">new_dict</span><span class="p">])],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="n">db_with_new_row</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">db_with_new_row</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">,</span><span class="n">cols_to_reduce_data</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">write_to_postgresql</span><span class="p">(</span><span class="n">db_with_new_row</span><span class="p">,</span> <span class="n">name_of_table</span><span class="p">,</span> <span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">old_dict</span><span class="p">[</span><span class="s1">&#39;manual_override&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span><span class="c1"># If the previous entry was a manual override, don&#39;t let multiple overrides happen in a row to stop someone forgetting they put manual override on and leaving it running in the script</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Manual override already in place, not adding another row, please check the new value is&#39;</span>\
+                                <span class="s1">&#39;correct and set manual override back to False&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">error_message</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
@@ -2595,45 +2795,7 @@ to a notification function for example.</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/quality_assessments.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">277</span>
-<span class="normal">278</span>
-<span class="normal">279</span>
-<span class="normal">280</span>
-<span class="normal">281</span>
-<span class="normal">282</span>
-<span class="normal">283</span>
-<span class="normal">284</span>
-<span class="normal">285</span>
-<span class="normal">286</span>
-<span class="normal">287</span>
-<span class="normal">288</span>
-<span class="normal">289</span>
-<span class="normal">290</span>
-<span class="normal">291</span>
-<span class="normal">292</span>
-<span class="normal">293</span>
-<span class="normal">294</span>
-<span class="normal">295</span>
-<span class="normal">296</span>
-<span class="normal">297</span>
-<span class="normal">298</span>
-<span class="normal">299</span>
-<span class="normal">300</span>
-<span class="normal">301</span>
-<span class="normal">302</span>
-<span class="normal">303</span>
-<span class="normal">304</span>
-<span class="normal">305</span>
-<span class="normal">306</span>
-<span class="normal">307</span>
-<span class="normal">308</span>
-<span class="normal">309</span>
-<span class="normal">310</span>
-<span class="normal">311</span>
-<span class="normal">312</span>
-<span class="normal">313</span>
-<span class="normal">314</span>
-<span class="normal">315</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">315</span>
 <span class="normal">316</span>
 <span class="normal">317</span>
 <span class="normal">318</span>
@@ -2684,7 +2846,46 @@ to a notification function for example.</p>
 <span class="normal">363</span>
 <span class="normal">364</span>
 <span class="normal">365</span>
-<span class="normal">366</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">duplicates_qa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">name_of_df</span><span class="p">,</span> <span class="n">perc_dupes_thresh</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cols_to_check</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span>
+<span class="normal">384</span>
+<span class="normal">385</span>
+<span class="normal">386</span>
+<span class="normal">387</span>
+<span class="normal">388</span>
+<span class="normal">389</span>
+<span class="normal">390</span>
+<span class="normal">391</span>
+<span class="normal">392</span>
+<span class="normal">393</span>
+<span class="normal">394</span>
+<span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">duplicates_qa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">name_of_df</span><span class="p">,</span> <span class="n">perc_dupes_thresh</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cols_to_check</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
                     <span class="n">cols_to_add</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;duplicates&#39;</span><span class="p">,</span> <span class="n">raise_exceptions</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks for duplicates in a dataframe and returns the duplicates or the dataframe without duplicates.</span>
 
@@ -2730,6 +2931,7 @@ to a notification function for example.</p>
                 <span class="n">spend_col</span> <span class="o">=</span> <span class="s1">&#39;spend_usd&#39;</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">spend_col</span> <span class="o">=</span> <span class="s1">&#39;spend&#39;</span>
+
             <span class="n">cols_to_check</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;platform&#39;</span><span class="p">,</span> <span class="s1">&#39;country&#39;</span><span class="p">,</span> <span class="s1">&#39;media_type&#39;</span><span class="p">,</span> <span class="s1">&#39;cohort&#39;</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="s1">&#39;ad_name&#39;</span><span class="p">,</span> <span class="n">spend_col</span><span class="p">]</span>
 
         <span class="k">elif</span> <span class="n">paid_or_organic</span> <span class="o">==</span> <span class="s1">&#39;Organic&#39;</span><span class="p">:</span>
@@ -2945,46 +3147,7 @@ i.e. 'CampaignNameErrors', 'AdGroupNameErrors', 'AdNameErrors'.</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/quality_assessments.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">421</span>
-<span class="normal">422</span>
-<span class="normal">423</span>
-<span class="normal">424</span>
-<span class="normal">425</span>
-<span class="normal">426</span>
-<span class="normal">427</span>
-<span class="normal">428</span>
-<span class="normal">429</span>
-<span class="normal">430</span>
-<span class="normal">431</span>
-<span class="normal">432</span>
-<span class="normal">433</span>
-<span class="normal">434</span>
-<span class="normal">435</span>
-<span class="normal">436</span>
-<span class="normal">437</span>
-<span class="normal">438</span>
-<span class="normal">439</span>
-<span class="normal">440</span>
-<span class="normal">441</span>
-<span class="normal">442</span>
-<span class="normal">443</span>
-<span class="normal">444</span>
-<span class="normal">445</span>
-<span class="normal">446</span>
-<span class="normal">447</span>
-<span class="normal">448</span>
-<span class="normal">449</span>
-<span class="normal">450</span>
-<span class="normal">451</span>
-<span class="normal">452</span>
-<span class="normal">453</span>
-<span class="normal">454</span>
-<span class="normal">455</span>
-<span class="normal">456</span>
-<span class="normal">457</span>
-<span class="normal">458</span>
-<span class="normal">459</span>
-<span class="normal">460</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">460</span>
 <span class="normal">461</span>
 <span class="normal">462</span>
 <span class="normal">463</span>
@@ -3046,7 +3209,46 @@ i.e. 'CampaignNameErrors', 'AdGroupNameErrors', 'AdNameErrors'.</p>
 <span class="normal">519</span>
 <span class="normal">520</span>
 <span class="normal">521</span>
-<span class="normal">522</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">naming_convention_checker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">,</span> <span class="n">gsheet_name</span><span class="p">,</span> <span class="n">naming_convention</span><span class="p">,</span> <span class="n">campaignname_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">adgroupname_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+<span class="normal">522</span>
+<span class="normal">523</span>
+<span class="normal">524</span>
+<span class="normal">525</span>
+<span class="normal">526</span>
+<span class="normal">527</span>
+<span class="normal">528</span>
+<span class="normal">529</span>
+<span class="normal">530</span>
+<span class="normal">531</span>
+<span class="normal">532</span>
+<span class="normal">533</span>
+<span class="normal">534</span>
+<span class="normal">535</span>
+<span class="normal">536</span>
+<span class="normal">537</span>
+<span class="normal">538</span>
+<span class="normal">539</span>
+<span class="normal">540</span>
+<span class="normal">541</span>
+<span class="normal">542</span>
+<span class="normal">543</span>
+<span class="normal">544</span>
+<span class="normal">545</span>
+<span class="normal">546</span>
+<span class="normal">547</span>
+<span class="normal">548</span>
+<span class="normal">549</span>
+<span class="normal">550</span>
+<span class="normal">551</span>
+<span class="normal">552</span>
+<span class="normal">553</span>
+<span class="normal">554</span>
+<span class="normal">555</span>
+<span class="normal">556</span>
+<span class="normal">557</span>
+<span class="normal">558</span>
+<span class="normal">559</span>
+<span class="normal">560</span>
+<span class="normal">561</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">naming_convention_checker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">,</span> <span class="n">gsheet_name</span><span class="p">,</span> <span class="n">naming_convention</span><span class="p">,</span> <span class="n">campaignname_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">adgroupname_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
                                 <span class="n">adname_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">campaign_col</span><span class="o">=</span><span class="s1">&#39;campaign_name&#39;</span><span class="p">,</span> <span class="n">adgroup_col</span><span class="o">=</span><span class="s1">&#39;group_name&#39;</span><span class="p">,</span> <span class="n">adname_col</span><span class="o">=</span><span class="s1">&#39;ad_name&#39;</span><span class="p">,</span>
                                 <span class="n">spend_col</span><span class="o">=</span> <span class="s1">&#39;spend_usd&#39;</span><span class="p">,</span> <span class="n">start_char</span><span class="o">=</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="n">middle_char</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">end_char</span><span class="o">=</span><span class="s1">&#39;_&#39;</span><span class="p">,</span><span class="n">platform_col</span><span class="o">=</span><span class="s1">&#39;platform&#39;</span><span class="p">,</span> <span class="n">check_meta_platform</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks for naming convention errors in a given DataFrame and outputs the errors to a Google Sheet.</span>
@@ -3147,7 +3349,7 @@ i.e. 'CampaignNameErrors', 'AdGroupNameErrors', 'AdNameErrors'.</p>
         <span class="n">output_df</span> <span class="o">=</span> <span class="n">output_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="n">checking_cols</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 
-        <span class="n">util</span><span class="o">.</span><span class="n">write_to_gsheet</span><span class="p">(</span><span class="n">workbook_name</span> <span class="o">=</span> <span class="n">gsheet_name</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span> <span class="n">level</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">df</span> <span class="o">=</span> <span class="n">output_df</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">write_to_gsheet</span><span class="p">(</span><span class="n">workbook_name</span> <span class="o">=</span> <span class="n">gsheet_name</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span> <span class="n">level</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">df</span> <span class="o">=</span> <span class="n">output_df</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
