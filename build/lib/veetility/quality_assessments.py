@@ -220,14 +220,14 @@ class QualityAssessments:
 
         # Create a dictionary of the sums of the columns specified in cols_to_check
         new_dict = {}
-        new_dict['Date'] = str(datetime.now())
+        new_dict['date'] = str(datetime.now())
         new_dict['min_date'],new_dict['max_date'] = df[date_col].min(), df[date_col].max()
-        new_dict['comments'] = ''
+        new_dict['comments'] = ' '
 
         for col in cols_to_check:
             new_dict[col] = int(df[col].sum())
         if check_cols_set == True:
-            new_dict['Columns'] = df.columns.tolist()
+            new_dict['columns'] = df.columns.tolist()
         if unique_id_cols != None:
             new_dict['num_unique_ids'] = df[unique_id_cols].apply(lambda row: '-'.join(row.values.astype(str)),axis=1).nunique()
         
@@ -236,6 +236,7 @@ class QualityAssessments:
             historic_db = self.util.read_from_postgresql(name_of_table, clean_date=False)
             historic_db.drop(columns=['DateWrittenToDB'], inplace=True) # This column is not needed for comparison, it gets created when writing to the db
             historic_db = historic_db.reset_index(drop=True)
+            historic_db.columns = historic_db.columns.str.lower()
 
         else:
             historic_db = pd.DataFrame([new_dict])
@@ -243,18 +244,18 @@ class QualityAssessments:
             return error_message
         
         #Turn the most recent entry in the historic db into a dict
-        old_dict = historic_db.sort_values(by='Date', ascending=False).iloc[0].to_dict()
+        old_dict = historic_db.sort_values(by='date', ascending=False).iloc[0].to_dict()
 
         # for each key in the old dict, check if it is in the new dict and if it is, check if it has increased or decreased too much
         for key, value in old_dict.items():
 
-            if key == 'Columns':
+            if key == 'columns':
                 value = value.replace('{', '').replace('}', '')
                 value = [part.strip() for part in value.split(',')]
-                if set(value) != set(new_dict['Columns']):
+                if set(value) != set(new_dict['columns']):
                     #error_occured = True
                     columns_removed = list(set(value) - set(new_dict['Columns']))
-                    columns_added = list(set(new_dict['Columns']) - set(value))
+                    columns_added = list(set(new_dict['columns']) - set(value))
                     error_message = error_message + '  ' + f'The columns seems to have changed from last time,\n'\
                                             f' Columns that were added = {columns_added}\n' \
                                             f' Columns that were removed = {columns_removed}\n'
@@ -274,12 +275,10 @@ class QualityAssessments:
         # If cols_to_group is specified, then group by those columns and store the info in the dict
         if cols_to_group != None:
             new_dict['info'] = df.groupby(cols_to_group)[cols_to_check].sum().reset_index().to_json(orient='records')
-        else:
-            new_dict['info'] = 'cols_to_group not specified, therefore no info stored'
         
         #The "Columns" and the "info" columns take up a low of space, so we only keep the last 5 entries in the db
         if check_cols_set == True: 
-            cols_to_reduce_data = ['info','Columns']
+            cols_to_reduce_data = ['info','columns']
         else:
             cols_to_reduce_data = ['info']
 
