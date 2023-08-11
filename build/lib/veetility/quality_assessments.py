@@ -171,119 +171,145 @@ class QualityAssessments:
         return error_message
     
     def comparison_with_previous_data(self,df, name_of_df, cols_to_check=['impressions','likes'], perc_increase_threshold=20,
-                                    perc_decrease_threshold=0.5, check_cols_set=True,unique_id_cols=None,cols_to_group=None,raise_exceptions=True, manual_override=False):
-            """ This function stores the high level sums for a datatable from the previous run of the script
-            and if they have reduced or increased too sharply an error is raised.
+                                    perc_decrease_threshold=0.5, check_cols_set=True,unique_id_cols=None,cols_to_group=None,
+                                    raise_exceptions=True, manual_override=False,date_col='date',dayfirst=True,yearfirst=False):
+        """ This function allows you to compare the column totals of a dataframe with the totals calculated on a previous time to detect any changes that could be indicative of an error.
 
-            A JSON file is created which stores historical data about the dataframe, the columns present and the
-            sum of the columns specified in cols_to_check. This can then be used for reference purposes to see if any changes in the totals are
-            caused by code changes or errors. 
+            The historic column totals are stored in a datatable for reference and the function will check the current totals with the most recent previous totals and raise an exception 
+            if the totals have changed by more than the specified thresholds.
+
+            The function will also check if the columns in the dataframe have changed from the previous time and raise an exception if they have.
+
+            If the previous totals were wrong because of an error and the latest values in the dataframe are correct then you can set manual_override to True and the function will 
+            add a new row to the historic db with the new values. This manual override can only be done once in a row to stop someone forgetting they put manual override on and 
+            leaving it running in the script which would mean the function would never pick up any errors 
 
             Args:
                 df (pd.DataFrame): Input dataframe that the historic checks are going to be performed on.
                 name_of_df (str): Name of the dataframe, this will be used to name a file to save for future comparison.
                 cols_to_check (List[str]): A list of strings that detail the columns to be totaled which will then 
                     be compared with previous data.
-                perc_increase_threshold (float): A number between 0 and 100, the percentage increase threshold above 
+                perc_increase_threshold (float): The percentage increase threshold above 
                     which it is deemed that the totals have raised too rapidly and an error has occured.
-                perc_decrease_threshold (float): A number between 0 and 100, the percentage decrease threshold below 
+                perc_decrease_threshold (float): The percentage decrease threshold below 
                     which it is deemed that the totals decreased and an error has occured.
                 check_cols_set (bool): If true, store the set of columns present for comparison to see if any new 
                     columns have been added or removed next time, in which case it is deemed an error has occured.
+                unique_id_cols (List[str]): A list of  the columns that are unique identifiers in order to do a unique ID count to help identify
+                    any cause of the change in totals of the cols_to_check.   
+                cols_to_group (List[str]): A list the columns that are to be grouped by, and the cols_to_check will be summed for each group. This will be stored as a string in the data table
+                    which can be used as a reference to see which groups have caused the change in totals. 
                 raise_exceptions (bool): If true, then raise an exception if an error has occured instead of just returning an error message.
+                    smanual_override (bool): If true, then add a new row to the historic db with the new values with the new value which is outside the tolerance bounds but is now not considered an error
+                date_col (str): The name of the date column in the dataframe
+                dayfirst (bool): If True, parses dates with the day first, eg 10/11/12 is parsed as 2012-11-10. If False, parses dates with the month first, eg 10/11/12 is parsed as 2010-11-12. 
+                    If None, this is set to True if the day is in the first position in the format string, False otherwise. If dayfirst is set to True, parsing will be faster, but will fail for ambiguous dates, such as 01/02/03.
+                yearfirst (bool): If True parses dates with the year first, eg 10/11/12 is parsed as 2010-11-12. If both dayfirst and yearfirst are True, yearfirst is preceded (same as dateutil). 
+                    If False, parses dates with the month first, eg 10/11/12 is parsed as 2012-11-10. If None, this defaults to False. Setting yearfirst to True is not recommended, as it can result in ambiguous dates.
 
             Returns:
-                error_message (str): String detailing what the error is so that it can be passed to a notification service like slack."""
+                error_message (str): String detailing what the error is so that it can be passed to a notification service like slack.
             
-            error_message, error_occured = '', False
-            client_name = self.util.client_name.lower()
-            name_of_table = f'previous_totals_check_{client_name}_{name_of_df}'
-
-            # Create a dictionary of the sums of the columns specified in cols_to_check
-            new_dict = {}
-            new_dict['Date'] = str(datetime.now())
-            for col in cols_to_check:
-                new_dict[col] = int(df[col].sum())
-            if check_cols_set == True:
-                new_dict['Columns'] = df.columns.tolist()
-            if unique_id_cols != None:
-                new_dict['num_unique_ids'] = df[unique_id_cols].apply(lambda row: '-'.join(row.values.astype(str)),axis=1).nunique()
+            Raises:
+                Exception: If raise_exceptions = True and an error has occured."""
             
-            # Check if the historic database already exists, if not create it
-            if self.util.table_exists(name_of_table):
-                historic_db = self.util.read_from_postgresql(name_of_table, clean_date=False)
-                historic_db.drop(columns=['DateWrittenToDB'], inplace=True) # This column is not needed for comparison, it gets created when writing to the db
-                historic_db = historic_db.reset_index(drop=True)
+        error_message, error_occured = '', False
+        client_name = self.util.client_name.lower()
+        name_of_table = f'previous_totals_check_{client_name}_{name_of_df}'
+        df[date_col] = pd.to_datetime(df[date_col], dayfirst=dayfirst, yearfirst=yearfirst)
 
-            else:
-                historic_db = pd.DataFrame([new_dict])
-                self.util.write_to_postgresql(historic_db, name_of_table, if_exists='replace')
-                return error_message
-            
-            #Turn the most recent entry in the historic db into a dict
-            old_dict = historic_db.sort_values(by='Date', ascending=False).iloc[0].to_dict()
+        # Create a dictionary of the sums of the columns specified in cols_to_check
+        new_dict = {}
+        new_dict['Date'] = str(datetime.now())
+        new_dict['min_date'],new_dict['max_date'] = df[date_col].min(), df[date_col].max()
+        new_dict['comments'] = ''
 
-            # for each key in the old dict, check if it is in the new dict and if it is, check if it has increased or decreased too much
-            for key, value in old_dict.items():
+        for col in cols_to_check:
+            new_dict[col] = int(df[col].sum())
+        if check_cols_set == True:
+            new_dict['Columns'] = df.columns.tolist()
+        if unique_id_cols != None:
+            new_dict['num_unique_ids'] = df[unique_id_cols].apply(lambda row: '-'.join(row.values.astype(str)),axis=1).nunique()
+        
+        # Check if the historic database already exists, if not create it
+        if self.util.table_exists(name_of_table):
+            historic_db = self.util.read_from_postgresql(name_of_table, clean_date=False)
+            historic_db.drop(columns=['DateWrittenToDB'], inplace=True) # This column is not needed for comparison, it gets created when writing to the db
+            historic_db = historic_db.reset_index(drop=True)
 
-                if key == 'Columns':
-                    value = value.replace('{', '').replace('}', '')
-                    value = [part.strip() for part in value.split(',')]
-                    if set(value) != set(new_dict['Columns']):
-                        #error_occured = True
-                        columns_removed = list(set(value) - set(new_dict['Columns']))
-                        columns_added = list(set(new_dict['Columns']) - set(value))
-                        error_message = error_message + '  ' + f'The columns seems to have changed from last time,\n'\
-                                                f' Columns that were added = {columns_added}\n' \
-                                                f' Columns that were removed = {columns_removed}\n'
-                elif key in ['Date','manual_override','info']:
-                    continue
-                elif new_dict[key] * (1 + perc_decrease_threshold/100) < value:
-                    error_occured = True
-                    error_message = error_message + '  ' + f'The total of {key} seems to have decreased from last time\n'\
-                                            f' Prev Value = {old_dict[key]} , New Value = {new_dict[key]}\n'
-                elif new_dict[key] > value * (1 + perc_increase_threshold/100):
-                    error_occured = True
-                    error_message = error_message + '  ' + f'The total of {key} has increased by more than\n'\
-                                        f'{perc_increase_threshold}% from last time\n'\
-                                            f' Prev Value = {old_dict[key]}, New Value = {new_dict[key]}\n'
-                    
-            # If cols_to_group is specified, then group by those columns and store the info in the dict
-            if cols_to_group != None:
-                new_dict['info'] = df.groupby(cols_to_group)[cols_to_check].sum().reset_index().to_json(orient='records')
-            else:
-                new_dict['info'] = 'cols_to_group not specified, therefore no info stored'
-            
-            #The "Columns" and the "info" columns take up a low of space, so we only keep the last 5 entries in the db
-            if check_cols_set == True: 
-                cols_to_reduce_data = ['info','Columns']
-
-            if not manual_override:
-                if error_occured:
-                    error_message = f'Comparison with historic df {name_of_df}: ' + error_message + '\n'
-                    logger.info('ERROR' + error_message) # If error messages has been added to then log it
-                if raise_exceptions and error_occured:
-                    raise Exception(error_message)
-                if not error_occured:
-                    new_dict['manual_override'] = False
-                    db_with_new_row = pd.concat([historic_db, pd.DataFrame([new_dict])], ignore_index=True)
-                    db_with_new_row.loc[db_with_new_row.iloc[:-5].index,cols_to_reduce_data] = np.nan
-                    self.util.write_to_postgresql(db_with_new_row, name_of_table, if_exists='replace')
-
-            else: # If manual override is set to True, then add a new row to the historic db with the new values
-                #If the previous entry was not a manual override, then add a new row with the new "correct" value
-                if old_dict['manual_override'] == False:
-                    logger.info('Manual Override set to True, adding new row to historic db with different values now deemed to be correct') 
-                    new_dict['manual_override'] = True
-                    db_with_new_row = pd.concat([historic_db, pd.DataFrame([new_dict])], ignore_index=True)
-                    
-                    db_with_new_row.loc[db_with_new_row.iloc[:-5].index,cols_to_reduce_data] = np.nan
-                    self.util.write_to_postgresql(db_with_new_row, name_of_table, if_exists='replace')
-
-                else:# If the previous entry was a manual override, don't let multiple overrides happen in a row to stop someone forgetting they put manual override on and leaving it running in the script
-                    raise Exception('Manual override already in place, not adding another row, please check the new value is'\
-                                     'correct and set manual override back to False')
+        else:
+            historic_db = pd.DataFrame([new_dict])
+            self.util.write_to_postgresql(historic_db, name_of_table, if_exists='replace')
             return error_message
+        
+        #Turn the most recent entry in the historic db into a dict
+        old_dict = historic_db.sort_values(by='Date', ascending=False).iloc[0].to_dict()
+
+        # for each key in the old dict, check if it is in the new dict and if it is, check if it has increased or decreased too much
+        for key, value in old_dict.items():
+
+            if key == 'Columns':
+                value = value.replace('{', '').replace('}', '')
+                value = [part.strip() for part in value.split(',')]
+                if set(value) != set(new_dict['Columns']):
+                    #error_occured = True
+                    columns_removed = list(set(value) - set(new_dict['Columns']))
+                    columns_added = list(set(new_dict['Columns']) - set(value))
+                    error_message = error_message + '  ' + f'The columns seems to have changed from last time,\n'\
+                                            f' Columns that were added = {columns_added}\n' \
+                                            f' Columns that were removed = {columns_removed}\n'
+            elif key not in cols_to_check: #If the key is not a numerical type column that needs checking then don't run the numerical checks
+                continue
+
+            elif new_dict[key] * (1 + perc_decrease_threshold/100) < value:
+                error_occured = True
+                error_message = error_message + '  ' + f'The total of {key} seems to have decreased from last time\n'\
+                                        f' Prev Value = {old_dict[key]} , New Value = {new_dict[key]}\n'
+            elif new_dict[key] > value * (1 + perc_increase_threshold/100):
+                error_occured = True
+                error_message = error_message + '  ' + f'The total of {key} has increased by more than\n'\
+                                    f'{perc_increase_threshold}% from last time\n'\
+                                        f' Prev Value = {old_dict[key]}, New Value = {new_dict[key]}\n'
+                
+        # If cols_to_group is specified, then group by those columns and store the info in the dict
+        if cols_to_group != None:
+            new_dict['info'] = df.groupby(cols_to_group)[cols_to_check].sum().reset_index().to_json(orient='records')
+        else:
+            new_dict['info'] = 'cols_to_group not specified, therefore no info stored'
+        
+        #The "Columns" and the "info" columns take up a low of space, so we only keep the last 5 entries in the db
+        if check_cols_set == True: 
+            cols_to_reduce_data = ['info','Columns']
+        else:
+            cols_to_reduce_data = ['info']
+
+        # If manual override is set to False, then add a new row to the historic db with the new values
+        if not manual_override:
+            if error_occured:
+                error_message = f'Comparison with historic df {name_of_df}: ' + error_message + '\n'
+                logger.info('ERROR' + error_message) # If error messages has been added to then log it
+            if raise_exceptions and error_occured:
+                raise Exception(error_message)
+            if not error_occured:
+                new_dict['manual_override'] = False
+                db_with_new_row = pd.concat([historic_db, pd.DataFrame([new_dict])], ignore_index=True)
+                db_with_new_row.loc[db_with_new_row.iloc[:-5].index,cols_to_reduce_data] = np.nan
+                self.util.write_to_postgresql(db_with_new_row, name_of_table, if_exists='replace')
+
+        else: # If manual override is set to True, then add a new row to the historic db with the new values
+            #If the previous entry was not a manual override, then add a new row with the new "correct" value
+            if old_dict['manual_override'] == False:
+                logger.info('Manual Override set to True, adding new row to historic db with different values now deemed to be correct') 
+                new_dict['manual_override'] = True
+                db_with_new_row = pd.concat([historic_db, pd.DataFrame([new_dict])], ignore_index=True)
+                
+                db_with_new_row.loc[db_with_new_row.iloc[:-5].index,cols_to_reduce_data] = np.nan
+                self.util.write_to_postgresql(db_with_new_row, name_of_table, if_exists='replace')
+
+            elif old_dict['manual_override'] == True:# If the previous entry was a manual override, don't let multiple overrides happen in a row to stop someone forgetting they put manual override on and leaving it running in the script
+                raise Exception('Manual override already in place, not adding another row, please check the new value is'\
+                                    'correct and set manual override back to False')
+        return error_message
 
     
     def duplicates_qa(self, df, name_of_df, perc_dupes_thresh=3, cols_to_check=None, 
@@ -332,6 +358,7 @@ class QualityAssessments:
                     spend_col = 'spend_usd'
                 else:
                     spend_col = 'spend'
+
                 cols_to_check = ['date', 'platform', 'country', 'media_type', 'cohort', 'message', 'ad_name', spend_col]
                 
             elif paid_or_organic == 'Organic':

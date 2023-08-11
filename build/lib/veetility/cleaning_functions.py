@@ -7,7 +7,6 @@ import sys
 from unidecode import unidecode
 from collections import Counter
 from . import utility_functions
-
 pickle_path = "Pickled Files/"
 cleaning_logger = utility_functions.Logger('Indeed','CleaningFunctions')
 # %% -----------------------------

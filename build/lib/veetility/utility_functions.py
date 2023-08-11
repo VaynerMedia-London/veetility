@@ -64,8 +64,6 @@ class UtilityFunctions():
         self.client_name = client_name
         # Initialise a logger for the utility functions
         self.logger = Logger(client_name, log_name)
-        
-    
     
     def prepare_string_matching(self, string, is_url=False):
         """Removing unnecessary detail, whitespaces and converting to lower case.
