@@ -217,6 +217,8 @@ class QualityAssessments:
         client_name = self.util.client_name.lower()
         name_of_table = f'previous_totals_check_{client_name}_{name_of_df}'
         df[date_col] = pd.to_datetime(df[date_col], dayfirst=dayfirst, yearfirst=yearfirst)
+        for col in cols_to_check:
+            df[col] = pd.to_numeric(df[col],errors='coerce').fillna(0).astype(int)
 
         # Create a dictionary of the sums of the columns specified in cols_to_check
         new_dict = {}
@@ -254,7 +256,7 @@ class QualityAssessments:
                 value = [part.strip() for part in value.split(',')]
                 if set(value) != set(new_dict['columns']):
                     #error_occured = True
-                    columns_removed = list(set(value) - set(new_dict['Columns']))
+                    columns_removed = list(set(value) - set(new_dict['columns']))
                     columns_added = list(set(new_dict['columns']) - set(value))
                     error_message = error_message + '  ' + f'The columns seems to have changed from last time,\n'\
                                             f' Columns that were added = {columns_added}\n' \
