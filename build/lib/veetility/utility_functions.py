@@ -621,6 +621,53 @@ class UtilityFunctions():
         conn.close()
         
         return df
+    
+    def dupes_some_cols_but_differ_in_others(self, df, subset_cols, diff_cols,return_mode='only_differing_duplicates', max_value_keep_col=None):
+        """Identifies rows that are duplicates in some columns but differ in others.
+
+        This is useful in some cases when you want to find specific types of duplicates
+        caused by specific types of errors. For example social media posts that have the
+        same URL but differ in the number of impressions.
+
+        For the "only_differing_duplicates" return_mode, the function will return the rows that are duplicates in the 
+        subset_cols but differ in the diff_cols.
+
+        For the "max_value" return_mode, the function will return the original and keep only the row with the max 
+        value in the max_value_keep_col
+
+        
+        Args:
+            df (DataFrame): The dataframe to identify the rows in
+            subset_cols (list): The columns to check for duplicates in
+            diff_cols (list): The columns to check for differences in
+            return_mode (str, optional): The mode to return the duplicates in. Options are 'only_differing_duplicates' 
+                or 'max_value'. Defaults to 'only_differing_duplicates'
+            
+        Returns:
+            df_dupes (DataFrame): Depending on the return mode, either the rows that are duplicates in the subset_cols but differ in the diff_cols or
+                the original dataframe with only the row with the max value in the max_value_keep_col """
+        
+        if return_mode == 'only_differing_duplicates':
+        # Find rows that are duplicated based on subset_columns
+            duplicates = df[df.duplicated(subset=subset_cols, keep=False)]
+            
+            # Filter rows where any of the diff_columns have more than one unique value within each group
+            result = duplicates.groupby(subset_cols).filter(lambda x: any(x[col].nunique() > 1 for col in diff_cols))
+            return result
+        
+        elif return_mode == 'max_value':
+            if not max_value_keep_col:
+                raise ValueError("max_value_keep_col must be provided when return_mode is 'max_value'")
+            
+            # Sort the dataframe by max_value_keep_col in descending order
+            df_sorted = df.sort_values(by=max_value_keep_col, ascending=False)
+            
+            # Drop duplicates based on subset_columns and keep the first occurrence (which has the max value due to sorting)
+            result = df_sorted.drop_duplicates(subset=subset_cols, keep='first')
+            return result
+
+        else:
+            raise ValueError("Invalid return_mode. Choose either 'only_differing_duplicates' or 'max_value'")
 
 
     def write_to_gsheet(self, workbook_name, sheet_name, df, if_exists='replace', sheet_prefix=''):
