@@ -1494,7 +1494,10 @@ storing cumulative data we receieve as a daily incremental total</p>
 <span class="normal">855</span>
 <span class="normal">856</span>
 <span class="normal">857</span>
-<span class="normal">858</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">UtilityFunctions</span><span class="p">():</span>
+<span class="normal">858</span>
+<span class="normal">859</span>
+<span class="normal">860</span>
+<span class="normal">861</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">UtilityFunctions</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A general purpose class for performing python pipeline functions such as reading/writing to google sheets, postgreSQL databases</span>
 <span class="sd">    storing data as pickle or JSON files, with error handling and automated retries.</span>
 
@@ -2107,6 +2110,8 @@ storing cumulative data we receieve as a daily incremental total</p>
 <span class="sd">            diff_cols (list): The columns to check for differences in</span>
 <span class="sd">            return_mode (str, optional): The mode to return the duplicates in. Options are &#39;only_differing_duplicates&#39; </span>
 <span class="sd">                or &#39;max_value&#39;. Defaults to &#39;only_differing_duplicates&#39;</span>
+<span class="sd">            max_value_keep_col (str, optional): The column to use to determine which row to use to find the max value of and therefore keep</span>
+<span class="sd">                the row item with the highest value when return_mode is &#39;max_value&#39;. Defaults to None.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            df_dupes (DataFrame): Depending on the return mode, either the rows that are duplicates in the subset_cols but differ in the diff_cols or</span>
@@ -2129,6 +2134,7 @@ storing cumulative data we receieve as a daily incremental total</p>
 
             <span class="c1"># Drop duplicates based on subset_columns and keep the first occurrence (which has the max value due to sorting)</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">df_sorted</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">subset_cols</span><span class="p">,</span> <span class="n">keep</span><span class="o">=</span><span class="s1">&#39;first&#39;</span><span class="p">)</span>
+
             <span class="k">return</span> <span class="n">result</span>
 
         <span class="k">else</span><span class="p">:</span>
@@ -2765,12 +2771,12 @@ having to do searches on a string if we've already found a match in the past</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">815</span>
-<span class="normal">816</span>
-<span class="normal">817</span>
-<span class="normal">818</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">818</span>
 <span class="normal">819</span>
-<span class="normal">820</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">columnnames_to_lowercase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
+<span class="normal">820</span>
+<span class="normal">821</span>
+<span class="normal">822</span>
+<span class="normal">823</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">columnnames_to_lowercase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Change the columns in a dataframe into lowercase with spaces replaced by underscores&quot;&quot;&quot;</span>
     <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
     <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
@@ -3043,6 +3049,17 @@ or 'max_value'. Defaults to 'only_differing_duplicates'</p></td>
                 <code>&#39;only_differing_duplicates&#39;</code>
           </td>
         </tr>
+        <tr>
+          <td><code>max_value_keep_col</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>The column to use to determine which row to use to find the max value of and therefore keep
+the row item with the highest value when return_mode is 'max_value'. Defaults to None.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
     </tbody>
   </table>
 
@@ -3112,7 +3129,10 @@ the original dataframe with only the row with the max value in the max_value_kee
 <span class="normal">667</span>
 <span class="normal">668</span>
 <span class="normal">669</span>
-<span class="normal">670</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">dupes_some_cols_but_differ_in_others</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">subset_cols</span><span class="p">,</span> <span class="n">diff_cols</span><span class="p">,</span><span class="n">return_mode</span><span class="o">=</span><span class="s1">&#39;only_differing_duplicates&#39;</span><span class="p">,</span> <span class="n">max_value_keep_col</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="normal">670</span>
+<span class="normal">671</span>
+<span class="normal">672</span>
+<span class="normal">673</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">dupes_some_cols_but_differ_in_others</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">subset_cols</span><span class="p">,</span> <span class="n">diff_cols</span><span class="p">,</span><span class="n">return_mode</span><span class="o">=</span><span class="s1">&#39;only_differing_duplicates&#39;</span><span class="p">,</span> <span class="n">max_value_keep_col</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Identifies rows that are duplicates in some columns but differ in others.</span>
 
 <span class="sd">    This is useful in some cases when you want to find specific types of duplicates</span>
@@ -3132,6 +3152,8 @@ the original dataframe with only the row with the max value in the max_value_kee
 <span class="sd">        diff_cols (list): The columns to check for differences in</span>
 <span class="sd">        return_mode (str, optional): The mode to return the duplicates in. Options are &#39;only_differing_duplicates&#39; </span>
 <span class="sd">            or &#39;max_value&#39;. Defaults to &#39;only_differing_duplicates&#39;</span>
+<span class="sd">        max_value_keep_col (str, optional): The column to use to determine which row to use to find the max value of and therefore keep</span>
+<span class="sd">            the row item with the highest value when return_mode is &#39;max_value&#39;. Defaults to None.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        df_dupes (DataFrame): Depending on the return mode, either the rows that are duplicates in the subset_cols but differ in the diff_cols or</span>
@@ -3154,6 +3176,7 @@ the original dataframe with only the row with the max value in the max_value_kee
 
         <span class="c1"># Drop duplicates based on subset_columns and keep the first occurrence (which has the max value due to sorting)</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">df_sorted</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">subset_cols</span><span class="p">,</span> <span class="n">keep</span><span class="o">=</span><span class="s1">&#39;first&#39;</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">else</span><span class="p">:</span>
@@ -3441,16 +3464,16 @@ the original dataframe with only the row with the max value in the max_value_kee
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">736</span>
-<span class="normal">737</span>
-<span class="normal">738</span>
-<span class="normal">739</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">739</span>
 <span class="normal">740</span>
 <span class="normal">741</span>
 <span class="normal">742</span>
 <span class="normal">743</span>
 <span class="normal">744</span>
-<span class="normal">745</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">identify_paid_or_organic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
+<span class="normal">745</span>
+<span class="normal">746</span>
+<span class="normal">747</span>
+<span class="normal">748</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">identify_paid_or_organic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Identify whether a given dataframe contains paid data&quot;&quot;&quot;</span>
     <span class="n">paid_or_organic</span> <span class="o">=</span> <span class="s1">&#39;Organic&#39;</span>
     <span class="c1"># Make columns to check lower case so can work on</span>
@@ -4106,10 +4129,7 @@ need to be is used.</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">822</span>
-<span class="normal">823</span>
-<span class="normal">824</span>
-<span class="normal">825</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">825</span>
 <span class="normal">826</span>
 <span class="normal">827</span>
 <span class="normal">828</span>
@@ -4142,7 +4162,10 @@ need to be is used.</p>
 <span class="normal">855</span>
 <span class="normal">856</span>
 <span class="normal">857</span>
-<span class="normal">858</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">merge_match_perc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df_1</span><span class="p">,</span> <span class="n">df_2</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">ignore_values_df2</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;nan&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">]):</span>
+<span class="normal">858</span>
+<span class="normal">859</span>
+<span class="normal">860</span>
+<span class="normal">861</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">merge_match_perc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df_1</span><span class="p">,</span> <span class="n">df_2</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">ignore_values_df2</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;nan&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Merges two dataframes and prints out the number of matches and the percentage of matches out of the total number of rows.</span>
 
 <span class="sd">    Args:</span>
@@ -4245,17 +4268,17 @@ need to be is used.</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">747</span>
-<span class="normal">748</span>
-<span class="normal">749</span>
-<span class="normal">750</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">750</span>
 <span class="normal">751</span>
 <span class="normal">752</span>
 <span class="normal">753</span>
 <span class="normal">754</span>
 <span class="normal">755</span>
 <span class="normal">756</span>
-<span class="normal">757</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">pickle_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="s2">&quot;Pickled Files&quot;</span><span class="p">):</span>
+<span class="normal">757</span>
+<span class="normal">758</span>
+<span class="normal">759</span>
+<span class="normal">760</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">pickle_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="s2">&quot;Pickled Files&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Pickle data and save it to a file.</span>
 
 <span class="sd">    Args:</span>
@@ -4510,10 +4533,7 @@ string : str
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">706</span>
-<span class="normal">707</span>
-<span class="normal">708</span>
-<span class="normal">709</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">709</span>
 <span class="normal">710</span>
 <span class="normal">711</span>
 <span class="normal">712</span>
@@ -4537,7 +4557,10 @@ string : str
 <span class="normal">730</span>
 <span class="normal">731</span>
 <span class="normal">732</span>
-<span class="normal">733</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">read_from_gsheet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">workbook_name</span><span class="p">,</span> <span class="n">sheet_name</span><span class="p">,</span> <span class="n">clean_date</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">date_col</span><span class="o">=</span><span class="s1">&#39;EnterValue&#39;</span><span class="p">,</span>
+<span class="normal">733</span>
+<span class="normal">734</span>
+<span class="normal">735</span>
+<span class="normal">736</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">read_from_gsheet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">workbook_name</span><span class="p">,</span> <span class="n">sheet_name</span><span class="p">,</span> <span class="n">clean_date</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">date_col</span><span class="o">=</span><span class="s1">&#39;EnterValue&#39;</span><span class="p">,</span>
                             <span class="n">dayfirst</span><span class="o">=</span><span class="s1">&#39;EnterValue&#39;</span><span class="p">,</span> <span class="n">yearfirst</span><span class="o">=</span><span class="s1">&#39;EnterValue&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read data from a google sheet and return it as a dataframe.</span>
 
@@ -4882,10 +4905,7 @@ If fails it waits 10 seconds and tries again.</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">796</span>
-<span class="normal">797</span>
-<span class="normal">798</span>
-<span class="normal">799</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">799</span>
 <span class="normal">800</span>
 <span class="normal">801</span>
 <span class="normal">802</span>
@@ -4899,7 +4919,10 @@ If fails it waits 10 seconds and tries again.</p>
 <span class="normal">810</span>
 <span class="normal">811</span>
 <span class="normal">812</span>
-<span class="normal">813</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">read_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">file_type</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="s2">&quot;JSON Files&quot;</span><span class="p">):</span>
+<span class="normal">813</span>
+<span class="normal">814</span>
+<span class="normal">815</span>
+<span class="normal">816</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">read_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">file_type</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="s2">&quot;JSON Files&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read a json file and return a Python object.</span>
 
 <span class="sd">    Args:</span>
@@ -5478,16 +5501,16 @@ was first tracked and when that particular row item was added to the data output
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">760</span>
-<span class="normal">761</span>
-<span class="normal">762</span>
-<span class="normal">763</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">763</span>
 <span class="normal">764</span>
 <span class="normal">765</span>
 <span class="normal">766</span>
 <span class="normal">767</span>
 <span class="normal">768</span>
-<span class="normal">769</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">unpickle_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">folder</span> <span class="o">=</span><span class="s2">&quot;Pickled Files&quot;</span><span class="p">):</span>
+<span class="normal">769</span>
+<span class="normal">770</span>
+<span class="normal">771</span>
+<span class="normal">772</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">unpickle_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">folder</span> <span class="o">=</span><span class="s2">&quot;Pickled Files&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Load pickled data from a file.</span>
 
 <span class="sd">    Args:</span>
@@ -5573,10 +5596,7 @@ was first tracked and when that particular row item was added to the data output
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">772</span>
-<span class="normal">773</span>
-<span class="normal">774</span>
-<span class="normal">775</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">775</span>
 <span class="normal">776</span>
 <span class="normal">777</span>
 <span class="normal">778</span>
@@ -5595,7 +5615,10 @@ was first tracked and when that particular row item was added to the data output
 <span class="normal">791</span>
 <span class="normal">792</span>
 <span class="normal">793</span>
-<span class="normal">794</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">write_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">file_type</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="s2">&quot;JSON Files&quot;</span><span class="p">):</span>
+<span class="normal">794</span>
+<span class="normal">795</span>
+<span class="normal">796</span>
+<span class="normal">797</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">write_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">file_type</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="s2">&quot;JSON Files&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Write a Python object to a json file.</span>
 
 <span class="sd">    Args:</span>
@@ -5721,10 +5744,7 @@ was first tracked and when that particular row item was added to the data output
 
       <details class="quote">
         <summary>Source code in <code>veetility/utility_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">673</span>
-<span class="normal">674</span>
-<span class="normal">675</span>
-<span class="normal">676</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">676</span>
 <span class="normal">677</span>
 <span class="normal">678</span>
 <span class="normal">679</span>
@@ -5752,7 +5772,10 @@ was first tracked and when that particular row item was added to the data output
 <span class="normal">701</span>
 <span class="normal">702</span>
 <span class="normal">703</span>
-<span class="normal">704</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">write_to_gsheet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">workbook_name</span><span class="p">,</span> <span class="n">sheet_name</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">,</span> <span class="n">sheet_prefix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<span class="normal">704</span>
+<span class="normal">705</span>
+<span class="normal">706</span>
+<span class="normal">707</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">write_to_gsheet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">workbook_name</span><span class="p">,</span> <span class="n">sheet_name</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">,</span> <span class="n">sheet_prefix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Write a dataframe to a google sheet</span>
 
 <span class="sd">    Args:</span>
