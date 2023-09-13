@@ -642,6 +642,8 @@ class UtilityFunctions():
             diff_cols (list): The columns to check for differences in
             return_mode (str, optional): The mode to return the duplicates in. Options are 'only_differing_duplicates' 
                 or 'max_value'. Defaults to 'only_differing_duplicates'
+            max_value_keep_col (str, optional): The column to use to determine which row to use to find the max value of and therefore keep
+                the row item with the highest value when return_mode is 'max_value'. Defaults to None.
             
         Returns:
             df_dupes (DataFrame): Depending on the return mode, either the rows that are duplicates in the subset_cols but differ in the diff_cols or
@@ -664,6 +666,7 @@ class UtilityFunctions():
             
             # Drop duplicates based on subset_columns and keep the first occurrence (which has the max value due to sorting)
             result = df_sorted.drop_duplicates(subset=subset_cols, keep='first')
+            
             return result
 
         else:

@@ -350,6 +350,7 @@ class QualityAssessments:
         num_rows = len(df)
         logger.info(f'Num of rows in {name_of_df} = {num_rows}')
         paid_or_organic = self.util.identify_paid_or_organic(df)
+        print(f'Paid or Organic? : {paid_or_organic}')
         
         if cols_to_check == None:
             if paid_or_organic == 'Paid':
@@ -371,10 +372,10 @@ class QualityAssessments:
             cols_to_check = cols_to_check + cols_to_add
         
         #detect whether a column has the word 'age' in it and if so add that column to the cols_to_check
-        age_columns = [x for x in df.columns if ('age' in x) and ('message' not in x)]
-        if len(age_columns) > 0:
-            logger.info(f'Age columns detected: {age_columns}')
-            cols_to_check = cols_to_check + age_columns
+        # age_columns = [x for x in df.columns if ('age' in x) and ('message' not in x)]
+        # if len(age_columns) > 0:
+        #     logger.info(f'Age columns detected: {age_columns}')
+        #     cols_to_check = cols_to_check + age_columns
         
         for i in range(2, len(cols_to_check)+1):
             num_duplicates = df.duplicated(subset=cols_to_check[:i]).sum()

@@ -135,6 +135,11 @@ class Snowflake():
         '''Function to write Pandas dataframe to Snowflake table
 
         Truncates (if it exists) or creates new table and inserts the new data into the selcted table
+
+        This function is based on the write_pandas function from the snowflake-connector-python package
+        but just adds some redundancy and retries if the connection fails
+        Their documentation can be found here, but is incomplete as it doesn't include the overwrite parameter
+        https://docs.snowflake.com/en/developer-guide/python-connector/python-connector-api#write_pandas
         
         Args:
             df (dataframe): Pandas dataframe to write to Snowflake
@@ -142,7 +147,7 @@ class Snowflake():
             database (str, optional): Name of the database to write the table to. Defaults to the database specified on class initialisation.
             schema (str, optional): Name of the schema to write the table to. Defaults to the schema specified on class initialisation.
             auto_create_table (bool, optional): If True, creates the table if it does not exist. Defaults to False.
-            overwrite (bool, optional): If True, overwrites the table if it exists. Defaults to False.
+            overwrite (bool, optional): If True, overwrites the table if it exists, else if False the df is appended to current table. Defaults to False.
             chunk_size (int, optional): Size of the data chunks to write in a single batch. Defaults to 200000.
         
         Returns:
