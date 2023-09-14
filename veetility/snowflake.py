@@ -186,7 +186,7 @@ class Snowflake():
                 except Exception as error_message:
                     print("Connection failed again")
                     print(f'{table_name} error: ' + str(error_message))
-                    return f'{table_name} error: ' + str(error_message) 
+                    raise Exception(error_message)
 
     def drop_table(self, table_name, database=None, schema=None):
             '''Function to drop Snowflake table
