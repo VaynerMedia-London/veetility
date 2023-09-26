@@ -43,6 +43,33 @@ def search_email(connection, from_email, subject):
     
     return matching_ids
 
+def search_most_recent_email(connection, from_email, subject):
+    '''
+    Search for the most recent email matching the FROM and SUBJECT criteria.
+    :param connection: IMAP connection
+    :param from_email: FROM email address
+    :param subject: SUBJECT
+    :return: the most recent email ID that matches the criteria, or None if no match is found
+    '''
+    # Step 1: Search by FROM criterion
+    status, from_ids = connection.search(None, '(FROM "{}")'.format(from_email))
+    if status != 'OK':
+        return None
+    
+    # Sort IDs numerically to get the most recent emails first
+    sorted_ids = sorted(from_ids[0].split(), key=int, reverse=True)
+    
+    # Step 2: Filter the results by SUBJECT
+    for e_id in sorted_ids:
+        status, data = connection.fetch(e_id, '(BODY[HEADER])')
+        if status != 'OK':
+            continue
+        header_data = email.message_from_bytes(data[0][1])
+        email_subject = header_data['Subject']
+        if subject in email_subject:
+            return e_id  # Return the most recent email ID that matches
+    
+    return None  # No match found
 
 def get_email_body(connection, email_id):
     '''
