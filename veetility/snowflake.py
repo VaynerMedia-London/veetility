@@ -78,7 +78,7 @@ class Snowflake():
         return f"Table {table_name} has been dropped."
 
     
-    def read_snowflake_to_df(self, table_name, schema=None, chunk_size=200000):
+    def read_snowflake_to_df(self, table_name, schema=None, database=None ,chunk_size=200000):
         """Function to read Snowflake table using SQLAlchemy
         
         URL stands for Uniform Resource Locator. It is a reference (an address) to a resource on the Internet.
@@ -93,14 +93,16 @@ class Snowflake():
 
         if schema == None:
             schema = self.schema
+        if database == None:
+            database = self.database
 
-        with snowflake.connector.connect(
-            user=self.user,
-            password=self.password,
-            account=self.account,
-            warehouse=self.warehouse,
-            database=self.database,
-            schema=schema,
+        with snowflake.connector.connect(   
+            user = self.user,
+            password = self.password,
+            account = self.account,
+            warehouse = self.warehouse,
+            database = database,
+            schema = schema,
         ) as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT COUNT(*) FROM {table_name}")

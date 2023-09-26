@@ -9,6 +9,14 @@ from collections import Counter
 from . import utility_functions
 pickle_path = "Pickled Files/"
 cleaning_logger = utility_functions.Logger('Indeed','CleaningFunctions')
+DEFAULT_COLS_NO_CHANGE = [
+    'spend', 'date', 'currency', 'cohort', 'creative_name', 'group_id',
+    'engagements', 'created', 'ad_id', 'plays', 'saved', 'post_hastags',
+    'content_type', 'linked_content', 'post_id', 'video_duration',
+    'average_time_watched', 'total_time_watched', 'adset_targeting',
+    'completion_rate', 'targeting', 'cohort_new', 'video_completions',
+    'post_hashtags'
+]
 # %% -----------------------------
 # Emojis to clean out of copy messages
 # -----------------------------
@@ -19,12 +27,11 @@ emoji_pattern = re.compile("["
                            u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
                            "]+", flags=re.UNICODE)
 
-def clean_column_names(df, name_of_df,hardcode_col_dict = {},errors= 'ignore',cols_no_change = ['spend', 'date', 'currency', 
-                            'cohort', 'creative_name', 'group_id', 'engagements', 'created', 'ad_id',
-                            'plays', 'saved', 'post_hastags', 'content_type', 'linked_content', 'post_id',
-                            'video_duration', 'average_time_watched', 'total_time_watched',
-                            'adset_targeting', 'completion_rate', 'targeting', 'cohort_new',
-                            'video_completions', 'post_hashtags']):
+def clean_column_names(df, 
+                       name_of_df,
+                       hardcode_col_dict = None,
+                       errors = 'ignore',
+                       cols_no_change = DEFAULT_COLS_NO_CHANGE):
 
     """Cleans the column names of an advertisement performance (organic or paid) dataset, commonly from
     Tracer but could also be from Sprout social. The column names will be standardized so
@@ -40,6 +47,9 @@ def clean_column_names(df, name_of_df,hardcode_col_dict = {},errors= 'ignore',co
 
     Returns:
         DataFrame: Output dataframe with the column names standardized."""
+    
+    if hardcode_col_dict == None:
+        hardcode_col_dict = {}
     
     new_columns = {}
     for column in df.columns:
@@ -239,9 +249,7 @@ def clean_url(url):
         the important information for matching
         In he case of Tiktok remove everything after and including the ?
         This removes the utm parameters"""
-    url = str(url)
-    url = url.lower()
-    url = url.strip()
+    url = str(url).lower().strip()
     url = url.replace('https://', '')
     url = url.replace('http://', '')
     url = url.replace('www.', '')

@@ -46,6 +46,7 @@ class UtilityFunctions():
         The email address of the google account must be added to the google sheet as a collaborator
         
         Args:
+            client_name (str): Used to specify the folder, 
             gspread_auth_dict (dict): A dictionary containing google authorisation data
             db_user (str): The postgreSQL database username
             db_password (str): The postgreSQL database password
