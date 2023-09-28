@@ -934,8 +934,7 @@ then other functions in other libraries can work with the dataset.</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">284</span>
-<span class="normal">285</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">285</span>
 <span class="normal">286</span>
 <span class="normal">287</span>
 <span class="normal">288</span>
@@ -959,7 +958,8 @@ then other functions in other libraries can work with the dataset.</p>
 <span class="normal">306</span>
 <span class="normal">307</span>
 <span class="normal">308</span>
-<span class="normal">309</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clean_media_type</span><span class="p">(</span><span class="n">media_type</span><span class="p">):</span>
+<span class="normal">309</span>
+<span class="normal">310</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clean_media_type</span><span class="p">(</span><span class="n">media_type</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Clean the media type into a standardised version of media type&quot;&quot;&quot;</span>
     <span class="n">media_type</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">media_type</span><span class="p">)</span>
     <span class="c1"># replace multiple underscores with a single space</span>
@@ -1049,8 +1049,7 @@ then other functions in other libraries can work with the dataset.</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">312</span>
-<span class="normal">313</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">313</span>
 <span class="normal">314</span>
 <span class="normal">315</span>
 <span class="normal">316</span>
@@ -1065,7 +1064,8 @@ then other functions in other libraries can work with the dataset.</p>
 <span class="normal">325</span>
 <span class="normal">326</span>
 <span class="normal">327</span>
-<span class="normal">328</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clean_placement</span><span class="p">(</span><span class="n">placement</span><span class="p">):</span>
+<span class="normal">328</span>
+<span class="normal">329</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clean_placement</span><span class="p">(</span><span class="n">placement</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Clean a placement string into a standardised placement</span>
 <span class="sd">    Args:</span>
 <span class="sd">        placement (str): A string representing the placement of the post </span>
@@ -1100,10 +1100,10 @@ then other functions in other libraries can work with the dataset.</p>
 
   <div class="doc doc-contents ">
   
-      <p>Cleans platform name, deals with the fact that most platforms 
-are in the 'title' case, i.e. First letter of each word is capitalised
+      <p>Cleans the platform name into a the standard used company wide.</p>
+<p>Most platforms are in the 'title' case, i.e. First letter of each word is capitalised
 However there are some platforms that have are one word but are usually 
-presented as having a capital letter midway through the word.</p>
+presented as having a capital letter midway through the word. E.g. TikTok and LinkedIn</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
@@ -1118,11 +1118,15 @@ presented as having a capital letter midway through the word.</p>
 <span class="normal">244</span>
 <span class="normal">245</span>
 <span class="normal">246</span>
-<span class="normal">247</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clean_platform_name</span><span class="p">(</span><span class="n">platform</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Cleans platform name, deals with the fact that most platforms </span>
-<span class="sd">    are in the &#39;title&#39; case, i.e. First letter of each word is capitalised</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clean_platform_name</span><span class="p">(</span><span class="n">platform</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Cleans the platform name into a the standard used company wide.</span>
+
+<span class="sd">    Most platforms are in the &#39;title&#39; case, i.e. First letter of each word is capitalised</span>
 <span class="sd">    However there are some platforms that have are one word but are usually </span>
-<span class="sd">    presented as having a capital letter midway through the word.&quot;&quot;&quot;</span>
+<span class="sd">    presented as having a capital letter midway through the word. E.g. TikTok and LinkedIn&quot;&quot;&quot;</span>
+
     <span class="n">platform</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">platform</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
     <span class="k">if</span> <span class="s1">&#39;tiktok&#39;</span> <span class="ow">in</span> <span class="n">platform</span><span class="p">:</span>
         <span class="k">return</span> <span class="s1">&#39;TikTok&#39;</span>
@@ -1148,16 +1152,12 @@ presented as having a capital letter midway through the word.</p>
 
   <div class="doc doc-contents ">
   
-      <p>Clean the url of the post to produce a string with just
-the important information for matching
-In he case of Tiktok remove everything after and including the ?
-This removes the utm parameters</p>
+      <p>Clean the url of the post to produce a string with just the important information for matching.</p>
+<p>In the case of Tiktok remove everything after and including the ?, This removes the utm parameters</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">249</span>
-<span class="normal">250</span>
-<span class="normal">251</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">251</span>
 <span class="normal">252</span>
 <span class="normal">253</span>
 <span class="normal">254</span>
@@ -1167,11 +1167,11 @@ This removes the utm parameters</p>
 <span class="normal">258</span>
 <span class="normal">259</span>
 <span class="normal">260</span>
-<span class="normal">261</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clean_url</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Clean the url of the post to produce a string with just</span>
-<span class="sd">        the important information for matching</span>
-<span class="sd">        In he case of Tiktok remove everything after and including the ?</span>
-<span class="sd">        This removes the utm parameters&quot;&quot;&quot;</span>
+<span class="normal">261</span>
+<span class="normal">262</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clean_url</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Clean the url of the post to produce a string with just the important information for matching.</span>
+
+<span class="sd">        In the case of Tiktok remove everything after and including the ?, This removes the utm parameters&quot;&quot;&quot;</span>
     <span class="n">url</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
     <span class="n">url</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;https://&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
     <span class="n">url</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;http://&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
@@ -1202,12 +1202,12 @@ This removes the utm parameters</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">335</span>
-<span class="normal">336</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">336</span>
 <span class="normal">337</span>
 <span class="normal">338</span>
 <span class="normal">339</span>
-<span class="normal">340</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">extract_after_nth_occurrence</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">char</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+<span class="normal">340</span>
+<span class="normal">341</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">extract_after_nth_occurrence</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">char</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts the string between the nth and n+1th occurrence of the character&quot;&quot;&quot;</span>
     <span class="n">extract</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">char</span><span class="p">)[</span><span class="n">n</span><span class="p">]</span>
     <span class="n">extract</span> <span class="o">=</span> <span class="n">extract</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
@@ -1389,10 +1389,10 @@ country Tag abbreviation mostly following the ISO 3166-1 alpha-2 format</p></td>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">330</span>
-<span class="normal">331</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">331</span>
 <span class="normal">332</span>
-<span class="normal">333</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">extract_quarter_from_date</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
+<span class="normal">333</span>
+<span class="normal">334</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">extract_quarter_from_date</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts the quarter from the date&quot;&quot;&quot;</span>
     <span class="n">date</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">date</span><span class="o">.</span><span class="n">quarter</span>
@@ -1578,14 +1578,15 @@ are essentially the same but one just has a whitespace</p>
 
   <div class="doc doc-contents ">
   
-      <p>Sometimes there are identical posts posted on the same day. 
-This can be used to return just the url of the post with
-the highest amount of 'impressions' or 'video views'</p>
+      <p>This function deals with posts that have two urls even though they are effectively the same post.</p>
+<p>Sometimes social media posts are posted but then deleted, only to be reposted later. </p>
+<p>This function returns just the url of the post with the highest amount of 'impressions' or 'video views'</p>
+<p>You can take a dataframe of social media posts, groupby the unique identifier and this will return only 
+the row item with the highest number of impressions or video_views.</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">364</span>
-<span class="normal">365</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">365</span>
 <span class="normal">366</span>
 <span class="normal">367</span>
 <span class="normal">368</span>
@@ -1599,10 +1600,24 @@ the highest amount of 'impressions' or 'video views'</p>
 <span class="normal">376</span>
 <span class="normal">377</span>
 <span class="normal">378</span>
-<span class="normal">379</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">two_urls_per_post_to_1</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">target_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sometimes there are identical posts posted on the same day. </span>
-<span class="sd">    This can be used to return just the url of the post with</span>
-<span class="sd">    the highest amount of &#39;impressions&#39; or &#39;video views&#39;&quot;&quot;&quot;</span>
+<span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span>
+<span class="normal">384</span>
+<span class="normal">385</span>
+<span class="normal">386</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">two_urls_per_post_to_1</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">target_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This function deals with posts that have two urls even though they are effectively the same post.</span>
+
+<span class="sd">    Sometimes social media posts are posted but then deleted, only to be reposted later. </span>
+
+<span class="sd">    This function returns just the url of the post with the highest amount of &#39;impressions&#39; or &#39;video views&#39;</span>
+
+<span class="sd">    You can take a dataframe of social media posts, groupby the unique identifier and this will return only </span>
+<span class="sd">    the row item with the highest number of impressions or video_views. </span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">target_cols</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">target_cols</span> <span class="o">=</span>   <span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">,</span> <span class="s1">&#39;influencer?&#39;</span><span class="p">]</span>
 
@@ -1613,7 +1628,6 @@ the highest amount of 'impressions' or 'video views'</p>
         <span class="n">target_col</span> <span class="o">=</span> <span class="s1">&#39;video_views&#39;</span>
         <span class="n">max_score</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;video_views&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
 
-    <span class="c1"># Return pd.Series(d,index=list(d.keys()))</span>
     <span class="k">return</span> <span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="n">target_col</span><span class="p">]</span> <span class="o">==</span> <span class="n">max_score</span><span class="p">][</span><span class="n">target_cols</span><span class="p">]</span>
 </code></pre></div></td></tr></table></div>
       </details>
@@ -1639,8 +1653,7 @@ it is a numerical code, sometimes it is alphanumeric</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">263</span>
-<span class="normal">264</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">264</span>
 <span class="normal">265</span>
 <span class="normal">266</span>
 <span class="normal">267</span>
@@ -1658,7 +1671,8 @@ it is a numerical code, sometimes it is alphanumeric</p>
 <span class="normal">279</span>
 <span class="normal">280</span>
 <span class="normal">281</span>
-<span class="normal">282</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">updated_value_extract</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+<span class="normal">282</span>
+<span class="normal">283</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">updated_value_extract</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract the unique identifier for a post from the url</span>
 <span class="sd">        This format of this code depends on the platform, sometimes</span>
 <span class="sd">        it is a numerical code, sometimes it is alphanumeric&quot;&quot;&quot;</span>
@@ -1757,14 +1771,7 @@ Returns None if the input does not make sense
 
       <details class="quote">
         <summary>Source code in <code>veetility/cleaning_functions.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">396</span>
-<span class="normal">397</span>
-<span class="normal">398</span>
-<span class="normal">399</span>
-<span class="normal">400</span>
-<span class="normal">401</span>
-<span class="normal">402</span>
-<span class="normal">403</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">403</span>
 <span class="normal">404</span>
 <span class="normal">405</span>
 <span class="normal">406</span>
@@ -1805,7 +1812,14 @@ Returns None if the input does not make sense
 <span class="normal">441</span>
 <span class="normal">442</span>
 <span class="normal">443</span>
-<span class="normal">444</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">video_len_toseconds</span><span class="p">(</span><span class="n">video_length</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">video_len_toseconds</span><span class="p">(</span><span class="n">video_length</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert video length in format from Tracer usually &quot;1:20&quot; to seconds (80 seconds in this case)</span>
 
 <span class="sd">    Args:</span>
