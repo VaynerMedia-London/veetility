@@ -26,14 +26,35 @@ file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
 class QualityAssessments:
+    """A class for performing quality assessment functions on social media advertising data.
+    
+    Examples:
+        1. Check the percentage of null or nan values for certain channels of data, e.g. Germany TikTok has 5% of the post messages as null values
+        2. Store the historic sum totals of columns such as likes, which should increase linerarly over time as more adverts are run. If a sharp increase or a 
+            decrease is detected then raise an error.
+        3. Check the percentage of duplicates in a dataframe of advertising data. Automatic detection of whether the data is paid or organic and what attributes of those
+            datasets would normally constitute a duplicate or not. 
+
+    It outputs results to Google Sheets and can raise exceptions or send notifications when issues are detected.
+
+    Attributes:
+        util: A utility object (from utility_functions in this library) for writing results to google sheets and databases."""
 
     def __init__(self, util_object=None):
 
         if util_object != None:
             self.util = util_object
     
-    def null_values_checker(self,df,cols_to_group,gsheet_name,tab_name,cols_to_ignore=None,
-                            null_definitions=[np.nan,'N/A','','None'],output_method='gsheet'):
+    def null_values_checker(
+            self,
+            df,
+            cols_to_group,
+            gsheet_name,
+            tab_name,
+            cols_to_ignore=None,
+            null_definitions=None,
+            output_method='gsheet'
+    ):
         """Takes in a dataframe and columns to groupby and checks how many null values or null equivalents
         there are in the rest of the columns.
             
@@ -52,7 +73,9 @@ class QualityAssessments:
         Returns:
             null_count_df (pandas.DataFrame): Dataframe showing the percentage of nulls in each column grouped 
                                            by the 'cols_to_group'."""
-        
+        if null_definitions == None:
+            null_definitions = [np.nan,'N/A','','None']
+
         if cols_to_ignore == None:
             cols_to_ignore = []
 
@@ -71,9 +94,19 @@ class QualityAssessments:
         elif output_method == 'Dataframe': 
             return null_count_df
     
-    def check_data_recency(self, df, cols_to_group, gsheet_name, tab_name='DataRecency',
-                            three_days_for_monday= True, date_col='date',
-                            dayfirst='EnterValue', yearfirst='EnterValue', format=None, errors='raise'):
+    def check_data_recency(
+            self, 
+            df, 
+            cols_to_group,
+            gsheet_name, 
+            tab_name='DataRecency',
+            three_days_for_monday=True,
+            date_col='date',
+            dayfirst='EnterValue', 
+            yearfirst='EnterValue', 
+            format=None, 
+            errors='raise'
+    ):
         """Post a google sheet showing how many days since different channels have been active.
         Also return a list of channels that have been inactive for more than 2 days which
         might be indicative of an error
@@ -127,8 +160,13 @@ class QualityAssessments:
 
         return error_message
     
-    def boosted_function_qa(self, paid_df, organic_df, gsheet_name, tab_name='OrganicWithBigImpressions', impressions_threshold=100000):
-        """Takes in organic data and paid data and reports how many are mislabelled as boosted
+    def boosted_function_qa(
+            self, paid_df, 
+            organic_df, gsheet_name, 
+            tab_name='OrganicWithBigImpressions', 
+            impressions_threshold=100000):
+        """Takes in organic data and paid data and reports how many paid adverts are mislabelled as boostes and how many organic posts are incorrectly
+        said to not have been boosted.
             
         Args:
             paid_df (pandas.DataFrame): Daily ad spend, boosted posts identified in the 'workstream' column
@@ -140,13 +178,13 @@ class QualityAssessments:
         error_message = ''
         organic_df['Error'] = False
 
-        # count number of unique paid posts wi  th workstream organic minus oranic posts labelled as boosted
+        # count number of unique paid posts with workstream organic minus oranic posts labelled as boosted
         # number of boosted post from paid naming convention Tags
         paid_boosted_count = len(paid_df[paid_df['workstream'] == 'boosted']['post_id'].unique())
 
         # number of posts our boosted matching function has identified as boosted
         organic_boosted_count = len(organic_df[organic_df['workstream'] == 'boosted']['post_id'].unique())
-        missing_boosted = paid_boosted_count-organic_boosted_count
+        missing_boosted = paid_boosted_count - organic_boosted_count
 
         if (missing_boosted) != 0:
             error_message = error_message + '  ' + \
@@ -164,15 +202,17 @@ class QualityAssessments:
                 f'There are {len(misslabelled_og_rows.index.values)} Pure Organic posts with over {impressions_threshold} impressions or video views\n'
             logger.warning(error_message)
             self.util.write_to_gsheet(gsheet_name, tab_name, misslabelled_og_rows)
-        # return TT or IG values with empty message field
-        # for the date function exlude the dates we paused for the queen
 
         logger.warning(error_message)
         return error_message
     
-    def comparison_with_previous_data(self,df, name_of_df, cols_to_check=['impressions','likes'], perc_increase_threshold=20,
-                                    perc_decrease_threshold=0.5, check_cols_set=True,unique_id_cols=None,cols_to_group=None,
-                                    raise_exceptions=True, manual_override=False,date_col='date',dayfirst=True,yearfirst=False):
+    def comparison_with_previous_data(
+            self, df, name_of_df, 
+            cols_to_check=None, perc_increase_threshold=20,
+            perc_decrease_threshold=0.5, check_cols_set=True,
+            unique_id_cols=None, cols_to_group=None,
+            raise_exceptions=True, manual_override=False,
+            date_col='date', dayfirst=True, yearfirst=False):
         """ This function allows you to compare the column totals of a dataframe with the totals calculated on a previous time to detect any changes that could be indicative of an error.
 
             The historic column totals are stored in a datatable for reference and the function will check the current totals with the most recent previous totals and raise an exception 
@@ -212,7 +252,9 @@ class QualityAssessments:
             
             Raises:
                 Exception: If raise_exceptions = True and an error has occured."""
-            
+        
+        if cols_to_check == None:
+            cols_to_check = ['impressions','likes']
         error_message, error_occured = '', False
         client_name = self.util.client_name.lower()
         name_of_table = f'previous_totals_check_{client_name}_{name_of_df}'
@@ -313,8 +355,11 @@ class QualityAssessments:
         return error_message
 
     
-    def duplicates_qa(self, df, name_of_df, perc_dupes_thresh=3, cols_to_check=None, 
-                        cols_to_add=None, return_type='duplicates', raise_exceptions=True):
+    def duplicates_qa(
+            self, df, name_of_df, 
+            perc_dupes_thresh=3, cols_to_check=None, 
+            cols_to_add=None, return_type='duplicates', 
+            raise_exceptions=True):
         """Checks for duplicates in a dataframe and returns the duplicates or the dataframe without duplicates.
 
         The function first checks to see whether the input dataframe is paid or organic data. If it is paid data then the columns to check for duplicates are
@@ -370,12 +415,7 @@ class QualityAssessments:
         
         if cols_to_add != None:
             cols_to_check = cols_to_check + cols_to_add
-        
-        #detect whether a column has the word 'age' in it and if so add that column to the cols_to_check
-        # age_columns = [x for x in df.columns if ('age' in x) and ('message' not in x)]
-        # if len(age_columns) > 0:
-        #     logger.info(f'Age columns detected: {age_columns}')
-        #     cols_to_check = cols_to_check + age_columns
+
         
         for i in range(2, len(cols_to_check)+1):
             num_duplicates = df.duplicated(subset=cols_to_check[:i]).sum()
@@ -407,7 +447,10 @@ class QualityAssessments:
             return 
 
     
-    def check_impressions_no_engagements(self, df, gsheet_name, tab_name='NoImpressionsButEngagements', raise_exceptions=False):
+    def check_impressions_no_engagements(
+            self, df, gsheet_name, 
+            tab_name='NoImpressionsButEngagements', 
+            raise_exceptions=False):
         """Function to check if a row item has engagements but no impressions and no video views. 
         This shouldn't happen and is indicative of an error with Tracer but can be valid as some 
         platforms count viral engagements differently.
@@ -459,9 +502,16 @@ class QualityAssessments:
         
         return error_message
 
-    def naming_convention_checker(self,df, gsheet_name, naming_convention, campaignname_dict=None, adgroupname_dict=None, 
-                                    adname_dict=None, campaign_col='campaign_name', adgroup_col='group_name', adname_col='ad_name',
-                                    spend_col= 'spend_usd', start_char='_', middle_char=':', end_char='_',platform_col='platform', check_meta_platform=True):
+    def naming_convention_checker(
+            self, df, gsheet_name, 
+            naming_convention, 
+            campaignname_dict=None, adgroupname_dict=None, 
+            adname_dict=None, campaign_col='campaign_name', 
+            adgroup_col='group_name', adname_col='ad_name',
+            spend_col='spend_usd', start_char='_', 
+            middle_char=':', end_char='_',
+            platform_col='platform', 
+            check_meta_platform=True):
         """Checks for naming convention errors in a given DataFrame and outputs the errors to a Google Sheet.
 
         The function takes in a DataFrame containing paid data with columns for campaign name, ad group name, and ad name, 

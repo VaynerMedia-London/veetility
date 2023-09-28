@@ -551,7 +551,7 @@
 
 
 
-<h1 id="linkedinapi-methods">"LinkedInAPI" Methods</h1>
+<h1 id="linkedinapi-methods">LinkedInAPI Methods</h1>
 
 
 <div class="doc doc-object doc-class">
@@ -565,6 +565,10 @@
 <p>This class provides methods to authenticate a user, fetch organization IDs, fetch posts, 
 fetch stats for posts, and convert time formats among other tasks. The class is designed 
 to be a comprehensive utility for fetching and analyzing LinkedIn organizational data.</p>
+<p>The main statistics (impressions, cicks, reach, likes, shares and comments) are fetched with the fetch_stats_for_a_post()
+method. </p>
+<p>To get more detailed reactions such as Empathy, Praise, Interest, Appreciation or Funny, the fetch_reactions_for_a_post() has to be called.</p>
+<p>To get video views call the method fetch_video_views_for_a_post().</p>
 
   <p><strong>Attributes:</strong></p>
   <table>
@@ -614,22 +618,6 @@ to be a comprehensive utility for fetching and analyzing LinkedIn organizational
     </tbody>
   </table>
 
-<details class="methods">
-  <summary>Methods</summary>
-  <p>authenticate_user: Authenticates the user using an API token.
-run_request_with_error_handling: Executes an HTTP request and handles any errors.
-convert_unix_datetime: Converts a Unix timestamp to a pandas datetime object.
-convert_pd_datetime_to_unix: Converts a pandas datetime object to a Unix timestamp.
-fetch_org_ids: Fetches organization IDs associated with the authenticated user.
-fetch_organization_info: Fetches detailed information about organizations.
-fetch_posts: Fetches posts for specified organization IDs.
-fetch_stats_for_a_post: Fetches statistics for a single post.
-fetch_stats_for_posts: Fetches statistics for multiple posts.
-fetch_video_views_for_a_post: Fetches video views for a single post.
-fetch_video_views_for_multiple_posts: Fetches video views for multiple posts.
-fetch_reactions_for_a_post: Fetches reactions for a single post.
-fetch_reactions_for_multiple_posts: Fetches reactions for multiple posts.</p>
-</details>
 <p><strong>Examples:</strong></p>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">api_client</span> <span class="o">=</span> <span class="n">LinkedIn</span><span class="p">(</span><span class="n">api_token</span><span class="o">=</span><span class="s2">&quot;your-api-token&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">api_client</span><span class="o">.</span><span class="n">fetch_org_ids</span><span class="p">()</span>
@@ -1192,12 +1180,51 @@ fetch_reactions_for_multiple_posts: Fetches reactions for multiple posts.</p>
 <span class="normal">571</span>
 <span class="normal">572</span>
 <span class="normal">573</span>
-<span class="normal">574</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">LinkedInAPI</span><span class="p">:</span>
+<span class="normal">574</span>
+<span class="normal">575</span>
+<span class="normal">576</span>
+<span class="normal">577</span>
+<span class="normal">578</span>
+<span class="normal">579</span>
+<span class="normal">580</span>
+<span class="normal">581</span>
+<span class="normal">582</span>
+<span class="normal">583</span>
+<span class="normal">584</span>
+<span class="normal">585</span>
+<span class="normal">586</span>
+<span class="normal">587</span>
+<span class="normal">588</span>
+<span class="normal">589</span>
+<span class="normal">590</span>
+<span class="normal">591</span>
+<span class="normal">592</span>
+<span class="normal">593</span>
+<span class="normal">594</span>
+<span class="normal">595</span>
+<span class="normal">596</span>
+<span class="normal">597</span>
+<span class="normal">598</span>
+<span class="normal">599</span>
+<span class="normal">600</span>
+<span class="normal">601</span>
+<span class="normal">602</span>
+<span class="normal">603</span>
+<span class="normal">604</span>
+<span class="normal">605</span>
+<span class="normal">606</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">LinkedInAPI</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A class to interact with LinkedIn&#39;s API for various data fetching and transformation tasks.</span>
 
 <span class="sd">    This class provides methods to authenticate a user, fetch organization IDs, fetch posts, </span>
 <span class="sd">    fetch stats for posts, and convert time formats among other tasks. The class is designed </span>
 <span class="sd">    to be a comprehensive utility for fetching and analyzing LinkedIn organizational data.</span>
+
+<span class="sd">    The main statistics (impressions, cicks, reach, likes, shares and comments) are fetched with the fetch_stats_for_a_post()</span>
+<span class="sd">    method. </span>
+
+<span class="sd">    To get more detailed reactions such as Empathy, Praise, Interest, Appreciation or Funny, the fetch_reactions_for_a_post() has to be called.</span>
+
+<span class="sd">    To get video views call the method fetch_video_views_for_a_post().</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        headers_v1 (dict): Headers for API requests that use LinkedIn&#39;s API v1.</span>
@@ -1205,21 +1232,6 @@ fetch_reactions_for_multiple_posts: Fetches reactions for multiple posts.</p>
 <span class="sd">        org_ids (list): List of organization IDs associated with the authenticated user.</span>
 <span class="sd">        posts_df (DataFrame): DataFrame containing fetched posts data.</span>
 <span class="sd">        post_stats_dict (dict): Dictionary containing statistics for fetched posts.</span>
-
-<span class="sd">    Methods:</span>
-<span class="sd">        authenticate_user: Authenticates the user using an API token.</span>
-<span class="sd">        run_request_with_error_handling: Executes an HTTP request and handles any errors.</span>
-<span class="sd">        convert_unix_datetime: Converts a Unix timestamp to a pandas datetime object.</span>
-<span class="sd">        convert_pd_datetime_to_unix: Converts a pandas datetime object to a Unix timestamp.</span>
-<span class="sd">        fetch_org_ids: Fetches organization IDs associated with the authenticated user.</span>
-<span class="sd">        fetch_organization_info: Fetches detailed information about organizations.</span>
-<span class="sd">        fetch_posts: Fetches posts for specified organization IDs.</span>
-<span class="sd">        fetch_stats_for_a_post: Fetches statistics for a single post.</span>
-<span class="sd">        fetch_stats_for_posts: Fetches statistics for multiple posts.</span>
-<span class="sd">        fetch_video_views_for_a_post: Fetches video views for a single post.</span>
-<span class="sd">        fetch_video_views_for_multiple_posts: Fetches video views for multiple posts.</span>
-<span class="sd">        fetch_reactions_for_a_post: Fetches reactions for a single post.</span>
-<span class="sd">        fetch_reactions_for_multiple_posts: Fetches reactions for multiple posts.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; api_client = LinkedIn(api_token=&quot;your-api-token&quot;)</span>
@@ -1230,7 +1242,7 @@ fetch_reactions_for_multiple_posts: Fetches reactions for multiple posts.</p>
 <span class="sd">        1. The class is designed to handle both individual and batch requests for efficiency.</span>
 <span class="sd">        2. Ensure that you have the required libraries installed and valid API credentials.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">time_zone</span><span class="o">=</span><span class="s2">&quot;Europe/London&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">time_zone</span><span class="o">=</span><span class="s2">&quot;Europe/London&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the LinkedIn API client with an API from the developer portal.</span>
 <span class="sd">            Developer portal: https://developer.linkedin.com/</span>
 
@@ -1257,15 +1269,18 @@ fetch_reactions_for_multiple_posts: Fetches reactions for multiple posts.</p>
             <span class="s1">&#39;X-Restli-Protocol-Version&#39;</span><span class="p">:</span> <span class="s1">&#39;1.0.0&#39;</span><span class="p">,</span> <span class="c1">#Version 2 doesn&#39;t work for individual posts...</span>
             <span class="s1">&#39;LinkedIn-Version&#39;</span> <span class="p">:</span> <span class="s1">&#39;202304&#39;</span><span class="p">,</span>
             <span class="s1">&#39;Authorization&#39;</span><span class="p">:</span> <span class="s1">&#39;Bearer &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_token</span><span class="p">,</span>
-            <span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span><span class="p">}</span> 
+            <span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span>
+            <span class="p">}</span> 
 
         <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;X-Restli-Protocol-Version&#39;</span><span class="p">:</span> <span class="s1">&#39;2.0.0&#39;</span><span class="p">,</span>
             <span class="s1">&#39;LinkedIn-Version&#39;</span> <span class="p">:</span> <span class="s1">&#39;202306&#39;</span><span class="p">,</span>
             <span class="s1">&#39;Authorization&#39;</span><span class="p">:</span> <span class="s1">&#39;Bearer &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_token</span><span class="p">,</span>
-            <span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span><span class="p">}</span> 
+            <span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span>
+            <span class="p">}</span> 
 
         <span class="bp">self</span><span class="o">.</span><span class="n">time_zone</span> <span class="o">=</span> <span class="n">timezone</span><span class="p">(</span><span class="n">time_zone</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">retry_count</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="k">def</span> <span class="nf">exponential_backoff_delay</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">retry_count</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Implements an exponential backoff delay with jitter for server response problems.</span>
@@ -1286,7 +1301,10 @@ fetch_reactions_for_multiple_posts: Fetches reactions for multiple posts.</p>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting exponential delay of </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">delay</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">jitter</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2"> seconds to give server time to recover&quot;</span><span class="p">)</span>
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">delay</span> <span class="o">+</span> <span class="n">jitter</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">run_request_with_error_handling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_retries</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run_request_with_error_handling</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> 
+            <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_retries</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+            <span class="n">expected_json_response</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Wrapper function to execute an HTTP GET request with error handling and mutliple time delayed retries.</span>
 
 <span class="sd">        Args:</span>
@@ -1303,43 +1321,44 @@ fetch_reactions_for_multiple_posts: Fetches reactions for multiple posts.</p>
 <span class="sd">            Exception: If an unexpected error occurs or if the request fails multiple times.&quot;&quot;&quot;</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">=</span> <span class="n">r</span>
-            <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
-            <span class="c1"># print(r.json())</span>
-            <span class="c1">#print(r.status_code)</span>
-            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">retry_count</span> <span class="o">=</span> <span class="mi">0</span>
-                <span class="k">if</span> <span class="n">r</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;None Value Returned&quot;</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">retry_count</span> <span class="o">+=</span> <span class="mi">1</span>
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">retry_count</span> <span class="o">&lt;=</span> <span class="n">max_retries</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="n">r</span>
+            <span class="k">if</span> <span class="n">params</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;r status code = </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;r on it&#39;s own: </span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Data type of r = </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">r</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">response</span> <span class="o">=</span> <span class="n">response</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+
+            <span class="c1"># Sometimes even though the status code is 200, the response object is actually a None value, that doesn&#39;t get picked up </span>
+            <span class="c1"># by testing for response == None, weird behaviour I couldn&#39;t figure out. So below i test to see if getting the json from response is possible</span>
+            <span class="c1"># else it will break the try loop and try again after an exponential delay</span>
+            <span class="k">if</span> <span class="n">expected_json_response</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;JSON on response object test&quot;</span><span class="p">)</span>
+                <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span> 
+            <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">retry_count</span><span class="o">=</span><span class="mi">0</span>
+                <span class="k">return</span> <span class="n">response</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Raise for status didn&#39;t work, status code = </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
 
         <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">HTTPError</span> <span class="k">as</span> <span class="n">errh</span><span class="p">:</span>
 
-            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">429</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;This is a Rate limit error code :</span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">: message: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\</span>
+            <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">429</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;This is a Rate limit error code :</span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">: message: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\</span>
 <span class="s2">                            Request params are: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">. Visit https://learn.microsoft.com/en-us/linkedin/shared/api-guide/concepts/rate-limits for more info&quot;</span> <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">exponential_backoff_delay</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">retry_count</span><span class="p">)</span>
 
-            <span class="k">elif</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">400</span><span class="p">,</span> <span class="mi">401</span><span class="p">,</span> <span class="mi">403</span><span class="p">]:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Permanent HTTP Error: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">, message: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">, Request params are: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
-                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Permanent HTTP Error: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">, message: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">, Request params are: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">400</span><span class="p">,</span> <span class="mi">401</span><span class="p">,</span> <span class="mi">403</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Permanent HTTP Error: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">, message: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">, Request params are: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Permanent HTTP Error: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">, message: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">, Request params are: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 
-            <span class="k">elif</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">429</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">502</span><span class="p">,</span> <span class="mi">503</span><span class="p">,</span> <span class="mi">504</span><span class="p">]:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Temporary HTTP Error: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">, message: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">, Request params are: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">429</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">502</span><span class="p">,</span> <span class="mi">503</span><span class="p">,</span> <span class="mi">504</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Temporary HTTP Error: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">, message: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">, Request params are: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">exponential_backoff_delay</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">retry_count</span><span class="p">)</span>  <span class="c1"># Or follow the Retry-After header if available</span>
 
             <span class="c1"># Other HTTP issues issues</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected HTTP Error: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">, message: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">, Request params are: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected HTTP Error: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">, message: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">, Request params are: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="c1"># Catch all other exceptions</span>
@@ -1349,7 +1368,7 @@ fetch_reactions_for_multiple_posts: Fetches reactions for multiple posts.</p>
         <span class="c1"># Increment and check retries for potentially temporary issues</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">retry_count</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">retry_count</span> <span class="o">&lt;=</span> <span class="n">max_retries</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span><span class="p">(</span><span class="s1">&#39;Request failed multiple times - Check Logs&#39;</span><span class="p">)</span>
 
@@ -1377,7 +1396,7 @@ fetch_reactions_for_multiple_posts: Fetches reactions for multiple posts.</p>
                 <span class="n">unix_format</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">unix_format</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The input is a string that is not a number&quot;</span><span class="p">)</span>
-                <span class="n">pd</span><span class="o">.</span><span class="n">NaT</span>
+                <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">NaT</span>
 
         <span class="k">try</span><span class="p">:</span> 
             <span class="n">unix_format</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">unix_format</span><span class="p">)</span>
@@ -1425,9 +1444,9 @@ fetch_reactions_for_multiple_posts: Fetches reactions for multiple posts.</p>
 
         <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://api.linkedin.com/rest/organizationalEntityAcls?q=roleAssignee&amp;role=ADMINISTRATOR&amp;fields=organizationalTarget&amp;count=1000&quot;</span>
 
-        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span><span class="p">)</span>
 
-        <span class="n">org_ids</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;urn:li:organization:&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;elements&quot;</span><span class="p">,</span> <span class="p">[])]</span>
+        <span class="n">org_ids</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;urn:li:organization:&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;elements&quot;</span><span class="p">,</span> <span class="p">[])]</span>
         <span class="k">if</span> <span class="n">org_ids</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">org_ids</span> <span class="o">=</span> <span class="n">org_ids</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1454,16 +1473,16 @@ fetch_reactions_for_multiple_posts: Fetches reactions for multiple posts.</p>
             <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://api.linkedin.com/rest/organizations&quot;</span>
             <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;ids&#39;</span> <span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">org_id</span><span class="p">)}</span>
 
-            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
-            <span class="n">df_nested_list</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+            <span class="n">df_nested_list</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
             <span class="n">df_unnested</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">json_normalize</span><span class="p">(</span><span class="n">df_nested_list</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">][</span><span class="n">org_id</span><span class="p">],</span> <span class="n">max_level</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
             <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">org_info_df</span><span class="p">,</span><span class="n">df_unnested</span><span class="p">]</span>
             <span class="n">org_info_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">org_info_df</span>
 
-    <span class="k">def</span> <span class="nf">fetch_posts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">org_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">fetch_posts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">org_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetches LinkedIn posts associated with the specified organization IDs or those found by the fetch_org_ids method.</span>
 <span class="sd">            The method utilizes `convert_unix_datetime` to convert Unix timestamps in the columns &#39;createdAt&#39;, &#39;lastModifiedAt&#39; and</span>
 <span class="sd">            &#39;publishedAt&#39;] to datetime objects.</span>
@@ -1487,24 +1506,24 @@ fetch_reactions_for_multiple_posts: Fetches reactions for multiple posts.</p>
             <span class="c1">#first just fetch the first page to find out the total number of posts there are</span>
             <span class="n">URL</span> <span class="o">=</span> <span class="s2">&quot;https://api.linkedin.com/rest/posts?q=author&amp;author=urn%3Ali%3Aorganization%3A&quot;</span> <span class="o">+</span><span class="s2">&quot;&quot;</span><span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">org_id</span><span class="p">)</span> <span class="o">+</span><span class="s2">&quot;&quot;</span> <span class="o">+</span> <span class="s2">&quot;&amp;count=1&quot;</span>
 
-            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">URL</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">URL</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span><span class="p">)</span>
 
-            <span class="n">num_posts</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;paging&#39;</span><span class="p">][</span><span class="s1">&#39;total&#39;</span><span class="p">]</span>
+            <span class="n">num_posts</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;paging&#39;</span><span class="p">][</span><span class="s1">&#39;total&#39;</span><span class="p">]</span>
             <span class="n">num_iterations</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num_posts</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span>  <span class="c1"># Assuming pages are fetched 100 at a time</span>
 
             <span class="k">with</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="n">num_iterations</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Fetching for org </span><span class="si">{</span><span class="n">org_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">pbar</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">start</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_posts</span><span class="p">,</span> <span class="mi">100</span><span class="p">):</span>
                     <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;https://api.linkedin.com/rest/posts?q=author&amp;author=urn%3Ali%3Aorganization%3A</span><span class="si">{</span><span class="n">org_id</span><span class="si">}</span><span class="s2">&amp;count=100&amp;start=</span><span class="si">{</span><span class="n">start</span><span class="si">}</span><span class="s2">&quot;</span>
-                    <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span><span class="p">)</span>
+                    <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span><span class="p">)</span>
                     <span class="k">try</span><span class="p">:</span>
-                        <span class="n">df_nested_list</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+                        <span class="n">df_nested_list</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
                     <span class="k">except</span><span class="p">:</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;r returned </span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;response returned </span><span class="si">{</span><span class="n">response</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                         <span class="n">retry_count</span> <span class="o">+=</span><span class="mi">1</span>
                         <span class="k">if</span> <span class="n">retry_count</span> <span class="o">&lt;=</span><span class="mi">5</span><span class="p">:</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">exponential_backoff_delay</span><span class="p">(</span><span class="n">retry_count</span><span class="p">)</span>
-                            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span><span class="p">)</span>
-                            <span class="n">df_nested_list</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+                            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span><span class="p">)</span>
+                            <span class="n">df_nested_list</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 
                     <span class="n">df_unnested</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">json_normalize</span><span class="p">(</span><span class="n">df_nested_list</span><span class="p">[</span><span class="s1">&#39;elements&#39;</span><span class="p">],</span> <span class="n">max_level</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
                     <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">posts_df</span><span class="p">,</span> <span class="n">df_unnested</span><span class="p">]</span>
@@ -1525,7 +1544,7 @@ fetch_reactions_for_multiple_posts: Fetches reactions for multiple posts.</p>
         <span class="k">return</span> <span class="n">posts_df</span>
 
     <span class="k">def</span> <span class="nf">fetch_stats_for_a_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">post_id</span><span class="p">,</span> <span class="n">org_id</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetches statistics for a specific LinkedIn post associated with a given organization.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetches impressions, cicks, reach, likes, shares and comments for a specific LinkedIn post associated with a given organization.</span>
 <span class="sd">        The org_id is requried for this endpoint.</span>
 
 <span class="sd">        Args:</span>
@@ -1551,10 +1570,12 @@ fetch_reactions_for_multiple_posts: Fetches reactions for multiple posts.</p>
             <span class="n">params</span><span class="p">[</span><span class="s1">&#39;ugcPosts&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">post_id</span><span class="si">}</span><span class="s1">&#39;</span>
 
         <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://api.linkedin.com/rest/organizationalEntityShareStatistics&#39;</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v1</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v1</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">fetch_stats_for_posts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">posts_df</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">post_id_col</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="n">org_id_col</span><span class="o">=</span><span class="s1">&#39;author&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">fetch_stats_for_posts</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">posts_df</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+            <span class="n">post_id_col</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="n">org_id_col</span><span class="o">=</span><span class="s1">&#39;author&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetches statistics for a list of LinkedIn posts based on their IDs and associated organization IDs.</span>
 <span class="sd">            The function adds a new column &#39;date_fetched_from_api&#39; to the DataFrame with the current date which can be used</span>
 <span class="sd">            to track how a posts metrics change over time.</span>
@@ -1624,10 +1645,13 @@ fetch_reactions_for_multiple_posts: Fetches reactions for multiple posts.</p>
             <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;VIDEO_VIEW&#39;</span>
         <span class="p">}</span>
         <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://api.linkedin.com/rest/videoAnalytics&#39;</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v1</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v1</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">fetch_video_views_for_multiple_posts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">posts_df</span><span class="p">,</span> <span class="n">media_type_col</span><span class="p">,</span> <span class="n">post_id_col</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="n">output_col</span><span class="o">=</span><span class="s1">&#39;videoViews&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">fetch_video_views_for_multiple_posts</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">posts_df</span><span class="p">,</span> 
+            <span class="n">media_type_col</span><span class="p">,</span> <span class="n">post_id_col</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">,</span>
+            <span class="n">output_col</span><span class="o">=</span><span class="s1">&#39;videoViews&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetches video view statistics for multiple LinkedIn posts and adds them to a DataFrame.</span>
 
 <span class="sd">        Args:</span>
@@ -1683,7 +1707,7 @@ fetch_reactions_for_multiple_posts: Fetches reactions for multiple posts.</p>
         <span class="n">urn_id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">urn_id</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span><span class="s1">&#39;%3A&#39;</span><span class="p">)</span> <span class="c1">#Can be a ogcPost or a share</span>
         <span class="n">count</span> <span class="o">=</span> <span class="mi">100</span>
         <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">params</span> <span class="o">=</span><span class="p">{</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;q&#39;</span> <span class="p">:</span> <span class="s1">&#39;entity&#39;</span><span class="p">,</span>
             <span class="s1">&#39;start&#39;</span><span class="p">:</span> <span class="n">start</span><span class="p">,</span>
             <span class="s1">&#39;count&#39;</span><span class="p">:</span> <span class="n">count</span>
@@ -1691,8 +1715,8 @@ fetch_reactions_for_multiple_posts: Fetches reactions for multiple posts.</p>
         <span class="n">reactions_count</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
         <span class="c1">#Initial query to find total number of reactions</span>
         <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;https://api.linkedin.com/rest/reactions/(entity:</span><span class="si">{</span><span class="n">urn_id</span><span class="si">}</span><span class="s1">)&#39;</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
-        <span class="n">total_reactions</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;paging&#39;</span><span class="p">][</span><span class="s1">&#39;total&#39;</span><span class="p">]</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="n">total_reactions</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;paging&#39;</span><span class="p">][</span><span class="s1">&#39;total&#39;</span><span class="p">]</span>
         <span class="n">num_iterations</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">total_reactions</span><span class="o">/</span><span class="n">count</span><span class="p">)</span>
 
         <span class="k">with</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="n">num_iterations</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Fetching for </span><span class="si">{</span><span class="n">urn_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">pbar</span><span class="p">:</span>
@@ -1700,16 +1724,18 @@ fetch_reactions_for_multiple_posts: Fetches reactions for multiple posts.</p>
                 <span class="n">params</span><span class="p">[</span><span class="s1">&#39;start&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">start</span>
 
                 <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;https://api.linkedin.com/rest/reactions/(entity:</span><span class="si">{</span><span class="n">urn_id</span><span class="si">}</span><span class="s1">)&#39;</span>
-                <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="n">elements</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;elements&#39;</span><span class="p">]</span>
+                    <span class="n">elements</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;elements&#39;</span><span class="p">]</span>
                 <span class="k">except</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;r returned </span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">retry_count</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;response returned </span><span class="si">{</span><span class="n">response</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
                     <span class="n">retry_count</span> <span class="o">+=</span><span class="mi">1</span>
                     <span class="k">if</span> <span class="n">retry_count</span> <span class="o">&lt;=</span><span class="mi">5</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">exponential_backoff_delay</span><span class="p">(</span><span class="n">retry_count</span><span class="p">)</span>
-                        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
-                        <span class="n">elements</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;elements&#39;</span><span class="p">]</span> <span class="c1">#Each of the json elements describing who reacted and what reaction</span>
+                        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+                        <span class="n">elements</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;elements&#39;</span><span class="p">]</span> <span class="c1">#Each of the json elements describing who reacted and what reaction</span>
 
                 <span class="n">reactions_count</span> <span class="o">=</span> <span class="n">reactions_count</span> <span class="o">+</span> <span class="n">Counter</span><span class="p">([</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;reactionType&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">])</span>
                 <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -1732,13 +1758,39 @@ fetch_reactions_for_multiple_posts: Fetches reactions for multiple posts.</p>
 <span class="sd">            3. The DataFrame&#39;s index is reset, and the column for URN IDs is renamed according to `id_col_name`.&quot;&quot;&quot;</span>
 
         <span class="n">reactions_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of posts = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">list_of_posts</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">post</span> <span class="ow">in</span> <span class="n">list_of_posts</span><span class="p">:</span>
             <span class="n">reactions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fetch_reactions_for_a_post</span><span class="p">(</span><span class="n">post</span><span class="p">)</span>
             <span class="n">reactions_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">reactions_df</span><span class="p">,</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">reactions</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">post</span><span class="p">])])</span>
 
         <span class="n">reactions_df</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">reactions_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;index&#39;</span><span class="p">,</span><span class="n">id_col_name</span><span class="p">},</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">reactions_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">reactions_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;index&#39;</span><span class="p">:</span><span class="n">id_col_name</span><span class="p">},</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">reactions_df</span>
+
+    <span class="k">def</span> <span class="nf">fetch_follower_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dict_of_urls</span><span class="p">):</span>
+
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36&#39;</span><span class="p">}</span>
+
+        <span class="n">output_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">company</span><span class="p">,</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">dict_of_urls</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">expected_json_response</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">html</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span>
+            <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;([\d,]+) followers on LinkedIn&#39;</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">html</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Extract the follower count, remove commas, and convert to integer</span>
+                <span class="n">follower_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+                <span class="n">output_dict</span><span class="p">[</span><span class="n">company</span><span class="p">]</span> <span class="o">=</span> <span class="n">follower_count</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No follower count found&quot;</span><span class="p">)</span>
+                <span class="n">output_dict</span><span class="p">[</span><span class="n">company</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Error&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;output_dict= </span><span class="si">{</span><span class="n">output_dict</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">output_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">output_dict</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">index</span><span class="o">=</span><span class="n">output_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Followers&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+        <span class="n">output_df</span><span class="p">[</span><span class="s1">&#39;datetime_fetched&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()))</span>
+        <span class="k">return</span> <span class="n">output_df</span>
 </code></pre></div></td></tr></table></div>
         </details>
 
@@ -1866,42 +1918,45 @@ manipulations. Defaults to "Europe/London".</p></td>
 
       <details class="quote">
         <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 66</span>
-<span class="normal"> 67</span>
-<span class="normal"> 68</span>
-<span class="normal"> 69</span>
-<span class="normal"> 70</span>
-<span class="normal"> 71</span>
-<span class="normal"> 72</span>
-<span class="normal"> 73</span>
-<span class="normal"> 74</span>
-<span class="normal"> 75</span>
-<span class="normal"> 76</span>
-<span class="normal"> 77</span>
-<span class="normal"> 78</span>
-<span class="normal"> 79</span>
-<span class="normal"> 80</span>
-<span class="normal"> 81</span>
-<span class="normal"> 82</span>
-<span class="normal"> 83</span>
-<span class="normal"> 84</span>
-<span class="normal"> 85</span>
-<span class="normal"> 86</span>
-<span class="normal"> 87</span>
-<span class="normal"> 88</span>
-<span class="normal"> 89</span>
-<span class="normal"> 90</span>
-<span class="normal"> 91</span>
-<span class="normal"> 92</span>
-<span class="normal"> 93</span>
-<span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
-<span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">time_zone</span><span class="o">=</span><span class="s2">&quot;Europe/London&quot;</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span>
+<span class="normal">95</span>
+<span class="normal">96</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">time_zone</span><span class="o">=</span><span class="s2">&quot;Europe/London&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize the LinkedIn API client with an API from the developer portal.</span>
 <span class="sd">        Developer portal: https://developer.linkedin.com/</span>
 
@@ -1928,15 +1983,18 @@ manipulations. Defaults to "Europe/London".</p></td>
         <span class="s1">&#39;X-Restli-Protocol-Version&#39;</span><span class="p">:</span> <span class="s1">&#39;1.0.0&#39;</span><span class="p">,</span> <span class="c1">#Version 2 doesn&#39;t work for individual posts...</span>
         <span class="s1">&#39;LinkedIn-Version&#39;</span> <span class="p">:</span> <span class="s1">&#39;202304&#39;</span><span class="p">,</span>
         <span class="s1">&#39;Authorization&#39;</span><span class="p">:</span> <span class="s1">&#39;Bearer &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_token</span><span class="p">,</span>
-        <span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span><span class="p">}</span> 
+        <span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span>
+        <span class="p">}</span> 
 
     <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;X-Restli-Protocol-Version&#39;</span><span class="p">:</span> <span class="s1">&#39;2.0.0&#39;</span><span class="p">,</span>
         <span class="s1">&#39;LinkedIn-Version&#39;</span> <span class="p">:</span> <span class="s1">&#39;202306&#39;</span><span class="p">,</span>
         <span class="s1">&#39;Authorization&#39;</span><span class="p">:</span> <span class="s1">&#39;Bearer &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_token</span><span class="p">,</span>
-        <span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span><span class="p">}</span> 
+        <span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span>
+        <span class="p">}</span> 
 
     <span class="bp">self</span><span class="o">.</span><span class="n">time_zone</span> <span class="o">=</span> <span class="n">timezone</span><span class="p">(</span><span class="n">time_zone</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">retry_count</span> <span class="o">=</span> <span class="mi">0</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
@@ -2001,7 +2059,8 @@ manipulations. Defaults to "Europe/London".</p></td>
 
       <details class="quote">
         <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">227</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">226</span>
+<span class="normal">227</span>
 <span class="normal">228</span>
 <span class="normal">229</span>
 <span class="normal">230</span>
@@ -2022,8 +2081,7 @@ manipulations. Defaults to "Europe/London".</p></td>
 <span class="normal">245</span>
 <span class="normal">246</span>
 <span class="normal">247</span>
-<span class="normal">248</span>
-<span class="normal">249</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">convert_pd_datetime_to_unix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pd_datetime</span><span class="p">):</span>
+<span class="normal">248</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">convert_pd_datetime_to_unix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pd_datetime</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a pandas Timestamp to a Unix timestamp in milliseconds.</span>
 
 <span class="sd">    The method first converts the Timestamp to a Unix timestamp in seconds, then multiplies it by 1000 to get the timestamp in milliseconds.</span>
@@ -2122,7 +2180,8 @@ manipulations. Defaults to "Europe/London".</p></td>
 </details>
       <details class="quote">
         <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">190</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">189</span>
+<span class="normal">190</span>
 <span class="normal">191</span>
 <span class="normal">192</span>
 <span class="normal">193</span>
@@ -2156,8 +2215,7 @@ manipulations. Defaults to "Europe/London".</p></td>
 <span class="normal">221</span>
 <span class="normal">222</span>
 <span class="normal">223</span>
-<span class="normal">224</span>
-<span class="normal">225</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">convert_unix_datetime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unix_format</span><span class="p">):</span>
+<span class="normal">224</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">convert_unix_datetime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unix_format</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a Unix timestamp to a pandas NaT (Not-a-Time) or datetime64 object.</span>
 
 <span class="sd">    Args:</span>
@@ -2180,7 +2238,7 @@ manipulations. Defaults to "Europe/London".</p></td>
             <span class="n">unix_format</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">unix_format</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The input is a string that is not a number&quot;</span><span class="p">)</span>
-            <span class="n">pd</span><span class="o">.</span><span class="n">NaT</span>
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">NaT</span>
 
     <span class="k">try</span><span class="p">:</span> 
         <span class="n">unix_format</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">unix_format</span><span class="p">)</span>
@@ -2249,7 +2307,12 @@ A jitter (random noise) is also added to the delay.</p>
 </details>
       <details class="quote">
         <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">103</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
 <span class="normal">104</span>
 <span class="normal">105</span>
 <span class="normal">106</span>
@@ -2261,12 +2324,7 @@ A jitter (random noise) is also added to the delay.</p>
 <span class="normal">112</span>
 <span class="normal">113</span>
 <span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">exponential_backoff_delay</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">retry_count</span><span class="p">):</span>
+<span class="normal">115</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">exponential_backoff_delay</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">retry_count</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Implements an exponential backoff delay with jitter for server response problems.</span>
 
 <span class="sd">        Args:</span>
@@ -2312,7 +2370,8 @@ Prints a message to the console if no data is found in the API response.</p>
 </details>
       <details class="quote">
         <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">251</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">250</span>
+<span class="normal">251</span>
 <span class="normal">252</span>
 <span class="normal">253</span>
 <span class="normal">254</span>
@@ -2327,8 +2386,7 @@ Prints a message to the console if no data is found in the API response.</p>
 <span class="normal">263</span>
 <span class="normal">264</span>
 <span class="normal">265</span>
-<span class="normal">266</span>
-<span class="normal">267</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_org_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">266</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_org_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetches the organization IDs associated with the authenticated LinkedIn user who has the role of ADMINISTRATOR.</span>
 <span class="sd">    This is useful if you want a list of organisation ids to iterate through to fetch information for each client.</span>
 
@@ -2338,9 +2396,9 @@ Prints a message to the console if no data is found in the API response.</p>
 
     <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://api.linkedin.com/rest/organizationalEntityAcls?q=roleAssignee&amp;role=ADMINISTRATOR&amp;fields=organizationalTarget&amp;count=1000&quot;</span>
 
-    <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span><span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span><span class="p">)</span>
 
-    <span class="n">org_ids</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;urn:li:organization:&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;elements&quot;</span><span class="p">,</span> <span class="p">[])]</span>
+    <span class="n">org_ids</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;urn:li:organization:&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;elements&quot;</span><span class="p">,</span> <span class="p">[])]</span>
     <span class="k">if</span> <span class="n">org_ids</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">org_ids</span> <span class="o">=</span> <span class="n">org_ids</span>
     <span class="k">else</span><span class="p">:</span>
@@ -2396,7 +2454,8 @@ Prints a message to the console if no data is found in the API response.</p>
 </details>
       <details class="quote">
         <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">270</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">269</span>
+<span class="normal">270</span>
 <span class="normal">271</span>
 <span class="normal">272</span>
 <span class="normal">273</span>
@@ -2422,8 +2481,7 @@ Prints a message to the console if no data is found in the API response.</p>
 <span class="normal">293</span>
 <span class="normal">294</span>
 <span class="normal">295</span>
-<span class="normal">296</span>
-<span class="normal">297</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_organization_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">296</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_organization_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetches the organization information for the authenticated LinkedIn user based on organization IDs.</span>
 
 <span class="sd">    Returns:</span>
@@ -2443,9 +2501,9 @@ Prints a message to the console if no data is found in the API response.</p>
         <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://api.linkedin.com/rest/organizations&quot;</span>
         <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;ids&#39;</span> <span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">org_id</span><span class="p">)}</span>
 
-        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
-        <span class="n">df_nested_list</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="n">df_nested_list</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
         <span class="n">df_unnested</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">json_normalize</span><span class="p">(</span><span class="n">df_nested_list</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">][</span><span class="n">org_id</span><span class="p">],</span> <span class="n">max_level</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">org_info_df</span><span class="p">,</span><span class="n">df_unnested</span><span class="p">]</span>
         <span class="n">org_info_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -2517,7 +2575,8 @@ Prints a message to the console if no data is found in the API response.</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">299</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">298</span>
+<span class="normal">299</span>
 <span class="normal">300</span>
 <span class="normal">301</span>
 <span class="normal">302</span>
@@ -2575,8 +2634,7 @@ Prints a message to the console if no data is found in the API response.</p>
 <span class="normal">354</span>
 <span class="normal">355</span>
 <span class="normal">356</span>
-<span class="normal">357</span>
-<span class="normal">358</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_posts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">org_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="normal">357</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_posts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">org_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetches LinkedIn posts associated with the specified organization IDs or those found by the fetch_org_ids method.</span>
 <span class="sd">        The method utilizes `convert_unix_datetime` to convert Unix timestamps in the columns &#39;createdAt&#39;, &#39;lastModifiedAt&#39; and</span>
 <span class="sd">        &#39;publishedAt&#39;] to datetime objects.</span>
@@ -2600,24 +2658,24 @@ Prints a message to the console if no data is found in the API response.</p>
         <span class="c1">#first just fetch the first page to find out the total number of posts there are</span>
         <span class="n">URL</span> <span class="o">=</span> <span class="s2">&quot;https://api.linkedin.com/rest/posts?q=author&amp;author=urn%3Ali%3Aorganization%3A&quot;</span> <span class="o">+</span><span class="s2">&quot;&quot;</span><span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">org_id</span><span class="p">)</span> <span class="o">+</span><span class="s2">&quot;&quot;</span> <span class="o">+</span> <span class="s2">&quot;&amp;count=1&quot;</span>
 
-        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">URL</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">URL</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span><span class="p">)</span>
 
-        <span class="n">num_posts</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;paging&#39;</span><span class="p">][</span><span class="s1">&#39;total&#39;</span><span class="p">]</span>
+        <span class="n">num_posts</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;paging&#39;</span><span class="p">][</span><span class="s1">&#39;total&#39;</span><span class="p">]</span>
         <span class="n">num_iterations</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num_posts</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span>  <span class="c1"># Assuming pages are fetched 100 at a time</span>
 
         <span class="k">with</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="n">num_iterations</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Fetching for org </span><span class="si">{</span><span class="n">org_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">pbar</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">start</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_posts</span><span class="p">,</span> <span class="mi">100</span><span class="p">):</span>
                 <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;https://api.linkedin.com/rest/posts?q=author&amp;author=urn%3Ali%3Aorganization%3A</span><span class="si">{</span><span class="n">org_id</span><span class="si">}</span><span class="s2">&amp;count=100&amp;start=</span><span class="si">{</span><span class="n">start</span><span class="si">}</span><span class="s2">&quot;</span>
-                <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span><span class="p">)</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span><span class="p">)</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="n">df_nested_list</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+                    <span class="n">df_nested_list</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
                 <span class="k">except</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;r returned </span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;response returned </span><span class="si">{</span><span class="n">response</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                     <span class="n">retry_count</span> <span class="o">+=</span><span class="mi">1</span>
                     <span class="k">if</span> <span class="n">retry_count</span> <span class="o">&lt;=</span><span class="mi">5</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">exponential_backoff_delay</span><span class="p">(</span><span class="n">retry_count</span><span class="p">)</span>
-                        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span><span class="p">)</span>
-                        <span class="n">df_nested_list</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+                        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span><span class="p">)</span>
+                        <span class="n">df_nested_list</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 
                 <span class="n">df_unnested</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">json_normalize</span><span class="p">(</span><span class="n">df_nested_list</span><span class="p">[</span><span class="s1">&#39;elements&#39;</span><span class="p">],</span> <span class="n">max_level</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
                 <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">posts_df</span><span class="p">,</span> <span class="n">df_unnested</span><span class="p">]</span>
@@ -2717,11 +2775,7 @@ Prints a message to the console if no data is found in the API response.</p>
 </details>
       <details class="quote">
         <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">497</span>
-<span class="normal">498</span>
-<span class="normal">499</span>
-<span class="normal">500</span>
-<span class="normal">501</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">501</span>
 <span class="normal">502</span>
 <span class="normal">503</span>
 <span class="normal">504</span>
@@ -2770,7 +2824,13 @@ Prints a message to the console if no data is found in the API response.</p>
 <span class="normal">547</span>
 <span class="normal">548</span>
 <span class="normal">549</span>
-<span class="normal">550</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_reactions_for_a_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">urn_id</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<span class="normal">550</span>
+<span class="normal">551</span>
+<span class="normal">552</span>
+<span class="normal">553</span>
+<span class="normal">554</span>
+<span class="normal">555</span>
+<span class="normal">556</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_reactions_for_a_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">urn_id</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetches the count of different types of reactions for a LinkedIn post specified by its URN (Uniform Resource Name) ID.</span>
 
 <span class="sd">    Args:</span>
@@ -2792,7 +2852,7 @@ Prints a message to the console if no data is found in the API response.</p>
     <span class="n">urn_id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">urn_id</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span><span class="s1">&#39;%3A&#39;</span><span class="p">)</span> <span class="c1">#Can be a ogcPost or a share</span>
     <span class="n">count</span> <span class="o">=</span> <span class="mi">100</span>
     <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">params</span> <span class="o">=</span><span class="p">{</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;q&#39;</span> <span class="p">:</span> <span class="s1">&#39;entity&#39;</span><span class="p">,</span>
         <span class="s1">&#39;start&#39;</span><span class="p">:</span> <span class="n">start</span><span class="p">,</span>
         <span class="s1">&#39;count&#39;</span><span class="p">:</span> <span class="n">count</span>
@@ -2800,8 +2860,8 @@ Prints a message to the console if no data is found in the API response.</p>
     <span class="n">reactions_count</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
     <span class="c1">#Initial query to find total number of reactions</span>
     <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;https://api.linkedin.com/rest/reactions/(entity:</span><span class="si">{</span><span class="n">urn_id</span><span class="si">}</span><span class="s1">)&#39;</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
-    <span class="n">total_reactions</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;paging&#39;</span><span class="p">][</span><span class="s1">&#39;total&#39;</span><span class="p">]</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+    <span class="n">total_reactions</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;paging&#39;</span><span class="p">][</span><span class="s1">&#39;total&#39;</span><span class="p">]</span>
     <span class="n">num_iterations</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">total_reactions</span><span class="o">/</span><span class="n">count</span><span class="p">)</span>
 
     <span class="k">with</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="n">num_iterations</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Fetching for </span><span class="si">{</span><span class="n">urn_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">pbar</span><span class="p">:</span>
@@ -2809,16 +2869,18 @@ Prints a message to the console if no data is found in the API response.</p>
             <span class="n">params</span><span class="p">[</span><span class="s1">&#39;start&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">start</span>
 
             <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;https://api.linkedin.com/rest/reactions/(entity:</span><span class="si">{</span><span class="n">urn_id</span><span class="si">}</span><span class="s1">)&#39;</span>
-            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">elements</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;elements&#39;</span><span class="p">]</span>
+                <span class="n">elements</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;elements&#39;</span><span class="p">]</span>
             <span class="k">except</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;r returned </span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">retry_count</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;response returned </span><span class="si">{</span><span class="n">response</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
                 <span class="n">retry_count</span> <span class="o">+=</span><span class="mi">1</span>
                 <span class="k">if</span> <span class="n">retry_count</span> <span class="o">&lt;=</span><span class="mi">5</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">exponential_backoff_delay</span><span class="p">(</span><span class="n">retry_count</span><span class="p">)</span>
-                    <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
-                    <span class="n">elements</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;elements&#39;</span><span class="p">]</span> <span class="c1">#Each of the json elements describing who reacted and what reaction</span>
+                    <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v2</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+                    <span class="n">elements</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;elements&#39;</span><span class="p">]</span> <span class="c1">#Each of the json elements describing who reacted and what reaction</span>
 
             <span class="n">reactions_count</span> <span class="o">=</span> <span class="n">reactions_count</span> <span class="o">+</span> <span class="n">Counter</span><span class="p">([</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;reactionType&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">])</span>
             <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -2905,13 +2967,7 @@ Prints a message to the console if no data is found in the API response.</p>
 </details>
       <details class="quote">
         <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">552</span>
-<span class="normal">553</span>
-<span class="normal">554</span>
-<span class="normal">555</span>
-<span class="normal">556</span>
-<span class="normal">557</span>
-<span class="normal">558</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">558</span>
 <span class="normal">559</span>
 <span class="normal">560</span>
 <span class="normal">561</span>
@@ -2927,7 +2983,15 @@ Prints a message to the console if no data is found in the API response.</p>
 <span class="normal">571</span>
 <span class="normal">572</span>
 <span class="normal">573</span>
-<span class="normal">574</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_reactions_for_multiple_posts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">list_of_posts</span><span class="p">,</span> <span class="n">id_col_name</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">):</span>
+<span class="normal">574</span>
+<span class="normal">575</span>
+<span class="normal">576</span>
+<span class="normal">577</span>
+<span class="normal">578</span>
+<span class="normal">579</span>
+<span class="normal">580</span>
+<span class="normal">581</span>
+<span class="normal">582</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_reactions_for_multiple_posts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">list_of_posts</span><span class="p">,</span> <span class="n">id_col_name</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetches the count of different types of reactions for a list of LinkedIn posts and aggregates them into a DataFrame.</span>
 
 <span class="sd">    Args:</span>
@@ -2943,12 +3007,14 @@ Prints a message to the console if no data is found in the API response.</p>
 <span class="sd">        3. The DataFrame&#39;s index is reset, and the column for URN IDs is renamed according to `id_col_name`.&quot;&quot;&quot;</span>
 
     <span class="n">reactions_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of posts = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">list_of_posts</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">post</span> <span class="ow">in</span> <span class="n">list_of_posts</span><span class="p">:</span>
         <span class="n">reactions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fetch_reactions_for_a_post</span><span class="p">(</span><span class="n">post</span><span class="p">)</span>
         <span class="n">reactions_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">reactions_df</span><span class="p">,</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">reactions</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">post</span><span class="p">])])</span>
 
     <span class="n">reactions_df</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">reactions_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;index&#39;</span><span class="p">,</span><span class="n">id_col_name</span><span class="p">},</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">reactions_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">reactions_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;index&#39;</span><span class="p">:</span><span class="n">id_col_name</span><span class="p">},</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">reactions_df</span>
 </code></pre></div></td></tr></table></div>
       </details>
@@ -2968,7 +3034,7 @@ Prints a message to the console if no data is found in the API response.</p>
 
   <div class="doc doc-contents ">
   
-      <p>Fetches statistics for a specific LinkedIn post associated with a given organization.
+      <p>Fetches impressions, cicks, reach, likes, shares and comments for a specific LinkedIn post associated with a given organization.
 The org_id is requried for this endpoint.</p>
 
   <p><strong>Parameters:</strong></p>
@@ -3031,7 +3097,8 @@ The org_id is requried for this endpoint.</p>
 </details>
       <details class="quote">
         <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">360</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">359</span>
+<span class="normal">360</span>
 <span class="normal">361</span>
 <span class="normal">362</span>
 <span class="normal">363</span>
@@ -3058,9 +3125,8 @@ The org_id is requried for this endpoint.</p>
 <span class="normal">384</span>
 <span class="normal">385</span>
 <span class="normal">386</span>
-<span class="normal">387</span>
-<span class="normal">388</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_stats_for_a_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">post_id</span><span class="p">,</span> <span class="n">org_id</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetches statistics for a specific LinkedIn post associated with a given organization.</span>
+<span class="normal">387</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_stats_for_a_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">post_id</span><span class="p">,</span> <span class="n">org_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetches impressions, cicks, reach, likes, shares and comments for a specific LinkedIn post associated with a given organization.</span>
 <span class="sd">    The org_id is requried for this endpoint.</span>
 
 <span class="sd">    Args:</span>
@@ -3086,8 +3152,8 @@ The org_id is requried for this endpoint.</p>
         <span class="n">params</span><span class="p">[</span><span class="s1">&#39;ugcPosts&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">post_id</span><span class="si">}</span><span class="s1">&#39;</span>
 
     <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://api.linkedin.com/rest/organizationalEntityShareStatistics&#39;</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v1</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v1</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
@@ -3187,7 +3253,8 @@ If None, the method will use self.posts_df that would be created by previously r
 </details>
       <details class="quote">
         <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">390</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">389</span>
+<span class="normal">390</span>
 <span class="normal">391</span>
 <span class="normal">392</span>
 <span class="normal">393</span>
@@ -3233,7 +3300,10 @@ If None, the method will use self.posts_df that would be created by previously r
 <span class="normal">433</span>
 <span class="normal">434</span>
 <span class="normal">435</span>
-<span class="normal">436</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_stats_for_posts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">posts_df</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">post_id_col</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="n">org_id_col</span><span class="o">=</span><span class="s1">&#39;author&#39;</span><span class="p">):</span>
+<span class="normal">436</span>
+<span class="normal">437</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_stats_for_posts</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">posts_df</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+        <span class="n">post_id_col</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="n">org_id_col</span><span class="o">=</span><span class="s1">&#39;author&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetches statistics for a list of LinkedIn posts based on their IDs and associated organization IDs.</span>
 <span class="sd">        The function adds a new column &#39;date_fetched_from_api&#39; to the DataFrame with the current date which can be used</span>
 <span class="sd">        to track how a posts metrics change over time.</span>
@@ -3350,8 +3420,7 @@ If None, the method will use self.posts_df that would be created by previously r
 </details>
       <details class="quote">
         <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">438</span>
-<span class="normal">439</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">439</span>
 <span class="normal">440</span>
 <span class="normal">441</span>
 <span class="normal">442</span>
@@ -3373,7 +3442,8 @@ If None, the method will use self.posts_df that would be created by previously r
 <span class="normal">458</span>
 <span class="normal">459</span>
 <span class="normal">460</span>
-<span class="normal">461</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_video_views_for_a_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">post_id</span><span class="p">):</span>
+<span class="normal">461</span>
+<span class="normal">462</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_video_views_for_a_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">post_id</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetches video view statistics for a specific LinkedIn post based on its ID.</span>
 
 <span class="sd">    Args:</span>
@@ -3395,8 +3465,8 @@ If None, the method will use self.posts_df that would be created by previously r
         <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;VIDEO_VIEW&#39;</span>
     <span class="p">}</span>
     <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://api.linkedin.com/rest/videoAnalytics&#39;</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v1</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_v1</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
@@ -3497,8 +3567,7 @@ If None, the method will use self.posts_df that would be created by previously r
 </details>
       <details class="quote">
         <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">463</span>
-<span class="normal">464</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">464</span>
 <span class="normal">465</span>
 <span class="normal">466</span>
 <span class="normal">467</span>
@@ -3528,7 +3597,14 @@ If None, the method will use self.posts_df that would be created by previously r
 <span class="normal">491</span>
 <span class="normal">492</span>
 <span class="normal">493</span>
-<span class="normal">494</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_video_views_for_multiple_posts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">posts_df</span><span class="p">,</span> <span class="n">media_type_col</span><span class="p">,</span> <span class="n">post_id_col</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="n">output_col</span><span class="o">=</span><span class="s1">&#39;videoViews&#39;</span><span class="p">):</span>
+<span class="normal">494</span>
+<span class="normal">495</span>
+<span class="normal">496</span>
+<span class="normal">497</span>
+<span class="normal">498</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_video_views_for_multiple_posts</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">posts_df</span><span class="p">,</span> 
+        <span class="n">media_type_col</span><span class="p">,</span> <span class="n">post_id_col</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">,</span>
+        <span class="n">output_col</span><span class="o">=</span><span class="s1">&#39;videoViews&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetches video view statistics for multiple LinkedIn posts and adds them to a DataFrame.</span>
 
 <span class="sd">    Args:</span>
@@ -3571,7 +3647,7 @@ If None, the method will use self.posts_df that would be created by previously r
 
 
 <h2 id="veetility.linkedin_api.LinkedInAPI.run_request_with_error_handling" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_retries</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_retries</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">expected_json_response</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
 
 </h2>
 
@@ -3677,7 +3753,12 @@ If None, the method will use self.posts_df that would be created by previously r
 
       <details class="quote">
         <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">122</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
 <span class="normal">123</span>
 <span class="normal">124</span>
 <span class="normal">125</span>
@@ -3741,8 +3822,10 @@ If None, the method will use self.posts_df that would be created by previously r
 <span class="normal">183</span>
 <span class="normal">184</span>
 <span class="normal">185</span>
-<span class="normal">186</span>
-<span class="normal">187</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">run_request_with_error_handling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_retries</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+<span class="normal">186</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">run_request_with_error_handling</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> 
+        <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_retries</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">expected_json_response</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrapper function to execute an HTTP GET request with error handling and mutliple time delayed retries.</span>
 
 <span class="sd">    Args:</span>
@@ -3759,43 +3842,44 @@ If None, the method will use self.posts_df that would be created by previously r
 <span class="sd">        Exception: If an unexpected error occurs or if the request fails multiple times.&quot;&quot;&quot;</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">=</span> <span class="n">r</span>
-        <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
-        <span class="c1"># print(r.json())</span>
-        <span class="c1">#print(r.status_code)</span>
-        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">retry_count</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="k">if</span> <span class="n">r</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;None Value Returned&quot;</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">retry_count</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">retry_count</span> <span class="o">&lt;=</span> <span class="n">max_retries</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">r</span>
+        <span class="k">if</span> <span class="n">params</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;r status code = </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;r on it&#39;s own: </span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Data type of r = </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">r</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span> <span class="o">=</span> <span class="n">response</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+
+        <span class="c1"># Sometimes even though the status code is 200, the response object is actually a None value, that doesn&#39;t get picked up </span>
+        <span class="c1"># by testing for response == None, weird behaviour I couldn&#39;t figure out. So below i test to see if getting the json from response is possible</span>
+        <span class="c1"># else it will break the try loop and try again after an exponential delay</span>
+        <span class="k">if</span> <span class="n">expected_json_response</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;JSON on response object test&quot;</span><span class="p">)</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span> 
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">retry_count</span><span class="o">=</span><span class="mi">0</span>
+            <span class="k">return</span> <span class="n">response</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Raise for status didn&#39;t work, status code = </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
 
     <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">HTTPError</span> <span class="k">as</span> <span class="n">errh</span><span class="p">:</span>
 
-        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">429</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;This is a Rate limit error code :</span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">: message: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\</span>
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">429</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;This is a Rate limit error code :</span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">: message: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\</span>
 <span class="s2">                        Request params are: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">. Visit https://learn.microsoft.com/en-us/linkedin/shared/api-guide/concepts/rate-limits for more info&quot;</span> <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">exponential_backoff_delay</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">retry_count</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">400</span><span class="p">,</span> <span class="mi">401</span><span class="p">,</span> <span class="mi">403</span><span class="p">]:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Permanent HTTP Error: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">, message: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">, Request params are: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Permanent HTTP Error: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">, message: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">, Request params are: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">400</span><span class="p">,</span> <span class="mi">401</span><span class="p">,</span> <span class="mi">403</span><span class="p">]:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Permanent HTTP Error: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">, message: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">, Request params are: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Permanent HTTP Error: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">, message: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">, Request params are: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">429</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">502</span><span class="p">,</span> <span class="mi">503</span><span class="p">,</span> <span class="mi">504</span><span class="p">]:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Temporary HTTP Error: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">, message: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">, Request params are: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">429</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">502</span><span class="p">,</span> <span class="mi">503</span><span class="p">,</span> <span class="mi">504</span><span class="p">]:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Temporary HTTP Error: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">, message: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">, Request params are: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">exponential_backoff_delay</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">retry_count</span><span class="p">)</span>  <span class="c1"># Or follow the Retry-After header if available</span>
 
         <span class="c1"># Other HTTP issues issues</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected HTTP Error: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">, message: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">, Request params are: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected HTTP Error: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">, message: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">, Request params are: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="c1"># Catch all other exceptions</span>
@@ -3805,7 +3889,7 @@ If None, the method will use self.posts_df that would be created by previously r
     <span class="c1"># Increment and check retries for potentially temporary issues</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">retry_count</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">retry_count</span> <span class="o">&lt;=</span> <span class="n">max_retries</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span><span class="p">(</span><span class="s1">&#39;Request failed multiple times - Check Logs&#39;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>

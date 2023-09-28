@@ -55,7 +55,7 @@ class LinkedInAPI:
         1. The class is designed to handle both individual and batch requests for efficiency.
         2. Ensure that you have the required libraries installed and valid API credentials."""
 
-    def __init__(self, api_token=None,time_zone="Europe/London"):
+    def __init__(self, api_token=None, time_zone="Europe/London"):
         """Initialize the LinkedIn API client with an API from the developer portal.
             Developer portal: https://developer.linkedin.com/
             
@@ -114,7 +114,10 @@ class LinkedInAPI:
         print(f"Starting exponential delay of {round(delay + jitter,2)} seconds to give server time to recover")
         time.sleep(delay + jitter)
     
-    def run_request_with_error_handling(self, url, headers, params=None, max_retries=5,expected_json_response=True):
+    def run_request_with_error_handling(
+            self, url, headers, 
+            params=None, max_retries=5,
+            expected_json_response=True):
         """Wrapper function to execute an HTTP GET request with error handling and mutliple time delayed retries.
             
         Args:
@@ -206,7 +209,7 @@ class LinkedInAPI:
                 unix_format = int(unix_format)
             else:
                 print("The input is a string that is not a number")
-                pd.NaT
+                return pd.NaT
         
         try: 
             unix_format = int(unix_format)
@@ -292,7 +295,7 @@ class LinkedInAPI:
 
         return org_info_df
     
-    def fetch_posts(self,org_ids=None):
+    def fetch_posts(self, org_ids=None):
         """Fetches LinkedIn posts associated with the specified organization IDs or those found by the fetch_org_ids method.
             The method utilizes `convert_unix_datetime` to convert Unix timestamps in the columns 'createdAt', 'lastModifiedAt' and
             'publishedAt'] to datetime objects.
@@ -383,7 +386,9 @@ class LinkedInAPI:
         response = self.run_request_with_error_handling(url, self.headers_v1, params)
         return response.json()
 
-    def fetch_stats_for_posts(self, posts_df=None, post_id_col='id',org_id_col='author'):
+    def fetch_stats_for_posts(
+            self, posts_df=None, 
+            post_id_col='id',org_id_col='author'):
         """Fetches statistics for a list of LinkedIn posts based on their IDs and associated organization IDs.
             The function adds a new column 'date_fetched_from_api' to the DataFrame with the current date which can be used
             to track how a posts metrics change over time.
@@ -456,7 +461,10 @@ class LinkedInAPI:
         response = self.run_request_with_error_handling(url, self.headers_v1, params)
         return response.json()
     
-    def fetch_video_views_for_multiple_posts(self, posts_df, media_type_col, post_id_col='id',output_col='videoViews'):
+    def fetch_video_views_for_multiple_posts(
+            self, posts_df, 
+            media_type_col, post_id_col='id',
+            output_col='videoViews'):
         """Fetches video view statistics for multiple LinkedIn posts and adds them to a DataFrame.
 
         Args:
@@ -573,7 +581,7 @@ class LinkedInAPI:
         reactions_df.rename(columns={'index':id_col_name},inplace=True)
         return reactions_df
 
-    def fetch_follower_count(self,dict_of_urls):
+    def fetch_follower_count(self, dict_of_urls):
 
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'}
         

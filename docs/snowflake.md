@@ -1,2 +1,2 @@
-# "Snowflake" Class Methods
+# Snowflake Class Methods
 ::: veetility.snowflake

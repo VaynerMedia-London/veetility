@@ -36,8 +36,12 @@ class UtilityFunctions():
     Also includes more complicated functions such as for merging paid and organic social data using fuzzy matching and regex or 
     storing cumulative data we receieve as a daily incremental total"""
 
-    def __init__(self, client_name, gspread_auth_dict=None, db_user=None, db_password=None, db_host=None,
-                        db_port=None, db_name=None, log_name='utility_functions'):
+    def __init__(
+            self, client_name, 
+            gspread_auth_dict=None, db_user=None, 
+            db_password=None, db_host=None,
+            db_port=None, db_name=None, 
+            log_name='utility_functions'):
         """Initialise a google sheets connector and postgreSQL connector for the utility instance 
 
         This means you can only connect to one google account and one database per instance 
@@ -103,9 +107,13 @@ class UtilityFunctions():
         string = re.sub(r'[^\w\s]', '', string) # remove punctuation
         return string.replace(' ', '')
 
-    def match_ads(self,df_1, df_2, df_1_exact_col, df_2_exact_col, extract_shortcode=False,
-            df_1_fuzzy_col=None, df_2_fuzzy_col=None, is_exact_col_link=True, 
-            matched_col_name='boosted', merge=False, cols_to_merge=None, 
+    def match_ads(
+            self, df_1, 
+            df_2, df_1_exact_col, 
+            df_2_exact_col, extract_shortcode=False,
+            df_1_fuzzy_col=None, df_2_fuzzy_col=None, 
+            is_exact_col_link=True, matched_col_name='boosted', 
+            merge=False, cols_to_merge=None, 
             pickle_name='NoStore'):
         """Match row items in df_2 onto row items in df_1 based on two sets of columns,using exact and fuzzy matching.
 
@@ -221,7 +229,11 @@ class UtilityFunctions():
 
         return df_1, df_2
     
-    def identify_match_multi_cols(self, df_1, df_2, df_1_cols_to_match, df_2_cols_to_match, match_col_name, exclude_values=['None', 'none', 'nan', '']):
+    def identify_match_multi_cols(
+            self, df_1, 
+            df_2, df_1_cols_to_match, 
+            df_2_cols_to_match, match_col_name, 
+            exclude_values=None):
         """This function will identify if a row in df_1 is in df_2 based on the columns specified in df_1_cols_to_match and df_2_cols_to_match
         
         Args:
@@ -231,6 +243,8 @@ class UtilityFunctions():
             df_2_cols_to_match (list): The columns in df_2 to look for matches in df_1
             match_col_name (str): The name of the column to be created in df_1 to indicate if the row is in df_2
             exclude_values (list): The values to be excluded from the match. Default is ['None', 'none', 'nan', '']"""
+        if exclude_values == None:
+            exclude_values = ['None', 'none', 'nan', '']
         
         def is_row_in_dataframe(row, target_df, source_cols, target_cols):
             mask = np.full(len(target_df), True, dtype=bool)
@@ -248,7 +262,11 @@ class UtilityFunctions():
 
         return df_1, df_2
 
-    def best_fuzzy_match(self, list_1, list_2, threshold, json_name):
+    def best_fuzzy_match(
+            self, list_1, 
+            list_2, threshold, 
+            json_name
+    ):
         """Takes in two lists of strings and every string in list_1 is fuzzy matched onto every item in list_2
         The fuzzy match of a string in list_1 with a string in list_2 with the highest score will count as the 
         match as long as it is above the threshold. The match is then stored as a key value pair in a dictionary
@@ -321,7 +339,9 @@ class UtilityFunctions():
 
         return best_match_dict
 
-    def write_to_postgresql(self, df, table_name, if_exists='replace'):
+    def write_to_postgresql(
+            self, df, 
+            table_name, if_exists='replace'):
         """Writes a dataframe to a PostgreSQL database table using a SQLalchemy engine defined elsewhere.
         If writing fails it waits 10 seconds then trys again
             
@@ -358,12 +378,15 @@ class UtilityFunctions():
                 return f'{table_name} error: ' + str(error_message)
         return error_message
 
-    def store_daily_organic_data(self, df, output_table_name, num_days_to_store=30, date_col_name='date',
-                                    dayfirst="EnterValue", yearfirst="EnterValue", format=None, errors='raise',
-                                    check_created_col=True, created_col='created', refresh_lag=1,
-                                    cumulative_metric_cols=['impressions', 'reach', 'video_views',
-                                    'comments', 'shares'], unique_id_cols=None,
-                                    require_run_after_hour=False, run_after_hour=15):
+    def store_daily_organic_data(
+            self, df, output_table_name, 
+            num_days_to_store=30, date_col_name='date',
+            dayfirst="EnterValue", yearfirst="EnterValue", 
+            format=None, errors='raise',
+            check_created_col=True, created_col='created', 
+            refresh_lag=1, cumulative_metric_cols=None, 
+            unique_id_cols=None,
+            require_run_after_hour=False, run_after_hour=15):
         """Converts a post level organic dataframe to a daily level dataframe and stores it in a PostGreSQL table.
         
         Most organic data is stored at the post level and this function converts it to a daily level dataframe
@@ -405,6 +428,10 @@ class UtilityFunctions():
         
         Returns:
             None: the function writes the data to a postgresql table """
+        if cumulative_metric_cols == None:
+            cumulative_metric_cols = ['impressions', 'reach', 'video_views',
+                                      'comments', 'shares'
+                                      ]
         today_datetime = datetime.today()
         today_date = today_datetime.date()
         if require_run_after_hour and (today_datetime.hour < run_after_hour): 
@@ -453,9 +480,12 @@ class UtilityFunctions():
             self.write_to_postgresql(daily_df, output_table_name + '_daily_conv', if_exists='replace')
 
 
-    def convert_cumulative_to_daily(self, df, metric_list = ['impressions', 'comments', 'clicks',
-                                    'link_clicks', 'likes', 'saved', 'shares', 'video_views'],
-                                    unique_identifier_cols='url', date_row_added_col='date_row_added'):
+    def convert_cumulative_to_daily(
+            self, df, 
+            metric_list = None,
+            unique_identifier_cols='url', 
+            date_row_added_col='date_row_added'
+    ):
         """Convert cumulative metrics to daily metrics for a given dataframe.
 
         Args:
@@ -467,6 +497,12 @@ class UtilityFunctions():
         Returns:
             df (DataFrame): The dataframe with the cumulative metrics converted to daily metrics"""
         
+        if metric_list == None:
+            metric_list = [
+                'impressions', 'comments', 'clicks',
+                'link_clicks', 'likes', 'saved', 
+                'shares', 'video_views'
+            ]
         #rename the metric list to create by appending 'cum_' to the start of each metric
         cum_metric_list = ['cum_' + metric for metric in metric_list]
         #Check if the cumulative metrics have been calculated before
@@ -562,8 +598,12 @@ class UtilityFunctions():
         return url_shortcode_dict
 
 
-    def read_from_postgresql(self, table_name, clean_date=True, date_col=None, dayfirst=None, yearfirst=None, 
-                             format=None, errors='raise'):
+    def read_from_postgresql(
+            self, table_name, 
+            clean_date=True, date_col=None, 
+            dayfirst=None, yearfirst=None, 
+            format=None, errors='raise'
+    ):
         """Reads a table from a PostgreSQL database table using a pscopg2 connection.
         If fails it waits 10 seconds and tries again.
         
@@ -623,7 +663,12 @@ class UtilityFunctions():
         
         return df
     
-    def dupes_some_cols_but_differ_in_others(self, df, subset_cols, diff_cols,return_mode='only_differing_duplicates', max_value_keep_col=None):
+    def dupes_some_cols_but_differ_in_others(
+            self, df, 
+            subset_cols, diff_cols,
+            return_mode='only_differing_duplicates', 
+            max_value_keep_col=None
+    ):
         """Identifies rows that are duplicates in some columns but differ in others.
 
         This is useful in some cases when you want to find specific types of duplicates
@@ -674,7 +719,11 @@ class UtilityFunctions():
             raise ValueError("Invalid return_mode. Choose either 'only_differing_duplicates' or 'max_value'")
 
 
-    def write_to_gsheet(self, workbook_name, sheet_name, df, if_exists='replace', sheet_prefix=''):
+    def write_to_gsheet(
+            self, workbook_name, 
+            sheet_name, df, 
+            if_exists='replace', sheet_prefix=''
+    ):
         """Write a dataframe to a google sheet
 
         Args:
@@ -707,8 +756,13 @@ class UtilityFunctions():
             time.sleep(10)
             gd.set_with_dataframe(sheet, df)
 
-    def read_from_gsheet(self, workbook_name, sheet_name, clean_date=True, date_col='EnterValue',
-                                dayfirst='EnterValue', yearfirst='EnterValue', format=None, errors='raise'):
+    def read_from_gsheet(
+            self, workbook_name, 
+            sheet_name, clean_date=True, 
+            date_col='EnterValue',
+            dayfirst='EnterValue', 
+            yearfirst='EnterValue', 
+            format=None, errors='raise'):
         """Read data from a google sheet and return it as a dataframe.
 
         Args:
@@ -773,7 +827,11 @@ class UtilityFunctions():
         return pickle.load(open(folder + '/' + filename, "rb"))
 
     
-    def write_json(self, object, file_name, file_type, folder="JSON Files"):
+    def write_json(
+            self, object, 
+            file_name, file_type, 
+            folder="JSON Files"
+    ):
         """Write a Python object to a json file.
         
         Args:
@@ -797,7 +855,10 @@ class UtilityFunctions():
         else:
             self.logger.logger.error('JSON write error, file_type error')
     
-    def read_json(self, file_name, file_type, folder="JSON Files"):
+    def read_json(
+            self, file_name, 
+            file_type, folder="JSON Files"
+    ):
         """Read a json file and return a Python object.
         
         Args:
@@ -823,7 +884,13 @@ class UtilityFunctions():
         df.columns = df.columns.str.strip()
         return df
 
-    def merge_match_perc(self, df_1, df_2, left_on=None, right_on=None, on=None, how='left', tag="", ignore_values_df2=['None', 'nan', '', ' ', 'none']):
+    def merge_match_perc(
+            self, df_1, df_2, 
+            left_on=None, right_on=None, 
+            on=None, 
+            how='left', tag="", 
+            ignore_values_df2=None
+    ):
         """Merges two dataframes and prints out the number of matches and the percentage of matches out of the total number of rows.
         
         Args:
@@ -834,9 +901,12 @@ class UtilityFunctions():
             how (str, optional): The type of merge to perform. Defaults to 'left'.
             tag (str, optional): A tag to add to the print statement. Defaults to "".
 
-        
         Returns:
             output_df (pd.DataFrame): A pandas dataframe that contains the merged data from the input dataframes."""
+        
+        if ignore_values_df2 == None:
+            ignore_values_df2 = ['None', 'nan', '', ' ', 'none']
+
         if right_on != None:
             df_2['no_merge_flag'] = df_2[right_on].apply(lambda row: any(item in ignore_values_df2 for item in row), axis=1)
         elif on != None:
@@ -870,8 +940,8 @@ class Logger:
 
         Args:
             client_name (str): The name of the client
-            log_name (str): The name of the log file
-        """
+            log_name (str): The name of the log file"""
+        
         # Get the log directory from the environment variable
         base_log_dir = os.environ.get('LOG_DIR')
 
@@ -915,109 +985,69 @@ class Logger:
         self.logger = logger    
 
 class SlackNotifier:
-    """A class that sends a message to a slack channel given a webhook url and optional url links
-    Args:
-        slack_webhook_url (str): The webhook url for the slack channel
-        title (str): The title of the slack message. Default: "Update"
-        link_1 (str): An optional link to be included in the slack message. Default: ''
-        link_1_name (str): The name to be displayed for link_1. Default: 'No Url'
-        link_2 (str): An optional link to be included in the slack message. Default: ''
-        link_2_name (str): The name to be displayed for link_2. Default: 'No Url'
-        link_3 (str): An optional link to be included in the slack message. Default: ''
-        link_3_name (str): The name to be displayed for link_3. Default: 'No Url'
-        link_4 (str): An optional link to be included in the slack message. Default: ''
-        link_4_name (str): The name to be displayed for link_4. Default: 'No Url'"""
-
-    def __init__(self, slack_webhook_url: str, title = "Update" ,link_1='', link_1_name='No Url',
-                    link_2='', link_2_name='No Url', link_3='', link_3_name='No Url',
-                    link_4='', link_4_name='No Url'):
-        """Initiate slack notifier object
-
-        Args:
-            slack_webhook_url (str): The webhook url for the slack channel
-            title (str): The title of the slack message. Default: "Update"
-            link_1 (str): An optional link to be included in the slack message. Default: ''
-            link_1_name (str): The name to be displayed for link_1. Default: 'No Url'
-            link_2 (str): An optional link to be included in the slack message. Default: ''
-            link_2_name (str): The name to be displayed for link_2. Default: 'No Url'
-            link_3 (str): An optional link to be included in the slack message. Default: ''
-            link_3_name (str): The name to be displayed for link_3. Default: 'No Url'
-            link_4 (str): An optional link to be included in the slack message. Default: ''
-            link_4_name (str): The name to be displayed for link_4. Default: 'No Url'"""
+    """A Slack notifier class to send rich-text messages using Slack's Block Kit.
     
-        self.slack_webhook_url, self.title = slack_webhook_url, title
-        self.link_1, self.link_2, self.link_3, self.link_4 = link_1, link_2, link_3, link_4
-        self.link_1_name, self.link_2_name, self.link_3_name, self.link_4_name = link_1_name, link_2_name, link_3_name, link_4_name
+    Attributes:
+        slack_webhook_url (str): The webhook URL for the Slack channel.
+        title (str): Default title for the Slack messages."""
+
+    def __init__(self, slack_webhook_url: str, title="Data Update"):
+        """Args:
+            slack_webhook_url (str): The webhook URL for the Slack channel.
+            title (str, optional): Default title for the Slack messages. Defaults to "Data Update"."""
+        self.slack_webhook_url = slack_webhook_url
+        self.title = title
+
+    def send_slack_message(self, message: str, title: str = None, **links):
+        """Sends a formatted message to Slack using the provided webhook URL.
         
-    def send_slack_message(self, message:str):
-        """Sends message to slack channel
         Args:
-            message (str): the message to be sent to the slack channel"""
+            message (str): The main content of the Slack message.
+            title (str, optional): The title of the Slack message. If not provided, defaults to the instance's title.
+            **links (str): Key-value pairs of descriptive names and actual URLs to be included in the Slack message.
+        
+        Raises:
+            Exception: If the request to send the Slack message fails.
+            """
+        if title is None:
+            title = self.title
 
-        payload = {
-        "blocks":
-        [
+        blocks = [
             {
-                  "type": "header",
-                  "text": {
-                      "type": "plain_text",
-                      "text": f"{self.title}",
-                        }
+                "type": "header",
+                "text": {
+                    "type": "plain_text",
+                    "text": title
+                }
             },
-
             {
-                  "type": "divider"
+                "type": "divider"
             },
-
             {
-                  "type": "section",
-                  "fields": [
-                      {
-                          "type": "mrkdwn",
-                          "text": message
-                      },
-
-                    ],
+                "type": "section",
+                "fields": [
+                    {
+                        "type": "mrkdwn",
+                        "text": message
+                    },
+                ],
             },
-
             {
-                  "type": "divider"
+                "type": "divider"
             },
-
-            {
-                  "type": "section",
-                  "text": {
-                      "type": "mrkdwn",
-                      "text": f"<{self.link_1}|{self.link_1_name}>"
-                  }
-            },
-
-            {
-                  "type": "section",
-                  "text": {
-                      "type": "mrkdwn",
-                      "text": f"<{self.link_2}|View {self.link_2_name}>"
-                        }
-            },
-
-            {
-                  "type": "section",
-                  "text": {
-                      "type": "mrkdwn",
-                      "text": f"<{self.link_3}|View {self.link_3_name}>"
-                        }
-            },
-
-            {
-                  "type": "section",
-                  "text": {
-                      "type": "mrkdwn",
-                      "text": f"<{self.link_4}|View {self.link_4_name}>"
-                        }
-            },
-
         ]
-        }
+
+        for link_name, link in links.items():
+            blocks.append({
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": f"<{link}|{link_name}>"
+                }
+            })
+
+        payload = {"blocks": blocks}
+
         try:
             requests.post(self.slack_webhook_url, data=json.dumps(payload))
         except Exception as e:

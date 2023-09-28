@@ -1,12 +1,12 @@
-from . import cleaning_functions as clean
-from . import utility_functions
+import point_to_point_regressor as ptp
 import pandas as pd
 import numpy as np
 import pickle
 import os
+from . import cleaning_functions as clean
 
 class ViewThroughRateAnalysis:
-    """Class for analysing View Through Rate (VTR) metrics of Video Ads from Social Media platforms such as TikTok and Meta.
+    """Class for analysing View Through Rate (VTR) metrics of Video Ads from Social Media platforms such as TikTok and Meta (Facebook and Instagram).
 
     The platforms provide the VTR metrics in terms of the number of people who viewed 25%, 50%, 75% and 100% of the video. This is inconvenient
     because the videos are at greatly varying lengths. This class converts the percentages to seconds of the video watched.
@@ -51,6 +51,7 @@ class ViewThroughRateAnalysis:
         
         Returns:
             pd.DataFrame: DataFrame of Ads with VTR metrics as percentages as extra columns"""
+        
         if 'likes' in df.columns:
             df['engagements'] = df['likes'] + df['comments'] + df['shares']
             df['engagement_rate'] = round(df['engagements'] * 100 / df['impressions'], 2)
