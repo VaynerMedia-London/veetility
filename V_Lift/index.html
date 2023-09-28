@@ -15,7 +15,7 @@
     
     
       
-        <title>"V Lift" Functions - Veetility Docs</title>
+        <title>Vayner Lift (V Lift) Functions - Veetility Docs</title>
       
     
     
@@ -65,7 +65,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#v-lift-functions" class="md-skip">
+        <a href="#vayner-lift-v-lift-functions" class="md-skip">
           Skip to content
         </a>
       
@@ -98,7 +98,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              "V Lift" Functions
+              Vayner Lift (V Lift) Functions
             
           </span>
         </div>
@@ -326,7 +326,7 @@
 
 
 
-<h1 id="v-lift-functions">"V Lift" Functions</h1>
+<h1 id="vayner-lift-v-lift-functions">Vayner Lift (V Lift) Functions</h1>
 
 
 <div class="doc doc-object doc-module">
@@ -352,7 +352,7 @@
 
 
 <h2 id="veetility.v_lift.add_on_weight_v2" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">add_on_weight_v2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">inflection</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">add_on_weight_v2</span><span class="p">(</span><span class="n">metric_value</span><span class="p">,</span> <span class="n">inflection</span><span class="p">,</span> <span class="n">weight</span><span class="p">)</span></code>
 
 </h2>
 
@@ -426,9 +426,7 @@ if the value is higher than the threshold, return the logit transformed weight, 
 
       <details class="quote">
         <summary>Source code in <code>veetility/v_lift.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">11</span>
 <span class="normal">12</span>
 <span class="normal">13</span>
 <span class="normal">14</span>
@@ -444,7 +442,9 @@ if the value is higher than the threshold, return the logit transformed weight, 
 <span class="normal">24</span>
 <span class="normal">25</span>
 <span class="normal">26</span>
-<span class="normal">27</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">add_on_weight_v2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">inflection</span><span class="p">,</span><span class="n">w</span><span class="p">):</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">add_on_weight_v2</span><span class="p">(</span><span class="n">metric_value</span><span class="p">,</span> <span class="n">inflection</span><span class="p">,</span> <span class="n">weight</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the add-on weight of the engagement metric using beta hill function</span>
 <span class="sd">    if the value is higher than the threshold, return the logit transformed weight, else return 0</span>
 
@@ -456,13 +456,13 @@ if the value is higher than the threshold, return the logit transformed weight, 
 <span class="sd">    Returns:</span>
 <span class="sd">        w_value (float): the add-on weight of the engagement metric&quot;&quot;&quot;</span>
 
-    <span class="n">hill</span><span class="o">=</span><span class="mi">1</span>
+    <span class="n">hill</span> <span class="o">=</span> <span class="mi">1</span>
 
-    <span class="k">if</span> <span class="n">x</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
-        <span class="n">w_value</span><span class="o">=</span><span class="mi">0</span>
+    <span class="k">if</span> <span class="n">metric_value</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">w_value</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">w_value</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="n">inflection</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="n">hill</span><span class="p">))</span> <span class="o">*</span> <span class="n">w</span>
-    <span class="k">return</span>  <span class="n">w_value</span>
+        <span class="n">w_value</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">metric_value</span> <span class="o">/</span> <span class="n">inflection</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="n">hill</span><span class="p">))</span> <span class="o">*</span> <span class="n">weight</span>
+    <span class="k">return</span> <span class="n">w_value</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
@@ -481,7 +481,7 @@ if the value is higher than the threshold, return the logit transformed weight, 
 
   <div class="doc doc-contents ">
   
-      <p>Calculate the lift value for the engagement columns, 
+      <p>Calculate the lift value for the engagement columns,
 Return a dataframe with all original columns and three results columns: ER, Score and V_lift</p>
 
   <p><strong>Parameters:</strong></p>
@@ -548,9 +548,7 @@ Return a dataframe with all original columns and three results columns: ER, Scor
 
       <details class="quote">
         <summary>Source code in <code>veetility/v_lift.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">32</span>
 <span class="normal">33</span>
 <span class="normal">34</span>
 <span class="normal">35</span>
@@ -586,8 +584,15 @@ Return a dataframe with all original columns and three results columns: ER, Scor
 <span class="normal">65</span>
 <span class="normal">66</span>
 <span class="normal">67</span>
-<span class="normal">68</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">v_lift</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">metric_list</span><span class="p">,</span><span class="n">impression_weight</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the lift value for the engagement columns, </span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">v_lift</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">metric_list</span><span class="p">,</span> <span class="n">impression_weight</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the lift value for the engagement columns,</span>
 <span class="sd">    Return a dataframe with all original columns and three results columns: ER, Score and V_lift</span>
 
 <span class="sd">    Args:</span>
@@ -596,33 +601,38 @@ Return a dataframe with all original columns and three results columns: ER, Scor
 <span class="sd">        impression_weight (float): the weight of impression in the final score</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        df (dataframe): a dataframe with all original columns and three results columns: ER, Score and V_lift&quot;&quot;&quot;</span>
+<span class="sd">        df (dataframe): a dataframe with all original columns and three results columns: ER, Score and V_lift</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;impressions&#39;</span><span class="p">:</span><span class="s1">&#39;Impressions&#39;</span><span class="p">},</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">impression_metric_list</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Impressions&#39;</span><span class="p">]</span><span class="o">+</span><span class="n">metric_list</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span><span class="p">{</span><span class="s2">&quot;impressions&quot;</span><span class="p">:</span> <span class="s2">&quot;Impressions&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">impression_metric_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Impressions&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">metric_list</span>
 
-    <span class="n">metrics_avg</span><span class="o">=</span><span class="p">[]</span>
-    <span class="n">inv_avg</span><span class="o">=</span><span class="p">[]</span>
-    <span class="n">add_on_weight_col</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">metrics_avg</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">inv_avg</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">add_on_weight_col</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="n">impression_metrics_avg</span><span class="o">=</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Impressions&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()]</span>
+    <span class="n">impression_metrics_avg</span> <span class="o">=</span> <span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Impressions&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()]</span>
     <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">metric_list</span><span class="p">:</span>
-      <span class="n">metrics_avg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
-      <span class="n">impression_metrics_avg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+        <span class="n">metrics_avg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+        <span class="n">impression_metrics_avg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
 
-    <span class="n">inv_avg</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span> <span class="k">if</span> <span class="n">x</span><span class="o">==</span><span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span><span class="o">/</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">metrics_avg</span><span class="p">]</span>
-    <span class="n">metric_weight</span><span class="o">=</span><span class="p">[</span><span class="n">x</span><span class="o">/</span><span class="nb">sum</span><span class="p">(</span><span class="n">inv_avg</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">inv_avg</span><span class="p">]</span>
+    <span class="n">inv_avg</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">metrics_avg</span><span class="p">]</span>
+    <span class="n">metric_weight</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">inv_avg</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">inv_avg</span><span class="p">]</span>
 
-    <span class="n">impression_metric_weight</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">metric_weight</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">impression_weight</span><span class="p">))</span>
-    <span class="n">impression_metric_weight</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">impression_weight</span><span class="p">)</span>
+    <span class="n">impression_metric_weight</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">metric_weight</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">impression_weight</span><span class="p">))</span>
+    <span class="n">impression_metric_weight</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">impression_weight</span><span class="p">)</span>
 
     <span class="c1"># V_lift calculation</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">impression_metric_list</span><span class="p">):</span>
-      <span class="n">df</span><span class="p">[</span><span class="s1">&#39;weight_&#39;</span><span class="o">+</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">add_on_weight_v2</span><span class="p">(</span><span class="n">row</span><span class="p">,</span><span class="n">impression_metrics_avg</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">impression_metric_weight</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span> <span class="c1"># v2 add on weight  </span>
-      <span class="n">add_on_weight_col</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;weight_&#39;</span><span class="o">+</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;weight_&quot;</span> <span class="o">+</span> <span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">add_on_weight_v2</span><span class="p">(</span>
+                <span class="n">row</span><span class="p">,</span> <span class="n">impression_metrics_avg</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">impression_metric_weight</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="p">)</span>  <span class="c1"># v2 add on weight</span>
+        <span class="n">add_on_weight_col</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;weight_&quot;</span> <span class="o">+</span> <span class="n">x</span><span class="p">)</span>
 
-    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;ER&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="n">metric_list</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Impressions&#39;</span><span class="p">]</span>
-    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;V_Lift&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="n">add_on_weight_col</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>   
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;ER&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">metric_list</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Impressions&quot;</span><span class="p">]</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;V_Lift&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">add_on_weight_col</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">df</span><span class="p">,</span> <span class="n">impression_metric_weight</span>
 </code></pre></div></td></tr></table></div>
