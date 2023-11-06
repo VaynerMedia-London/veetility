@@ -1,8 +1,5 @@
 #%%
-#import env
 import pandas as pd
-# from sqlalchemy import create_engine
-# from snowflake.sqlalchemy import URL
 from snowflake.sqlalchemy import URL
 import snowflake.connector
 from snowflake.connector.pandas_tools import write_pandas
@@ -10,11 +7,15 @@ from datetime import datetime
 import time
 import math
 from sqlalchemy import create_engine
-#import utility_functions as uf
 #%%
 class Snowflake():
+    """A class for connecting to Snowflake wrapping around the snowflake python connector.
+
+    https://docs.snowflake.com/en/developer-guide/snowpark/python/index
     
-    def __init__(self,connection_params_dict,client_name) -> None:
+    The additional features include reading large tables in chunks, and having pauses and retries if a chunk read is unsuccessful."""
+    
+    def __init__(self, connection_params_dict) -> None:
         """Initialise the snowflake connection with a dictionary of connection parameters.
 
         Log File is created in the LOG_DIR environment variable with a subdirectory with the name of the client_name
@@ -35,50 +36,11 @@ class Snowflake():
         self.schema = self.connection_params_dict['schema']
         self.account = self.connection_params_dict['account']
         self.password = self.connection_params_dict['password']
-        #self.session = Session().create(self.connection_params_dict)
-        # self.session = Session.builder.configs(self.connection_params_dict).create()
-        #self.logger = Logger(client_name,'snowflake')
     
-    def drop_table(self, table_name, database=None, schema=None):
-        '''Function to drop Snowflake table
-        
-        Args:
-            table_name (str): Name of the table to drop
-            database (str, optional): Name of the database to drop the table from. Defaults to the database specified on class initialisation.
-            schema (str, optional): Name of the schema to drop the table from. Defaults to the schema specified on class initialisation.
-        
-        Returns:
-            Message that the table has been dropped'''
-
-        # Set default values for database and schema if not provided
-        if schema == None:
-            schema = self.schema
-        if database == None:
-            database = self.database
-
-        # Create connection to Snowflake
-        with snowflake.connector.connect(
-            user=self.user,
-            password=self.password,
-            account=self.account,
-            warehouse=self.warehouse,
-            database=self.database,
-            schema=schema,
-        ) as conn:
-
-            # Create cursor
-            with conn.cursor() as cur:
-
-                # Drop table
-                cur.execute(f"DROP TABLE IF EXISTS {table_name}")
-
-                # Commit changes
-                conn.commit()
-
-        return f"Table {table_name} has been dropped."
-
-    
-    def read_snowflake_to_df(self, table_name, schema=None, database=None ,chunk_size=200000):
+    def read_snowflake_to_df(
+            self, table_name, 
+            schema=None, database=None,
+            chunk_size=200000):
         """Function to read Snowflake table using SQLAlchemy
         
         URL stands for Uniform Resource Locator. It is a reference (an address) to a resource on the Internet.
@@ -96,7 +58,7 @@ class Snowflake():
         if database == None:
             database = self.database
 
-        with snowflake.connector.connect(
+        with snowflake.connector.connect(   
             user = self.user,
             password = self.password,
             account = self.account,
@@ -132,15 +94,21 @@ class Snowflake():
         return df_total
 
     
-    def write_df_to_snowflake(self, df, table_name, database=None, schema=None,
-                          auto_create_table=False, overwrite=False, chunk_size=20000):
-        '''Function to write Pandas dataframe to Snowflake table
+    def write_df_to_snowflake(
+        self, df, table_name, 
+        database=None, schema=None,
+        auto_create_table=False, 
+        overwrite=False, chunk_size=20000):
+        '''Function to write Pandas dataframe to Snowflake table.
 
-        Truncates (if it exists) or creates new table and inserts the new data into the selcted table
+        Truncates (if it exists) or creates new table and inserts the new data into the selcted table.
 
         This function is based on the write_pandas function from the snowflake-connector-python package
-        but just adds some redundancy and retries if the connection fails
-        Their documentation can be found here, but is incomplete as it doesn't include the overwrite parameter
+        but just adds some redundancy and retries if the connection fails.
+
+        Their documentation can be found here, but is incomplete as it doesn't include the overwrite parameter.
+
+
         https://docs.snowflake.com/en/developer-guide/python-connector/python-connector-api#write_pandas
         
         Args:
@@ -154,6 +122,7 @@ class Snowflake():
         
         Returns:
             None'''
+        
         if schema == None:
             schema = self.schema
         if database == None:
@@ -170,8 +139,16 @@ class Snowflake():
             print(f"Connected to Snowflake")
             try:
                 now = time.time()
-                success, nchunks, nrows, _ = write_pandas(conn, df, table_name, parallel=8,schema=schema,database=database,
-                                        auto_create_table=auto_create_table,overwrite=overwrite,chunk_size=chunk_size)
+                success, nchunks, nrows, _ = write_pandas(
+                    conn, df, 
+                    table_name, 
+                    parallel=8,
+                    schema=schema,
+                    database=database,
+                    auto_create_table=auto_create_table,
+                    overwrite=overwrite,
+                    chunk_size=chunk_size
+                )
                 time_taken = round(time.time() - now,2)
                 print(f"Sent Data to {table_name}, time taken: {time_taken} seconds")
                 
@@ -227,3 +204,4 @@ class Snowflake():
                     conn.commit()
                     
             return f"Table {table_name} has been dropped."
+

@@ -15,9 +15,7 @@ SLACK_CONN_ID = 'slack'
 
 
 def task_fail_slack_alert(context):
-    '''
-    This function is used to send a slack alert
-    in Airflow when a task fails
+    '''This function is used to send a slack alert in Airflow when a task fails
     '''
     channel_id = Variable.get("slack_channel_id")
     ec2_url = Variable.get("ec2_url")

@@ -10,6 +10,7 @@ import numpy as np
 import requests
 import pandas as pd
 from dotenv import load_dotenv
+import requests as re
 import os
 import random
 from tqdm.auto import tqdm
@@ -582,6 +583,35 @@ class LinkedInAPI:
         return reactions_df
 
     def fetch_follower_count(self, dict_of_urls):
+        """Fetches the follower count of companies from their LinkedIn URLs.
+
+        This function sends a GET request to each URL present in the given dictionary, scrapes the page's HTML to find 
+        the follower count, and then stores this information in a pandas DataFrame.
+
+        Args:
+            dict_of_urls (dict): A dictionary where keys are company names and values are their respective LinkedIn URLs.
+
+        Returns:
+            pd.DataFrame: A DataFrame with columns: 'index', 'Followers', and 'datetime_fetched'. 
+                        The 'index' column contains the company names, 'Followers' column contains the fetched 
+                        follower counts or 'Error' if not found, and 'datetime_fetched' column contains the time 
+                        the data was fetched.
+
+        Raises:
+            If there's an error during the HTTP request or while extracting the follower count, the respective 
+            company's follower count will be set to 'Error' in the output DataFrame.
+
+        Example:
+            input_dict = {
+                'CompanyA': 'https://www.linkedin.com/company/companyA/',
+                'CompanyB': 'https://www.linkedin.com/company/companyB/'
+            }
+            output_df = obj.fetch_follower_count(input_dict)
+            print(output_df)
+
+        Notes:
+            - The function uses regular expressions to extract the follower count from the HTML content.
+            - The User-Agent header is hardcoded to mimic a browser request."""
 
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'}
         

@@ -658,6 +658,9 @@ class UtilityFunctions():
             time_taken = round(time.time() - now,2)
             self.logger.logger.info(f"Time taken to read {table_name} = {time_taken}secs{min_max_date(df, date_col, clean_date)}")
 
+        if clean_date:
+            df[date_col] = pd.to_datetime(df[date_col], dayfirst=dayfirst, yearfirst=yearfirst,
+                                        format=format, errors=errors)
         # Close the database connection
         conn.close()
         
@@ -759,10 +762,11 @@ class UtilityFunctions():
     def read_from_gsheet(
             self, workbook_name, 
             sheet_name, clean_date=True, 
-            date_col='EnterValue',
-            dayfirst='EnterValue', 
-            yearfirst='EnterValue', 
-            format=None, errors='raise'):
+            date_col=None,
+            dayfirst=None, 
+            yearfirst=None, 
+            format=None, errors='raise'
+    ):
         """Read data from a google sheet and return it as a dataframe.
 
         Args:
@@ -777,6 +781,17 @@ class UtilityFunctions():
 
         Returns:
             df (pandas.DataFrame): The dataframe containing the data from the google sheets"""
+        date_param_error_list = []
+        if clean_date == True:
+            if date_col == None:
+                date_param_error_list.append('date_col')
+            if dayfirst == None:
+                date_param_error_list.append('dayfirst')
+            if yearfirst == None:
+                date_param_error_list.append('yearfirst')
+            if len(date_param_error_list) > 0:
+                raise Exception(f"The following parameters are required to clean the date column: {date_param_error_list}")
+            
         try:
             spreadsheet = self.sa.open(workbook_name)
         except Exception as error_message:
@@ -786,6 +801,7 @@ class UtilityFunctions():
         worksheet = spreadsheet.worksheet(sheet_name)
         df = pd.DataFrame(worksheet.get_all_records())
         if clean_date:
+            df[date_col] = df[date_col].str.strip()
             df[date_col] = pd.to_datetime(df[date_col], dayfirst=dayfirst, yearfirst=yearfirst,
                                             format=format, errors=errors)
         return df

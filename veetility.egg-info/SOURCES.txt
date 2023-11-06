@@ -11,6 +11,7 @@ veetility/linkedin_api.py
 veetility/point_to_point_regressor.py
 veetility/quality_assessments.py
 veetility/rivaliq_functions.py
+veetility/s3_bucket.py
 veetility/snowflake.py
 veetility/utility_functions.py
 veetility/v_lift.py
