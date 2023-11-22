@@ -9,7 +9,7 @@
       
       
       
-        <link rel="prev" href="../snowflake/">
+        <link rel="prev" href="../S3Bucket/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -256,6 +256,21 @@
 
   
   
+  
+    <li class="md-nav__item">
+      <a href="../S3Bucket/" class="md-nav__link">
+        S3Bucket
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
     
   
   
@@ -322,6 +337,13 @@
         <li class="md-nav__item">
   <a href="#veetility.linkedin_api.LinkedInAPI.exponential_backoff_delay" class="md-nav__link">
     exponential_backoff_delay()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#veetility.linkedin_api.LinkedInAPI.fetch_follower_count" class="md-nav__link">
+    fetch_follower_count()
   </a>
   
 </li>
@@ -461,6 +483,13 @@
         <li class="md-nav__item">
   <a href="#veetility.linkedin_api.LinkedInAPI.exponential_backoff_delay" class="md-nav__link">
     exponential_backoff_delay()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#veetility.linkedin_api.LinkedInAPI.fetch_follower_count" class="md-nav__link">
+    fetch_follower_count()
   </a>
   
 </li>
@@ -634,8 +663,7 @@ method. </p>
 
         <details class="quote">
           <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 28</span>
-<span class="normal"> 29</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 29</span>
 <span class="normal"> 30</span>
 <span class="normal"> 31</span>
 <span class="normal"> 32</span>
@@ -1212,7 +1240,37 @@ method. </p>
 <span class="normal">603</span>
 <span class="normal">604</span>
 <span class="normal">605</span>
-<span class="normal">606</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">LinkedInAPI</span><span class="p">:</span>
+<span class="normal">606</span>
+<span class="normal">607</span>
+<span class="normal">608</span>
+<span class="normal">609</span>
+<span class="normal">610</span>
+<span class="normal">611</span>
+<span class="normal">612</span>
+<span class="normal">613</span>
+<span class="normal">614</span>
+<span class="normal">615</span>
+<span class="normal">616</span>
+<span class="normal">617</span>
+<span class="normal">618</span>
+<span class="normal">619</span>
+<span class="normal">620</span>
+<span class="normal">621</span>
+<span class="normal">622</span>
+<span class="normal">623</span>
+<span class="normal">624</span>
+<span class="normal">625</span>
+<span class="normal">626</span>
+<span class="normal">627</span>
+<span class="normal">628</span>
+<span class="normal">629</span>
+<span class="normal">630</span>
+<span class="normal">631</span>
+<span class="normal">632</span>
+<span class="normal">633</span>
+<span class="normal">634</span>
+<span class="normal">635</span>
+<span class="normal">636</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">LinkedInAPI</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A class to interact with LinkedIn&#39;s API for various data fetching and transformation tasks.</span>
 
 <span class="sd">    This class provides methods to authenticate a user, fetch organization IDs, fetch posts, </span>
@@ -1769,6 +1827,35 @@ method. </p>
         <span class="k">return</span> <span class="n">reactions_df</span>
 
     <span class="k">def</span> <span class="nf">fetch_follower_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dict_of_urls</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetches the follower count of companies from their LinkedIn URLs.</span>
+
+<span class="sd">        This function sends a GET request to each URL present in the given dictionary, scrapes the page&#39;s HTML to find </span>
+<span class="sd">        the follower count, and then stores this information in a pandas DataFrame.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dict_of_urls (dict): A dictionary where keys are company names and values are their respective LinkedIn URLs.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pd.DataFrame: A DataFrame with columns: &#39;index&#39;, &#39;Followers&#39;, and &#39;datetime_fetched&#39;. </span>
+<span class="sd">                        The &#39;index&#39; column contains the company names, &#39;Followers&#39; column contains the fetched </span>
+<span class="sd">                        follower counts or &#39;Error&#39; if not found, and &#39;datetime_fetched&#39; column contains the time </span>
+<span class="sd">                        the data was fetched.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            If there&#39;s an error during the HTTP request or while extracting the follower count, the respective </span>
+<span class="sd">            company&#39;s follower count will be set to &#39;Error&#39; in the output DataFrame.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            input_dict = {</span>
+<span class="sd">                &#39;CompanyA&#39;: &#39;https://www.linkedin.com/company/companyA/&#39;,</span>
+<span class="sd">                &#39;CompanyB&#39;: &#39;https://www.linkedin.com/company/companyB/&#39;</span>
+<span class="sd">            }</span>
+<span class="sd">            output_df = obj.fetch_follower_count(input_dict)</span>
+<span class="sd">            print(output_df)</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">            - The function uses regular expressions to extract the follower count from the HTML content.</span>
+<span class="sd">            - The User-Agent header is hardcoded to mimic a browser request.&quot;&quot;&quot;</span>
 
         <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36&#39;</span><span class="p">}</span>
 
@@ -1918,8 +2005,7 @@ manipulations. Defaults to "Europe/London".</p></td>
 
       <details class="quote">
         <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">58</span>
-<span class="normal">59</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">59</span>
 <span class="normal">60</span>
 <span class="normal">61</span>
 <span class="normal">62</span>
@@ -1956,7 +2042,8 @@ manipulations. Defaults to "Europe/London".</p></td>
 <span class="normal">93</span>
 <span class="normal">94</span>
 <span class="normal">95</span>
-<span class="normal">96</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">time_zone</span><span class="o">=</span><span class="s2">&quot;Europe/London&quot;</span><span class="p">):</span>
+<span class="normal">96</span>
+<span class="normal">97</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">time_zone</span><span class="o">=</span><span class="s2">&quot;Europe/London&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize the LinkedIn API client with an API from the developer portal.</span>
 <span class="sd">        Developer portal: https://developer.linkedin.com/</span>
 
@@ -2059,8 +2146,7 @@ manipulations. Defaults to "Europe/London".</p></td>
 
       <details class="quote">
         <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">226</span>
-<span class="normal">227</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">227</span>
 <span class="normal">228</span>
 <span class="normal">229</span>
 <span class="normal">230</span>
@@ -2081,7 +2167,8 @@ manipulations. Defaults to "Europe/London".</p></td>
 <span class="normal">245</span>
 <span class="normal">246</span>
 <span class="normal">247</span>
-<span class="normal">248</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">convert_pd_datetime_to_unix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pd_datetime</span><span class="p">):</span>
+<span class="normal">248</span>
+<span class="normal">249</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">convert_pd_datetime_to_unix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pd_datetime</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a pandas Timestamp to a Unix timestamp in milliseconds.</span>
 
 <span class="sd">    The method first converts the Timestamp to a Unix timestamp in seconds, then multiplies it by 1000 to get the timestamp in milliseconds.</span>
@@ -2180,8 +2267,7 @@ manipulations. Defaults to "Europe/London".</p></td>
 </details>
       <details class="quote">
         <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">189</span>
-<span class="normal">190</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">190</span>
 <span class="normal">191</span>
 <span class="normal">192</span>
 <span class="normal">193</span>
@@ -2215,7 +2301,8 @@ manipulations. Defaults to "Europe/London".</p></td>
 <span class="normal">221</span>
 <span class="normal">222</span>
 <span class="normal">223</span>
-<span class="normal">224</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">convert_unix_datetime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unix_format</span><span class="p">):</span>
+<span class="normal">224</span>
+<span class="normal">225</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">convert_unix_datetime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unix_format</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a Unix timestamp to a pandas NaT (Not-a-Time) or datetime64 object.</span>
 
 <span class="sd">    Args:</span>
@@ -2307,8 +2394,7 @@ A jitter (random noise) is also added to the delay.</p>
 </details>
       <details class="quote">
         <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 98</span>
-<span class="normal"> 99</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 99</span>
 <span class="normal">100</span>
 <span class="normal">101</span>
 <span class="normal">102</span>
@@ -2324,7 +2410,8 @@ A jitter (random noise) is also added to the delay.</p>
 <span class="normal">112</span>
 <span class="normal">113</span>
 <span class="normal">114</span>
-<span class="normal">115</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">exponential_backoff_delay</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">retry_count</span><span class="p">):</span>
+<span class="normal">115</span>
+<span class="normal">116</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">exponential_backoff_delay</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">retry_count</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Implements an exponential backoff delay with jitter for server response problems.</span>
 
 <span class="sd">        Args:</span>
@@ -2342,6 +2429,193 @@ A jitter (random noise) is also added to the delay.</p>
     <span class="n">jitter</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">delay</span><span class="p">)</span>  <span class="c1"># Adding jitter</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting exponential delay of </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">delay</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">jitter</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2"> seconds to give server time to recover&quot;</span><span class="p">)</span>
     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">delay</span> <span class="o">+</span> <span class="n">jitter</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="veetility.linkedin_api.LinkedInAPI.fetch_follower_count" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">fetch_follower_count</span><span class="p">(</span><span class="n">dict_of_urls</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Fetches the follower count of companies from their LinkedIn URLs.</p>
+<p>This function sends a GET request to each URL present in the given dictionary, scrapes the page's HTML to find 
+the follower count, and then stores this information in a pandas DataFrame.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>dict_of_urls</code></td>
+          <td>
+                <code>dict</code>
+          </td>
+          <td><p>A dictionary where keys are company names and values are their respective LinkedIn URLs.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+          </td>
+          <td><p>pd.DataFrame: A DataFrame with columns: 'index', 'Followers', and 'datetime_fetched'. 
+        The 'index' column contains the company names, 'Followers' column contains the fetched 
+        follower counts or 'Error' if not found, and 'datetime_fetched' column contains the time 
+        the data was fetched.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+<details class="example">
+  <summary>Example</summary>
+  <p>input_dict = {
+    'CompanyA': 'https://www.linkedin.com/company/companyA/',
+    'CompanyB': 'https://www.linkedin.com/company/companyB/'
+}
+output_df = obj.fetch_follower_count(input_dict)
+print(output_df)</p>
+</details>
+<details class="notes">
+  <summary>Notes</summary>
+  <ul>
+<li>The function uses regular expressions to extract the follower count from the HTML content.</li>
+<li>The User-Agent header is hardcoded to mimic a browser request.</li>
+</ul>
+</details>
+      <details class="quote">
+        <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">585</span>
+<span class="normal">586</span>
+<span class="normal">587</span>
+<span class="normal">588</span>
+<span class="normal">589</span>
+<span class="normal">590</span>
+<span class="normal">591</span>
+<span class="normal">592</span>
+<span class="normal">593</span>
+<span class="normal">594</span>
+<span class="normal">595</span>
+<span class="normal">596</span>
+<span class="normal">597</span>
+<span class="normal">598</span>
+<span class="normal">599</span>
+<span class="normal">600</span>
+<span class="normal">601</span>
+<span class="normal">602</span>
+<span class="normal">603</span>
+<span class="normal">604</span>
+<span class="normal">605</span>
+<span class="normal">606</span>
+<span class="normal">607</span>
+<span class="normal">608</span>
+<span class="normal">609</span>
+<span class="normal">610</span>
+<span class="normal">611</span>
+<span class="normal">612</span>
+<span class="normal">613</span>
+<span class="normal">614</span>
+<span class="normal">615</span>
+<span class="normal">616</span>
+<span class="normal">617</span>
+<span class="normal">618</span>
+<span class="normal">619</span>
+<span class="normal">620</span>
+<span class="normal">621</span>
+<span class="normal">622</span>
+<span class="normal">623</span>
+<span class="normal">624</span>
+<span class="normal">625</span>
+<span class="normal">626</span>
+<span class="normal">627</span>
+<span class="normal">628</span>
+<span class="normal">629</span>
+<span class="normal">630</span>
+<span class="normal">631</span>
+<span class="normal">632</span>
+<span class="normal">633</span>
+<span class="normal">634</span>
+<span class="normal">635</span>
+<span class="normal">636</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_follower_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dict_of_urls</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetches the follower count of companies from their LinkedIn URLs.</span>
+
+<span class="sd">    This function sends a GET request to each URL present in the given dictionary, scrapes the page&#39;s HTML to find </span>
+<span class="sd">    the follower count, and then stores this information in a pandas DataFrame.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dict_of_urls (dict): A dictionary where keys are company names and values are their respective LinkedIn URLs.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: A DataFrame with columns: &#39;index&#39;, &#39;Followers&#39;, and &#39;datetime_fetched&#39;. </span>
+<span class="sd">                    The &#39;index&#39; column contains the company names, &#39;Followers&#39; column contains the fetched </span>
+<span class="sd">                    follower counts or &#39;Error&#39; if not found, and &#39;datetime_fetched&#39; column contains the time </span>
+<span class="sd">                    the data was fetched.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        If there&#39;s an error during the HTTP request or while extracting the follower count, the respective </span>
+<span class="sd">        company&#39;s follower count will be set to &#39;Error&#39; in the output DataFrame.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        input_dict = {</span>
+<span class="sd">            &#39;CompanyA&#39;: &#39;https://www.linkedin.com/company/companyA/&#39;,</span>
+<span class="sd">            &#39;CompanyB&#39;: &#39;https://www.linkedin.com/company/companyB/&#39;</span>
+<span class="sd">        }</span>
+<span class="sd">        output_df = obj.fetch_follower_count(input_dict)</span>
+<span class="sd">        print(output_df)</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">        - The function uses regular expressions to extract the follower count from the HTML content.</span>
+<span class="sd">        - The User-Agent header is hardcoded to mimic a browser request.&quot;&quot;&quot;</span>
+
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36&#39;</span><span class="p">}</span>
+
+    <span class="n">output_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">company</span><span class="p">,</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">dict_of_urls</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_request_with_error_handling</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">expected_json_response</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">html</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;([\d,]+) followers on LinkedIn&#39;</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">html</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Extract the follower count, remove commas, and convert to integer</span>
+            <span class="n">follower_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+            <span class="n">output_dict</span><span class="p">[</span><span class="n">company</span><span class="p">]</span> <span class="o">=</span> <span class="n">follower_count</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No follower count found&quot;</span><span class="p">)</span>
+            <span class="n">output_dict</span><span class="p">[</span><span class="n">company</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Error&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;output_dict= </span><span class="si">{</span><span class="n">output_dict</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">output_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">output_dict</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">index</span><span class="o">=</span><span class="n">output_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Followers&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+    <span class="n">output_df</span><span class="p">[</span><span class="s1">&#39;datetime_fetched&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()))</span>
+    <span class="k">return</span> <span class="n">output_df</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
@@ -2370,8 +2644,7 @@ Prints a message to the console if no data is found in the API response.</p>
 </details>
       <details class="quote">
         <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">250</span>
-<span class="normal">251</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">251</span>
 <span class="normal">252</span>
 <span class="normal">253</span>
 <span class="normal">254</span>
@@ -2386,7 +2659,8 @@ Prints a message to the console if no data is found in the API response.</p>
 <span class="normal">263</span>
 <span class="normal">264</span>
 <span class="normal">265</span>
-<span class="normal">266</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_org_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">266</span>
+<span class="normal">267</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_org_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetches the organization IDs associated with the authenticated LinkedIn user who has the role of ADMINISTRATOR.</span>
 <span class="sd">    This is useful if you want a list of organisation ids to iterate through to fetch information for each client.</span>
 
@@ -2454,8 +2728,7 @@ Prints a message to the console if no data is found in the API response.</p>
 </details>
       <details class="quote">
         <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">269</span>
-<span class="normal">270</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">270</span>
 <span class="normal">271</span>
 <span class="normal">272</span>
 <span class="normal">273</span>
@@ -2481,7 +2754,8 @@ Prints a message to the console if no data is found in the API response.</p>
 <span class="normal">293</span>
 <span class="normal">294</span>
 <span class="normal">295</span>
-<span class="normal">296</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_organization_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">296</span>
+<span class="normal">297</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_organization_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetches the organization information for the authenticated LinkedIn user based on organization IDs.</span>
 
 <span class="sd">    Returns:</span>
@@ -2575,8 +2849,7 @@ Prints a message to the console if no data is found in the API response.</p>
 
       <details class="quote">
         <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">298</span>
-<span class="normal">299</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">299</span>
 <span class="normal">300</span>
 <span class="normal">301</span>
 <span class="normal">302</span>
@@ -2634,7 +2907,8 @@ Prints a message to the console if no data is found in the API response.</p>
 <span class="normal">354</span>
 <span class="normal">355</span>
 <span class="normal">356</span>
-<span class="normal">357</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_posts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">org_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="normal">357</span>
+<span class="normal">358</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_posts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">org_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetches LinkedIn posts associated with the specified organization IDs or those found by the fetch_org_ids method.</span>
 <span class="sd">        The method utilizes `convert_unix_datetime` to convert Unix timestamps in the columns &#39;createdAt&#39;, &#39;lastModifiedAt&#39; and</span>
 <span class="sd">        &#39;publishedAt&#39;] to datetime objects.</span>
@@ -2775,8 +3049,7 @@ Prints a message to the console if no data is found in the API response.</p>
 </details>
       <details class="quote">
         <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">501</span>
-<span class="normal">502</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">502</span>
 <span class="normal">503</span>
 <span class="normal">504</span>
 <span class="normal">505</span>
@@ -2830,7 +3103,8 @@ Prints a message to the console if no data is found in the API response.</p>
 <span class="normal">553</span>
 <span class="normal">554</span>
 <span class="normal">555</span>
-<span class="normal">556</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_reactions_for_a_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">urn_id</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<span class="normal">556</span>
+<span class="normal">557</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_reactions_for_a_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">urn_id</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetches the count of different types of reactions for a LinkedIn post specified by its URN (Uniform Resource Name) ID.</span>
 
 <span class="sd">    Args:</span>
@@ -2967,8 +3241,7 @@ Prints a message to the console if no data is found in the API response.</p>
 </details>
       <details class="quote">
         <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">558</span>
-<span class="normal">559</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">559</span>
 <span class="normal">560</span>
 <span class="normal">561</span>
 <span class="normal">562</span>
@@ -2991,7 +3264,8 @@ Prints a message to the console if no data is found in the API response.</p>
 <span class="normal">579</span>
 <span class="normal">580</span>
 <span class="normal">581</span>
-<span class="normal">582</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_reactions_for_multiple_posts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">list_of_posts</span><span class="p">,</span> <span class="n">id_col_name</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">):</span>
+<span class="normal">582</span>
+<span class="normal">583</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_reactions_for_multiple_posts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">list_of_posts</span><span class="p">,</span> <span class="n">id_col_name</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetches the count of different types of reactions for a list of LinkedIn posts and aggregates them into a DataFrame.</span>
 
 <span class="sd">    Args:</span>
@@ -3097,8 +3371,7 @@ The org_id is requried for this endpoint.</p>
 </details>
       <details class="quote">
         <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">359</span>
-<span class="normal">360</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">360</span>
 <span class="normal">361</span>
 <span class="normal">362</span>
 <span class="normal">363</span>
@@ -3125,7 +3398,8 @@ The org_id is requried for this endpoint.</p>
 <span class="normal">384</span>
 <span class="normal">385</span>
 <span class="normal">386</span>
-<span class="normal">387</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_stats_for_a_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">post_id</span><span class="p">,</span> <span class="n">org_id</span><span class="p">):</span>
+<span class="normal">387</span>
+<span class="normal">388</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_stats_for_a_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">post_id</span><span class="p">,</span> <span class="n">org_id</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetches impressions, cicks, reach, likes, shares and comments for a specific LinkedIn post associated with a given organization.</span>
 <span class="sd">    The org_id is requried for this endpoint.</span>
 
@@ -3253,8 +3527,7 @@ If None, the method will use self.posts_df that would be created by previously r
 </details>
       <details class="quote">
         <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">389</span>
-<span class="normal">390</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">390</span>
 <span class="normal">391</span>
 <span class="normal">392</span>
 <span class="normal">393</span>
@@ -3301,7 +3574,8 @@ If None, the method will use self.posts_df that would be created by previously r
 <span class="normal">434</span>
 <span class="normal">435</span>
 <span class="normal">436</span>
-<span class="normal">437</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_stats_for_posts</span><span class="p">(</span>
+<span class="normal">437</span>
+<span class="normal">438</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_stats_for_posts</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">posts_df</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
         <span class="n">post_id_col</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="n">org_id_col</span><span class="o">=</span><span class="s1">&#39;author&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetches statistics for a list of LinkedIn posts based on their IDs and associated organization IDs.</span>
@@ -3420,8 +3694,7 @@ If None, the method will use self.posts_df that would be created by previously r
 </details>
       <details class="quote">
         <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">439</span>
-<span class="normal">440</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">440</span>
 <span class="normal">441</span>
 <span class="normal">442</span>
 <span class="normal">443</span>
@@ -3443,7 +3716,8 @@ If None, the method will use self.posts_df that would be created by previously r
 <span class="normal">459</span>
 <span class="normal">460</span>
 <span class="normal">461</span>
-<span class="normal">462</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_video_views_for_a_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">post_id</span><span class="p">):</span>
+<span class="normal">462</span>
+<span class="normal">463</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_video_views_for_a_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">post_id</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetches video view statistics for a specific LinkedIn post based on its ID.</span>
 
 <span class="sd">    Args:</span>
@@ -3567,8 +3841,7 @@ If None, the method will use self.posts_df that would be created by previously r
 </details>
       <details class="quote">
         <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">464</span>
-<span class="normal">465</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">465</span>
 <span class="normal">466</span>
 <span class="normal">467</span>
 <span class="normal">468</span>
@@ -3601,7 +3874,8 @@ If None, the method will use self.posts_df that would be created by previously r
 <span class="normal">495</span>
 <span class="normal">496</span>
 <span class="normal">497</span>
-<span class="normal">498</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_video_views_for_multiple_posts</span><span class="p">(</span>
+<span class="normal">498</span>
+<span class="normal">499</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_video_views_for_multiple_posts</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">posts_df</span><span class="p">,</span> 
         <span class="n">media_type_col</span><span class="p">,</span> <span class="n">post_id_col</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">,</span>
         <span class="n">output_col</span><span class="o">=</span><span class="s1">&#39;videoViews&#39;</span><span class="p">):</span>
@@ -3753,8 +4027,7 @@ If None, the method will use self.posts_df that would be created by previously r
 
       <details class="quote">
         <summary>Source code in <code>veetility/linkedin_api.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">117</span>
-<span class="normal">118</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">118</span>
 <span class="normal">119</span>
 <span class="normal">120</span>
 <span class="normal">121</span>
@@ -3822,7 +4095,8 @@ If None, the method will use self.posts_df that would be created by previously r
 <span class="normal">183</span>
 <span class="normal">184</span>
 <span class="normal">185</span>
-<span class="normal">186</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">run_request_with_error_handling</span><span class="p">(</span>
+<span class="normal">186</span>
+<span class="normal">187</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">run_request_with_error_handling</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> 
         <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_retries</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
         <span class="n">expected_json_response</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>

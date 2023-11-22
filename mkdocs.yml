@@ -14,4 +14,5 @@ nav:
   - View Through Rate: ViewThroughRate.md
   - Slack Notifier: SlackNotifier.md
   - Snowflake : snowflake.md
+  - S3Bucket : S3Bucket.md
   - LinkedIn API : LinkedIn_API.md

@@ -204,4 +204,33 @@ class Snowflake():
                     conn.commit()
                     
             return f"Table {table_name} has been dropped."
+    
+    def send_sql_query(self, sql_query, database=None, schema=None):
+            ''''''
+            
+            # Set default values for database and schema if not provided
+            if schema == None:
+                schema = self.schema
+            if database == None:
+                database = self.database
+            
+            # Create connection to Snowflake
+            with snowflake.connector.connect(
+                user=self.user,
+                password=self.password,
+                account=self.account,
+                warehouse=self.warehouse,
+                database=self.database,
+                schema=schema,
+            ) as conn:
+            
+                # Create cursor
+                with conn.cursor() as cur:
+                    
+                    # Drop table
+                    cur.execute(sql_query)
+                    
+                    # Commit changes
+                    conn.commit()
+
 

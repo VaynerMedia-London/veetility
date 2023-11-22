@@ -319,7 +319,7 @@ class QualityAssessments:
         # If cols_to_group is specified, then group by those columns and store the info in the dict
         if cols_to_group != None:
             new_dict['info'] = df.groupby(cols_to_group)[cols_to_check].sum().reset_index().to_json(orient='records')
-            print(f"Groupby of latest {name_of_df} = {new_dict['info']}")
+            
         
         #The "Columns" and the "info" columns take up a low of space, so we only keep the last 5 entries in the db
         if check_cols_set == True: 
@@ -331,6 +331,8 @@ class QualityAssessments:
         if not manual_override:
             if error_occured:
                 error_message = f'Comparison with historic df {name_of_df}: ' + error_message + '\n'
+                if cols_to_group != None:
+                    error_message = error_message + f"Groupby of latest {name_of_df} = {new_dict['info']}" + '\n'
                 logger.info('ERROR' + error_message) # If error messages has been added to then log it
             if raise_exceptions and error_occured:
                 if 'num_unique_ids' in old_dict:
