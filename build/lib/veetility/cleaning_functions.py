@@ -8,7 +8,7 @@ from unidecode import unidecode
 from collections import Counter
 from . import utility_functions
 pickle_path = "Pickled Files/"
-cleaning_logger = utility_functions.Logger('Indeed','CleaningFunctions')
+# cleaning_logger = utility_functions.Logger('Indeed','CleaningFunctions')
 DEFAULT_COLS_NO_CHANGE = [
     'spend', 'date', 'currency', 'cohort', 'creative_name', 'group_id',
     'engagements', 'created', 'ad_id', 'plays', 'saved', 'post_hastags',
@@ -27,11 +27,13 @@ emoji_pattern = re.compile("["
                            u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
                            "]+", flags=re.UNICODE)
 
-def clean_column_names(df, 
-                       name_of_df,
-                       hardcode_col_dict = None,
-                       errors = 'ignore',
-                       cols_no_change = DEFAULT_COLS_NO_CHANGE):
+def clean_column_names(
+        df, 
+        name_of_df,
+        hardcode_col_dict=None,
+        errors='ignore',
+        cols_no_change=DEFAULT_COLS_NO_CHANGE
+):
 
     """Cleans the column names of an advertisement performance (organic or paid) dataset, commonly from
     Tracer but could also be from Sprout social. The column names will be standardized so
@@ -142,14 +144,15 @@ def clean_column_names(df,
             new_columns[column] = column
             if errors == 'raise':
                 raise Exception(message)
-            cleaning_logger.logger.info(message)
+            print(message)
+            # cleaning_logger.logger.info(message)
 
     duplicated_cols = [item for item,count in Counter(list(new_columns.values())).items() if count > 1]
-    cleaning_logger.logger.info(f"{name_of_df} : {new_columns}")
+    # cleaning_logger.logger.info(f"{name_of_df} : {new_columns}")
     if len(duplicated_cols) > 0:
         error = f'Duplicate column names in {name_of_df} : {[f"{key} -> {value}" for key, value in new_columns.items() if value in duplicated_cols]}'
         # error = f'Duplicate column names in {name_of_df} : {[item for item, count in Counter(new_columns).items() if count > 1]}'
-        cleaning_logger.logger.exception(error)
+        # cleaning_logger.logger.exception(error)
         raise ValueError(error)
     df.columns = list(new_columns.values())
 
@@ -232,10 +235,12 @@ def extract_region_from_country(country):
 
 
 def clean_platform_name(platform):
-    """Cleans platform name, deals with the fact that most platforms 
-    are in the 'title' case, i.e. First letter of each word is capitalised
+    """Cleans the platform name into a the standard used company wide.
+
+    Most platforms are in the 'title' case, i.e. First letter of each word is capitalised
     However there are some platforms that have are one word but are usually 
-    presented as having a capital letter midway through the word."""
+    presented as having a capital letter midway through the word. E.g. TikTok and LinkedIn"""
+    
     platform = str(platform).lower()
     if 'tiktok' in platform:
         return 'TikTok'
@@ -245,10 +250,9 @@ def clean_platform_name(platform):
         return platform.title()
 
 def clean_url(url):
-    """Clean the url of the post to produce a string with just
-        the important information for matching
-        In he case of Tiktok remove everything after and including the ?
-        This removes the utm parameters"""
+    """Clean the url of the post to produce a string with just the important information for matching.
+
+        In the case of Tiktok remove everything after and including the ?, This removes the utm parameters"""
     url = str(url).lower().strip()
     url = url.replace('https://', '')
     url = url.replace('http://', '')
@@ -360,9 +364,16 @@ def extract_value(string, identifier):
 
 
 def two_urls_per_post_to_1(x, target_cols=None):
-    """Sometimes there are identical posts posted on the same day. 
-    This can be used to return just the url of the post with
-    the highest amount of 'impressions' or 'video views'"""
+    """This function deals with posts that have two urls even though they are effectively the same post.
+
+    Sometimes social media posts are posted but then deleted, only to be reposted later. 
+
+    This function returns just the url of the post with the highest amount of 'impressions' or 'video views'
+
+    You can take a dataframe of social media posts, groupby the unique identifier and this will return only 
+    the row item with the highest number of impressions or video_views. 
+    
+    """
     if target_cols is None:
         target_cols =   ['url', 'influencer?']
 
@@ -372,8 +383,12 @@ def two_urls_per_post_to_1(x, target_cols=None):
     else:
         target_col = 'video_views'
         max_score = x['video_views'].max()
+        
+    # Check if max_score is zero
+    if max_score == 0:
+        return pd.DataFrame(columns=target_cols)  # Return empty DataFrame
 
-    # Return pd.Series(d,index=list(d.keys()))
+
     return x[x[target_col] == max_score][target_cols]
 
 

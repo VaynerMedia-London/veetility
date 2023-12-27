@@ -8,7 +8,7 @@ from unidecode import unidecode
 from collections import Counter
 from . import utility_functions
 pickle_path = "Pickled Files/"
-cleaning_logger = utility_functions.Logger('Indeed','CleaningFunctions')
+# cleaning_logger = utility_functions.Logger('Indeed','CleaningFunctions')
 DEFAULT_COLS_NO_CHANGE = [
     'spend', 'date', 'currency', 'cohort', 'creative_name', 'group_id',
     'engagements', 'created', 'ad_id', 'plays', 'saved', 'post_hastags',
@@ -144,14 +144,15 @@ def clean_column_names(
             new_columns[column] = column
             if errors == 'raise':
                 raise Exception(message)
-            cleaning_logger.logger.info(message)
+            print(message)
+            # cleaning_logger.logger.info(message)
 
     duplicated_cols = [item for item,count in Counter(list(new_columns.values())).items() if count > 1]
-    cleaning_logger.logger.info(f"{name_of_df} : {new_columns}")
+    # cleaning_logger.logger.info(f"{name_of_df} : {new_columns}")
     if len(duplicated_cols) > 0:
         error = f'Duplicate column names in {name_of_df} : {[f"{key} -> {value}" for key, value in new_columns.items() if value in duplicated_cols]}'
         # error = f'Duplicate column names in {name_of_df} : {[item for item, count in Counter(new_columns).items() if count > 1]}'
-        cleaning_logger.logger.exception(error)
+        # cleaning_logger.logger.exception(error)
         raise ValueError(error)
     df.columns = list(new_columns.values())
 
@@ -382,6 +383,11 @@ def two_urls_per_post_to_1(x, target_cols=None):
     else:
         target_col = 'video_views'
         max_score = x['video_views'].max()
+        
+    # Check if max_score is zero
+    if max_score == 0:
+        return pd.DataFrame(columns=target_cols)  # Return empty DataFrame
+
 
     return x[x[target_col] == max_score][target_cols]
 

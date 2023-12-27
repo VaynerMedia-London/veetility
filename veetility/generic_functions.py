@@ -1,3 +1,4 @@
+#%%
 import pygsheets
 import requests
 import json
@@ -10,15 +11,48 @@ import pandas as pd
 from airflow.models import Variable
 from airflow.hooks.base_hook import BaseHook
 from airflow.providers.slack.operators.slack_webhook import SlackWebhookOperator
+#%%
 
+#%%
 SLACK_CONN_ID = 'slack'
 
 
-def task_fail_slack_alert(context):
-    '''This function is used to send a slack alert in Airflow when a task fails
-    '''
-    channel_id = Variable.get("slack_channel_id")
-    ec2_url = Variable.get("ec2_url")
+def task_fail_slack_alert(context, channel_id=None, ec2_url=None):
+    """Send a Slack alert for a failed task in an Airflow DAG.
+
+    This function constructs and sends a Slack message when a task in an Airflow DAG fails. 
+    It includes details like the task ID, DAG ID, execution time, and a URL to the task's logs.
+    The Slack channel ID and EC2 URL can be optionally specified; otherwise, they are retrieved 
+    from Airflow Variables. The Slack webhook token is fetched from Airflow Connections.
+
+    Args:
+        context (dict): The context passed from the Airflow task, containing information like 
+                        the task instance and execution date.
+        channel_id (str, optional): Slack channel ID where the alert should be sent. If not 
+                                    provided, it's fetched from Airflow Variables.
+        ec2_url (str, optional): The base URL for the EC2 instance where logs are stored. If not 
+                                 provided, it's fetched from Airflow Variables.
+
+    Returns:
+        None: The function sends a message to Slack and does not return anything.
+
+    Raises:
+        AirflowException: If the Slack alert fails to send for any reason.
+
+    Examples:
+        # Typical usage within an Airflow DAG
+        fail_alert = task_fail_slack_alert(
+            context=context,
+            channel_id='your_slack_channel_id',
+            ec2_url='http://your.ec2.url'
+        )"""
+    
+    
+    if channel_id == None:
+        channel_id = Variable.get("slack_channel_id")
+    if ec2_url == None:
+        ec2_url = Variable.get("ec2_url")
+
     slack_webhook_token = BaseHook.get_connection(SLACK_CONN_ID).password
     ti = context.get('task_instance')
     execution_date = context.get(
