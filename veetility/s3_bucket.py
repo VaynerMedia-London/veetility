@@ -126,43 +126,37 @@ class S3Bucket:
         
         return [item['Key'] for item in contents.get('Contents', [])]
 
-    def write_df_to_csv(self, bucket_name, df, filename):
-        """Writes a pandas DataFrame to a CSV file and uploads it to an AWS S3 bucket.
-
-        This function converts a given pandas DataFrame to a CSV format and uploads 
-        it directly to the specified S3 bucket without saving it locally. The CSV 
-        file will be stored in the S3 bucket with the provided filename.
+    def write_df_to_file(self, bucket_name, df, filename, filetype='csv'):
+        """Write a DataFrame to a file and upload it to an S3 bucket.
 
         Args:
-            bucket_name (str): The name of the S3 bucket where the CSV file will be stored.
-            df (pandas.DataFrame): The DataFrame to be written to CSV and uploaded.
-            filename (str): The filename under which the CSV file will be stored in the S3 bucket.
-
-        Returns:
-            None
+            bucket_name (str): Name of the S3 bucket.
+            df (pandas.DataFrame): DataFrame to be written to file.
+            filename (str): The name of the file to be created.
+            filetype (str, optional): Type of file to create ('csv' or 'json'). Defaults to 'csv'.
 
         Raises:
-            boto3.exceptions.S3UploadFailedError: If the upload to the S3 bucket fails.
-            AttributeError: If the provided `df` is not a pandas DataFrame.
-            ValueError: If the `bucket_name` or `filename` is an empty string or None.
-
-        Example:
-            >>> import pandas as pd
-            >>> df = pd.DataFrame({'col1': [1, 2], 'col2': [3, 4]})
-            >>> s3 = S3Bucket()
-            >>> s3.write_df_to_csv('my_bucket', df, 'my_data.csv')
-
-        Note:
-            Ensure that AWS credentials are properly configured and the `boto3` client is 
-            initialized before calling this function."""
+            ValueError: If the specified filetype is not supported.
+        """
     
-        csv_buffer = StringIO()
+        if filetype == 'csv':
+            csv_buffer = StringIO()
+            df.to_csv(csv_buffer, index=False)
+            file_buffer = csv_buffer.getvalue()
+            
 
-        df.to_csv(csv_buffer, index=False)
+        elif filetype == 'json':
+            json_buffer = StringIO()
+            df.to_json(json_buffer, orient='records', lines=True)
+            file_buffer = json_buffer.getvalue()
+            filename += ".json"
 
-        self.s3_client.put_object(Bucket=bucket_name, Key=filename, Body=csv_buffer.getvalue())
+        else:
+            raise ValueError("Unsupported filetype. Choose 'csv' or 'json'.")
+
+        self.s3_client.put_object(Bucket=bucket_name, Key=filename, Body=file_buffer)
     
-    def save_df_to_s3_if_not_exists(self, bucket_name, df, df_name):
+    def save_df_to_s3_if_not_exists(self, bucket_name, df, df_name, filetype, override=False):
         """Saves a pandas DataFrame to an S3 bucket as a CSV file if a file with the same name does not already exist.
 
         This method checks the specified S3 bucket for an existing file that matches the naming convention 
@@ -191,17 +185,35 @@ class S3Bucket:
         today_str = datetime.now().strftime("%Y_%m_%d")
 
         # Construct the filename with date
-        filename = f"{df_name}_{today_str}.csv"
+        filename = f"{df_name}_{today_str}"
 
         # Check if the file already exists in the S3 bucket
         existing_files = self.list_s3_bucket_contents(bucket_name)
-        if filename in existing_files:
-            print(f"File '{filename}' already exists in the bucket '{bucket_name}'.")
-            return
+        if override == False:
+            if filename in existing_files:
+                print(f"File '{filename}' already exists in the bucket '{bucket_name}'.")
+                return
 
         # Convert DataFrame to CSV and upload to S3
-        self.write_df_to_csv(bucket_name, df, filename)
+        self.write_df_to_file(bucket_name, df, filename, filetype)
         print(f"File '{filename}' successfully uploaded to bucket '{bucket_name}'.")
+    
+    def download_s3_file(self, url, aws_access_key_id, aws_secret_access_key):
+        ''' Download a file from an S3 Bucket given a url.
+        Args:
+            url: S3 URL
+        Returns:
+            File content as string
+        '''
+
+        # Extracting bucket and key from the provided URL
+        parsed_url = url.split('/')
+        bucket = parsed_url[3]
+        key = "/".join(parsed_url[4:])
+
+        s3_client = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
+        obj = s3_client.get_object(Bucket=bucket, Key=key)
+        return obj['Body'].read().decode('utf-8')
 
     def upload_binary_file(self, bucket_name, local_file_path, s3_key):
         """Upload a binary file to an S3 bucket.

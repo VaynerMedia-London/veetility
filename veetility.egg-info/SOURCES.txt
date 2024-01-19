@@ -15,6 +15,7 @@ veetility/s3_bucket.py
 veetility/snowflake.py
 veetility/utility_functions.py
 veetility/v_lift.py
+veetility/vee_mails.py
 veetility/view_through_rate.py
 veetility.egg-info/PKG-INFO
 veetility.egg-info/SOURCES.txt

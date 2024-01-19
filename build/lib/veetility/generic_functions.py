@@ -1,3 +1,4 @@
+#%%
 import pygsheets
 import requests
 import json
@@ -10,7 +11,9 @@ import pandas as pd
 from airflow.models import Variable
 from airflow.hooks.base_hook import BaseHook
 from airflow.providers.slack.operators.slack_webhook import SlackWebhookOperator
+#%%
 
+#%%
 SLACK_CONN_ID = 'slack'
 
 

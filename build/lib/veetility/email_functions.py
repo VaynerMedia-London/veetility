@@ -4,6 +4,8 @@ import imaplib
 import boto3
 import io
 
+#We have a google automations macro that deletes all emails after 30 days
+
 def auth(user,password,imap_url):
     '''
     Sets up the auth
