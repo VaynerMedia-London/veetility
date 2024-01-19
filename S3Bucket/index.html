@@ -900,7 +900,7 @@ The class requires an AWS profile name to be passed during initialization for se
 <span class="sd">                                            or the request to S3 fails.</span>
 <span class="sd">            ValueError: If the `bucket_name` or `file_name` is an empty string or None.</span>
 
-<span class="sd">        Example:</span>
+<span class="sd">        Examples:</span>
 <span class="sd">            &gt;&gt;&gt; s3 = S3Bucket()</span>
 <span class="sd">            &gt;&gt;&gt; df = s3.read_csv_to_df(&#39;my_bucket&#39;, &#39;my_data.csv&#39;)</span>
 <span class="sd">            &gt;&gt;&gt; print(df)</span>
@@ -932,7 +932,7 @@ The class requires an AWS profile name to be passed during initialization for se
 <span class="sd">        Raises:</span>
 <span class="sd">            boto3.exceptions.S3Error: If an error occurs while accessing the S3 bucket.</span>
 
-<span class="sd">        Example:</span>
+<span class="sd">        Examples:</span>
 <span class="sd">            &gt;&gt;&gt; s3 = S3Bucket()</span>
 <span class="sd">            &gt;&gt;&gt; s3.list_s3_bucket_contents(&#39;my_bucket&#39;)</span>
 <span class="sd">            [&#39;file1.csv&#39;, &#39;file2.csv&#39;, &#39;image1.png&#39;]</span>
@@ -995,7 +995,7 @@ The class requires an AWS profile name to be passed during initialization for se
 <span class="sd">            boto3.exceptions.S3UploadFailedError: If the upload to the S3 bucket fails.</span>
 <span class="sd">            Exception: If any other error occurs during the process.</span>
 
-<span class="sd">        Example:</span>
+<span class="sd">        Examples:</span>
 <span class="sd">            &gt;&gt;&gt; s3 = S3Bucket()</span>
 <span class="sd">            &gt;&gt;&gt; s3.save_df_to_s3_if_not_exists(&#39;my_bucket&#39;, my_dataframe, &#39;sales_data&#39;)</span>
 <span class="sd">            File &#39;sales_data_2023_11_22.csv&#39; successfully uploaded to bucket &#39;my_bucket&#39;.&quot;&quot;&quot;</span>
@@ -1503,18 +1503,12 @@ profile and that the profile has the necessary permissions to access AWS S3 serv
     </tbody>
   </table>
 
-<details class="example">
-  <summary>Example</summary>
-  <blockquote>
-<blockquote>
-<blockquote>
-<p>s3 = S3Bucket()
-s3.list_s3_bucket_contents('my_bucket')
-['file1.csv', 'file2.csv', 'image1.png']</p>
-</blockquote>
-</blockquote>
-</blockquote>
-</details>
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">s3</span> <span class="o">=</span> <span class="n">S3Bucket</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s3</span><span class="o">.</span><span class="n">list_s3_bucket_contents</span><span class="p">(</span><span class="s1">&#39;my_bucket&#39;</span><span class="p">)</span>
+<span class="go">[&#39;file1.csv&#39;, &#39;file2.csv&#39;, &#39;image1.png&#39;]</span>
+</code></pre></div>
+
 <details class="note">
   <summary>Note</summary>
   <p>This method assumes that the AWS credentials and permissions are correctly set up to access the specified S3 bucket.</p>
@@ -1563,7 +1557,7 @@ s3.list_s3_bucket_contents('my_bucket')
 <span class="sd">    Raises:</span>
 <span class="sd">        boto3.exceptions.S3Error: If an error occurs while accessing the S3 bucket.</span>
 
-<span class="sd">    Example:</span>
+<span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; s3 = S3Bucket()</span>
 <span class="sd">        &gt;&gt;&gt; s3.list_s3_bucket_contents(&#39;my_bucket&#39;)</span>
 <span class="sd">        [&#39;file1.csv&#39;, &#39;file2.csv&#39;, &#39;image1.png&#39;]</span>
@@ -1673,18 +1667,12 @@ using BytesIO, and then pandas is used to parse the CSV data from this buffer.</
     </tbody>
   </table>
 
-<details class="example">
-  <summary>Example</summary>
-  <blockquote>
-<blockquote>
-<blockquote>
-<p>s3 = S3Bucket()
-df = s3.read_csv_to_df('my_bucket', 'my_data.csv')
-print(df)</p>
-</blockquote>
-</blockquote>
-</blockquote>
-</details>
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">s3</span> <span class="o">=</span> <span class="n">S3Bucket</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">read_csv_to_df</span><span class="p">(</span><span class="s1">&#39;my_bucket&#39;</span><span class="p">,</span> <span class="s1">&#39;my_data.csv&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</code></pre></div>
+
 <details class="note">
   <summary>Note</summary>
   <p>Ensure that AWS credentials are properly configured and the <code>boto3</code> client 
@@ -1745,7 +1733,7 @@ CSV file is properly formatted for use with pandas' <code>read_csv</code> functi
 <span class="sd">                                        or the request to S3 fails.</span>
 <span class="sd">        ValueError: If the `bucket_name` or `file_name` is an empty string or None.</span>
 
-<span class="sd">    Example:</span>
+<span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; s3 = S3Bucket()</span>
 <span class="sd">        &gt;&gt;&gt; df = s3.read_csv_to_df(&#39;my_bucket&#39;, &#39;my_data.csv&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; print(df)</span>
@@ -1870,18 +1858,12 @@ that the file already exists.</p></td>
     </tbody>
   </table>
 
-<details class="example">
-  <summary>Example</summary>
-  <blockquote>
-<blockquote>
-<blockquote>
-<p>s3 = S3Bucket()
-s3.save_df_to_s3_if_not_exists('my_bucket', my_dataframe, 'sales_data')
-File 'sales_data_2023_11_22.csv' successfully uploaded to bucket 'my_bucket'.</p>
-</blockquote>
-</blockquote>
-</blockquote>
-</details>
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">s3</span> <span class="o">=</span> <span class="n">S3Bucket</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s3</span><span class="o">.</span><span class="n">save_df_to_s3_if_not_exists</span><span class="p">(</span><span class="s1">&#39;my_bucket&#39;</span><span class="p">,</span> <span class="n">my_dataframe</span><span class="p">,</span> <span class="s1">&#39;sales_data&#39;</span><span class="p">)</span>
+<span class="go">File &#39;sales_data_2023_11_22.csv&#39; successfully uploaded to bucket &#39;my_bucket&#39;.</span>
+</code></pre></div>
+
       <details class="quote">
         <summary>Source code in <code>veetility/s3_bucket.py</code></summary>
         <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">159</span>
@@ -1945,7 +1927,7 @@ File 'sales_data_2023_11_22.csv' successfully uploaded to bucket 'my_bucket'.</p
 <span class="sd">        boto3.exceptions.S3UploadFailedError: If the upload to the S3 bucket fails.</span>
 <span class="sd">        Exception: If any other error occurs during the process.</span>
 
-<span class="sd">    Example:</span>
+<span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; s3 = S3Bucket()</span>
 <span class="sd">        &gt;&gt;&gt; s3.save_df_to_s3_if_not_exists(&#39;my_bucket&#39;, my_dataframe, &#39;sales_data&#39;)</span>
 <span class="sd">        File &#39;sales_data_2023_11_22.csv&#39; successfully uploaded to bucket &#39;my_bucket&#39;.&quot;&quot;&quot;</span>
