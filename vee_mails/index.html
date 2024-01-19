@@ -1115,12 +1115,7 @@
 <span class="normal">407</span>
 <span class="normal">408</span>
 <span class="normal">409</span>
-<span class="normal">410</span>
-<span class="normal">411</span>
-<span class="normal">412</span>
-<span class="normal">413</span>
-<span class="normal">414</span>
-<span class="normal">415</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">VEEmail</span><span class="p">:</span>
+<span class="normal">410</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">VEEmail</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A class for handling email operations for receiving and sending data using the imaplib library</span>
 
 <span class="sd">    The class provides a set of methods to interact with an google email server</span>
@@ -1480,11 +1475,6 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If the header row with the specified key columns is not found (if the corresponding code block is uncommented).</span>
-
-<span class="sd">        Examples:</span>
-<span class="sd">            &gt;&gt;&gt; csv_data = &quot;Day,Media Owner,Venue Type,Advertiser\n1,XYZ,Outdoor,ABC Corp\n2,ABC,Online,XYZ Inc&quot;</span>
-<span class="sd">            &gt;&gt;&gt; parse_csv(csv_data, [&#39;Day&#39;, &#39;Media Owner&#39;, &#39;Venue Type&#39;, &#39;Advertiser&#39;])</span>
-<span class="sd">            &gt;&gt;&gt; [DataFrame with the parsed CSV content]</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            The function currently does not raise an error if the header row is not found. To enable this functionality, uncomment the relevant code block.&quot;&quot;&quot;</span>
@@ -2567,29 +2557,81 @@ otherwise False.</p></td>
   <div class="doc doc-contents ">
   
       <p>Parses the provided CSV content into a pandas DataFrame, identifying the header row based on key columns.</p>
-<pre><code>    This function processes a string representation of CSV data. It identifies the header row by searching for specified key columns. If the key columns are not provided, it defaults to a predefined set of columns.
+<p>This function processes a string representation of CSV data. It identifies the header row by searching for specified key columns. If the key columns are not provided, it defaults to a predefined set of columns.</p>
 
-    Args:
-        csv_content (str): The CSV data as a string.
-        key_columns (list of str, optional): A list of column names to identify the header row. Defaults to ['Day', 'Media Owner', 'Venue Type', 'Advertiser'].
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>csv_content</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>The CSV data as a string.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>key_columns</code></td>
+          <td>
+                <code>list of str</code>
+          </td>
+          <td><p>A list of column names to identify the header row. Defaults to ['Day', 'Media Owner', 'Venue Type', 'Advertiser'].</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
 
-    Returns:
-        DataFrame: A pandas DataFrame containing the parsed CSV data starting from the identified header row.
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+<td><code>DataFrame</code></td>          <td>
+          </td>
+          <td><p>A pandas DataFrame containing the parsed CSV data starting from the identified header row.</p></td>
+        </tr>
+    </tbody>
+  </table>
 
-    Raises:
-        ValueError: If the header row with the specified key columns is not found (if the corresponding code block is uncommented).
+  <p><strong>Raises:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>ValueError</code>
+          </td>
+          <td><p>If the header row with the specified key columns is not found (if the corresponding code block is uncommented).</p></td>
+        </tr>
+    </tbody>
+  </table>
 
-    Examples:
-        &gt;&gt;&gt; csv_data = "Day,Media Owner,Venue Type,Advertiser
-</code></pre>
-<p>1,XYZ,Outdoor,ABC Corp
-2,ABC,Online,XYZ Inc"
-            &gt;&gt;&gt; parse_csv(csv_data, ['Day', 'Media Owner', 'Venue Type', 'Advertiser'])
-            &gt;&gt;&gt; [DataFrame with the parsed CSV content]</p>
-<pre><code>    Note:
-        The function currently does not raise an error if the header row is not found. To enable this functionality, uncomment the relevant code block.
-</code></pre>
-
+<details class="note">
+  <summary>Note</summary>
+  <p>The function currently does not raise an error if the header row is not found. To enable this functionality, uncomment the relevant code block.</p>
+</details>
       <details class="quote">
         <summary>Source code in <code>veetility/vee_mails.py</code></summary>
         <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">361</span>
@@ -2641,12 +2683,7 @@ otherwise False.</p></td>
 <span class="normal">407</span>
 <span class="normal">408</span>
 <span class="normal">409</span>
-<span class="normal">410</span>
-<span class="normal">411</span>
-<span class="normal">412</span>
-<span class="normal">413</span>
-<span class="normal">414</span>
-<span class="normal">415</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">parse_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">csv_content</span><span class="p">,</span> <span class="n">key_columns</span><span class="p">):</span>
+<span class="normal">410</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">parse_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">csv_content</span><span class="p">,</span> <span class="n">key_columns</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parses the provided CSV content into a pandas DataFrame, identifying the header row based on key columns.</span>
 
 <span class="sd">    This function processes a string representation of CSV data. It identifies the header row by searching for specified key columns. If the key columns are not provided, it defaults to a predefined set of columns.</span>
@@ -2660,11 +2697,6 @@ otherwise False.</p></td>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: If the header row with the specified key columns is not found (if the corresponding code block is uncommented).</span>
-
-<span class="sd">    Examples:</span>
-<span class="sd">        &gt;&gt;&gt; csv_data = &quot;Day,Media Owner,Venue Type,Advertiser\n1,XYZ,Outdoor,ABC Corp\n2,ABC,Online,XYZ Inc&quot;</span>
-<span class="sd">        &gt;&gt;&gt; parse_csv(csv_data, [&#39;Day&#39;, &#39;Media Owner&#39;, &#39;Venue Type&#39;, &#39;Advertiser&#39;])</span>
-<span class="sd">        &gt;&gt;&gt; [DataFrame with the parsed CSV content]</span>
 
 <span class="sd">    Note:</span>
 <span class="sd">        The function currently does not raise an error if the header row is not found. To enable this functionality, uncomment the relevant code block.&quot;&quot;&quot;</span>
