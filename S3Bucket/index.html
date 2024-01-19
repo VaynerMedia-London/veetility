@@ -311,6 +311,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#veetility.s3_bucket.S3Bucket.download_s3_file" class="md-nav__link">
+    download_s3_file()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#veetility.s3_bucket.S3Bucket.list_s3_bucket_contents" class="md-nav__link">
     list_s3_bucket_contents()
   </a>
@@ -339,8 +346,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#veetility.s3_bucket.S3Bucket.write_df_to_csv" class="md-nav__link">
-    write_df_to_csv()
+  <a href="#veetility.s3_bucket.S3Bucket.write_df_to_file" class="md-nav__link">
+    write_df_to_file()
   </a>
   
 </li>
@@ -414,6 +421,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#veetility.s3_bucket.S3Bucket.download_s3_file" class="md-nav__link">
+    download_s3_file()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#veetility.s3_bucket.S3Bucket.list_s3_bucket_contents" class="md-nav__link">
     list_s3_bucket_contents()
   </a>
@@ -442,8 +456,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#veetility.s3_bucket.S3Bucket.write_df_to_csv" class="md-nav__link">
-    write_df_to_csv()
+  <a href="#veetility.s3_bucket.S3Bucket.write_df_to_file" class="md-nav__link">
+    write_df_to_file()
   </a>
   
 </li>
@@ -782,7 +796,19 @@ The class requires an AWS profile name to be passed during initialization for se
 <span class="normal">237</span>
 <span class="normal">238</span>
 <span class="normal">239</span>
-<span class="normal">240</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">S3Bucket</span><span class="p">:</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">S3Bucket</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A class for interacting with AWS S3 buckets using the `boto3` library.</span>
 
 <span class="sd">    This class provides methods to read from and write to S3 buckets, including uploading and downloading </span>
@@ -903,43 +929,37 @@ The class requires an AWS profile name to be passed during initialization for se
 
         <span class="k">return</span> <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;Key&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">contents</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Contents&#39;</span><span class="p">,</span> <span class="p">[])]</span>
 
-    <span class="k">def</span> <span class="nf">write_df_to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_name</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Writes a pandas DataFrame to a CSV file and uploads it to an AWS S3 bucket.</span>
-
-<span class="sd">        This function converts a given pandas DataFrame to a CSV format and uploads </span>
-<span class="sd">        it directly to the specified S3 bucket without saving it locally. The CSV </span>
-<span class="sd">        file will be stored in the S3 bucket with the provided filename.</span>
+    <span class="k">def</span> <span class="nf">write_df_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_name</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">filetype</span><span class="o">=</span><span class="s1">&#39;csv&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write a DataFrame to a file and upload it to an S3 bucket.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            bucket_name (str): The name of the S3 bucket where the CSV file will be stored.</span>
-<span class="sd">            df (pandas.DataFrame): The DataFrame to be written to CSV and uploaded.</span>
-<span class="sd">            filename (str): The filename under which the CSV file will be stored in the S3 bucket.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            None</span>
+<span class="sd">            bucket_name (str): Name of the S3 bucket.</span>
+<span class="sd">            df (pandas.DataFrame): DataFrame to be written to file.</span>
+<span class="sd">            filename (str): The name of the file to be created.</span>
+<span class="sd">            filetype (str, optional): Type of file to create (&#39;csv&#39; or &#39;json&#39;). Defaults to &#39;csv&#39;.</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            boto3.exceptions.S3UploadFailedError: If the upload to the S3 bucket fails.</span>
-<span class="sd">            AttributeError: If the provided `df` is not a pandas DataFrame.</span>
-<span class="sd">            ValueError: If the `bucket_name` or `filename` is an empty string or None.</span>
+<span class="sd">            ValueError: If the specified filetype is not supported.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
-<span class="sd">        Example:</span>
-<span class="sd">            &gt;&gt;&gt; import pandas as pd</span>
-<span class="sd">            &gt;&gt;&gt; df = pd.DataFrame({&#39;col1&#39;: [1, 2], &#39;col2&#39;: [3, 4]})</span>
-<span class="sd">            &gt;&gt;&gt; s3 = S3Bucket()</span>
-<span class="sd">            &gt;&gt;&gt; s3.write_df_to_csv(&#39;my_bucket&#39;, df, &#39;my_data.csv&#39;)</span>
+        <span class="k">if</span> <span class="n">filetype</span> <span class="o">==</span> <span class="s1">&#39;csv&#39;</span><span class="p">:</span>
+            <span class="n">csv_buffer</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">csv_buffer</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">file_buffer</span> <span class="o">=</span> <span class="n">csv_buffer</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
 
-<span class="sd">        Note:</span>
-<span class="sd">            Ensure that AWS credentials are properly configured and the `boto3` client is </span>
-<span class="sd">            initialized before calling this function.&quot;&quot;&quot;</span>
 
-        <span class="n">csv_buffer</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">filetype</span> <span class="o">==</span> <span class="s1">&#39;json&#39;</span><span class="p">:</span>
+            <span class="n">json_buffer</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">json_buffer</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s1">&#39;records&#39;</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">file_buffer</span> <span class="o">=</span> <span class="n">json_buffer</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+            <span class="n">filename</span> <span class="o">+=</span> <span class="s2">&quot;.json&quot;</span>
 
-        <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">csv_buffer</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unsupported filetype. Choose &#39;csv&#39; or &#39;json&#39;.&quot;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">s3_client</span><span class="o">.</span><span class="n">put_object</span><span class="p">(</span><span class="n">Bucket</span><span class="o">=</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">Key</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">Body</span><span class="o">=</span><span class="n">csv_buffer</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s3_client</span><span class="o">.</span><span class="n">put_object</span><span class="p">(</span><span class="n">Bucket</span><span class="o">=</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">Key</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">Body</span><span class="o">=</span><span class="n">file_buffer</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">save_df_to_s3_if_not_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_name</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">df_name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">save_df_to_s3_if_not_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_name</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">df_name</span><span class="p">,</span> <span class="n">filetype</span><span class="p">,</span> <span class="n">override</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Saves a pandas DataFrame to an S3 bucket as a CSV file if a file with the same name does not already exist.</span>
 
 <span class="sd">        This method checks the specified S3 bucket for an existing file that matches the naming convention </span>
@@ -968,17 +988,35 @@ The class requires an AWS profile name to be passed during initialization for se
         <span class="n">today_str</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y_%m_</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="c1"># Construct the filename with date</span>
-        <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">df_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">today_str</span><span class="si">}</span><span class="s2">.csv&quot;</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">df_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">today_str</span><span class="si">}</span><span class="s2">&quot;</span>
 
         <span class="c1"># Check if the file already exists in the S3 bucket</span>
         <span class="n">existing_files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_s3_bucket_contents</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">existing_files</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File &#39;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&#39; already exists in the bucket &#39;</span><span class="si">{</span><span class="n">bucket_name</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
-            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">override</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">existing_files</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File &#39;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&#39; already exists in the bucket &#39;</span><span class="si">{</span><span class="n">bucket_name</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+                <span class="k">return</span>
 
         <span class="c1"># Convert DataFrame to CSV and upload to S3</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">write_df_to_csv</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_df_to_file</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">filetype</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File &#39;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&#39; successfully uploaded to bucket &#39;</span><span class="si">{</span><span class="n">bucket_name</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">download_s3_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">aws_access_key_id</span><span class="p">,</span> <span class="n">aws_secret_access_key</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39; Download a file from an S3 Bucket given a url.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            url: S3 URL</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            File content as string</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="c1"># Extracting bucket and key from the provided URL</span>
+        <span class="n">parsed_url</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+        <span class="n">bucket</span> <span class="o">=</span> <span class="n">parsed_url</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parsed_url</span><span class="p">[</span><span class="mi">4</span><span class="p">:])</span>
+
+        <span class="n">s3_client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">,</span> <span class="n">aws_access_key_id</span><span class="o">=</span><span class="n">aws_access_key_id</span><span class="p">,</span> <span class="n">aws_secret_access_key</span><span class="o">=</span><span class="n">aws_secret_access_key</span><span class="p">)</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">s3_client</span><span class="o">.</span><span class="n">get_object</span><span class="p">(</span><span class="n">Bucket</span><span class="o">=</span><span class="n">bucket</span><span class="p">,</span> <span class="n">Key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;Body&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">upload_binary_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_name</span><span class="p">,</span> <span class="n">local_file_path</span><span class="p">,</span> <span class="n">s3_key</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Upload a binary file to an S3 bucket.</span>
@@ -1242,23 +1280,23 @@ profile and that the profile has the necessary permissions to access AWS S3 serv
 
       <details class="quote">
         <summary>Source code in <code>veetility/s3_bucket.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">224</span>
-<span class="normal">225</span>
-<span class="normal">226</span>
-<span class="normal">227</span>
-<span class="normal">228</span>
-<span class="normal">229</span>
-<span class="normal">230</span>
-<span class="normal">231</span>
-<span class="normal">232</span>
-<span class="normal">233</span>
-<span class="normal">234</span>
-<span class="normal">235</span>
-<span class="normal">236</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">236</span>
 <span class="normal">237</span>
 <span class="normal">238</span>
 <span class="normal">239</span>
-<span class="normal">240</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">download_binary_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_name</span><span class="p">,</span> <span class="n">s3_key</span><span class="p">,</span> <span class="n">local_file_path</span><span class="p">):</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">download_binary_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_name</span><span class="p">,</span> <span class="n">s3_key</span><span class="p">,</span> <span class="n">local_file_path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Download a binary file from an S3 bucket.</span>
 
 <span class="sd">    Args:</span>
@@ -1275,6 +1313,99 @@ profile and that the profile has the necessary permissions to access AWS S3 serv
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File &#39;</span><span class="si">{</span><span class="n">local_file_path</span><span class="si">}</span><span class="s2">&#39; not found.&quot;</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">NoCredentialsError</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;AWS credentials not found.&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="veetility.s3_bucket.S3Bucket.download_s3_file" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">download_s3_file</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">aws_access_key_id</span><span class="p">,</span> <span class="n">aws_secret_access_key</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Download a file from an S3 Bucket given a url.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>url</code></td>
+          <td>
+          </td>
+          <td><p>S3 URL</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+          </td>
+          <td><p>File content as string</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>veetility/s3_bucket.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">download_s3_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">aws_access_key_id</span><span class="p">,</span> <span class="n">aws_secret_access_key</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39; Download a file from an S3 Bucket given a url.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        url: S3 URL</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        File content as string</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="c1"># Extracting bucket and key from the provided URL</span>
+    <span class="n">parsed_url</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+    <span class="n">bucket</span> <span class="o">=</span> <span class="n">parsed_url</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parsed_url</span><span class="p">[</span><span class="mi">4</span><span class="p">:])</span>
+
+    <span class="n">s3_client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">,</span> <span class="n">aws_access_key_id</span><span class="o">=</span><span class="n">aws_access_key_id</span><span class="p">,</span> <span class="n">aws_secret_access_key</span><span class="o">=</span><span class="n">aws_secret_access_key</span><span class="p">)</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">s3_client</span><span class="o">.</span><span class="n">get_object</span><span class="p">(</span><span class="n">Bucket</span><span class="o">=</span><span class="n">bucket</span><span class="p">,</span> <span class="n">Key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;Body&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
@@ -1625,7 +1756,7 @@ CSV file is properly formatted for use with pandas' <code>read_csv</code> functi
 
 
 <h2 id="veetility.s3_bucket.S3Bucket.save_df_to_s3_if_not_exists" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">save_df_to_s3_if_not_exists</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">df_name</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">save_df_to_s3_if_not_exists</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">df_name</span><span class="p">,</span> <span class="n">filetype</span><span class="p">,</span> <span class="n">override</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1738,7 +1869,13 @@ File 'sales_data_2023_11_22.csv' successfully uploaded to bucket 'my_bucket'.</p
 </details>
       <details class="quote">
         <summary>Source code in <code>veetility/s3_bucket.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">165</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
 <span class="normal">166</span>
 <span class="normal">167</span>
 <span class="normal">168</span>
@@ -1772,12 +1909,7 @@ File 'sales_data_2023_11_22.csv' successfully uploaded to bucket 'my_bucket'.</p
 <span class="normal">196</span>
 <span class="normal">197</span>
 <span class="normal">198</span>
-<span class="normal">199</span>
-<span class="normal">200</span>
-<span class="normal">201</span>
-<span class="normal">202</span>
-<span class="normal">203</span>
-<span class="normal">204</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">save_df_to_s3_if_not_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_name</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">df_name</span><span class="p">):</span>
+<span class="normal">199</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">save_df_to_s3_if_not_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_name</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">df_name</span><span class="p">,</span> <span class="n">filetype</span><span class="p">,</span> <span class="n">override</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Saves a pandas DataFrame to an S3 bucket as a CSV file if a file with the same name does not already exist.</span>
 
 <span class="sd">    This method checks the specified S3 bucket for an existing file that matches the naming convention </span>
@@ -1806,16 +1938,17 @@ File 'sales_data_2023_11_22.csv' successfully uploaded to bucket 'my_bucket'.</p
     <span class="n">today_str</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y_%m_</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="c1"># Construct the filename with date</span>
-    <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">df_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">today_str</span><span class="si">}</span><span class="s2">.csv&quot;</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">df_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">today_str</span><span class="si">}</span><span class="s2">&quot;</span>
 
     <span class="c1"># Check if the file already exists in the S3 bucket</span>
     <span class="n">existing_files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_s3_bucket_contents</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">existing_files</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File &#39;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&#39; already exists in the bucket &#39;</span><span class="si">{</span><span class="n">bucket_name</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
-        <span class="k">return</span>
+    <span class="k">if</span> <span class="n">override</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">existing_files</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File &#39;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&#39; already exists in the bucket &#39;</span><span class="si">{</span><span class="n">bucket_name</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
 
     <span class="c1"># Convert DataFrame to CSV and upload to S3</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">write_df_to_csv</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">write_df_to_file</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">filetype</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File &#39;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&#39; successfully uploaded to bucket &#39;</span><span class="si">{</span><span class="n">bucket_name</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
       </details>
@@ -1890,23 +2023,23 @@ File 'sales_data_2023_11_22.csv' successfully uploaded to bucket 'my_bucket'.</p
 
       <details class="quote">
         <summary>Source code in <code>veetility/s3_bucket.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">206</span>
-<span class="normal">207</span>
-<span class="normal">208</span>
-<span class="normal">209</span>
-<span class="normal">210</span>
-<span class="normal">211</span>
-<span class="normal">212</span>
-<span class="normal">213</span>
-<span class="normal">214</span>
-<span class="normal">215</span>
-<span class="normal">216</span>
-<span class="normal">217</span>
-<span class="normal">218</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">218</span>
 <span class="normal">219</span>
 <span class="normal">220</span>
 <span class="normal">221</span>
-<span class="normal">222</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">upload_binary_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_name</span><span class="p">,</span> <span class="n">local_file_path</span><span class="p">,</span> <span class="n">s3_key</span><span class="p">):</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">upload_binary_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_name</span><span class="p">,</span> <span class="n">local_file_path</span><span class="p">,</span> <span class="n">s3_key</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Upload a binary file to an S3 bucket.</span>
 
 <span class="sd">    Args:</span>
@@ -1933,18 +2066,15 @@ File 'sales_data_2023_11_22.csv' successfully uploaded to bucket 'my_bucket'.</p
 
 
 
-<h2 id="veetility.s3_bucket.S3Bucket.write_df_to_csv" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">write_df_to_csv</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span></code>
+<h2 id="veetility.s3_bucket.S3Bucket.write_df_to_file" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">write_df_to_file</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">filetype</span><span class="o">=</span><span class="s1">&#39;csv&#39;</span><span class="p">)</span></code>
 
 </h2>
 
 
   <div class="doc doc-contents ">
   
-      <p>Writes a pandas DataFrame to a CSV file and uploads it to an AWS S3 bucket.</p>
-<p>This function converts a given pandas DataFrame to a CSV format and uploads 
-it directly to the specified S3 bucket without saving it locally. The CSV 
-file will be stored in the S3 bucket with the provided filename.</p>
+      <p>Write a DataFrame to a file and upload it to an S3 bucket.</p>
 
   <p><strong>Parameters:</strong></p>
   <table>
@@ -1962,7 +2092,7 @@ file will be stored in the S3 bucket with the provided filename.</p>
           <td>
                 <code>str</code>
           </td>
-          <td><p>The name of the S3 bucket where the CSV file will be stored.</p></td>
+          <td><p>Name of the S3 bucket.</p></td>
           <td>
               <em>required</em>
           </td>
@@ -1972,7 +2102,7 @@ file will be stored in the S3 bucket with the provided filename.</p>
           <td>
                 <code>pandas.<span title="pandas.DataFrame">DataFrame</span></code>
           </td>
-          <td><p>The DataFrame to be written to CSV and uploaded.</p></td>
+          <td><p>DataFrame to be written to file.</p></td>
           <td>
               <em>required</em>
           </td>
@@ -1982,27 +2112,20 @@ file will be stored in the S3 bucket with the provided filename.</p>
           <td>
                 <code>str</code>
           </td>
-          <td><p>The filename under which the CSV file will be stored in the S3 bucket.</p></td>
+          <td><p>The name of the file to be created.</p></td>
           <td>
               <em>required</em>
           </td>
         </tr>
-    </tbody>
-  </table>
-
-  <p><strong>Returns:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
         <tr>
+          <td><code>filetype</code></td>
           <td>
+                <code>str</code>
           </td>
-          <td><p>None</p></td>
+          <td><p>Type of file to create ('csv' or 'json'). Defaults to 'csv'.</p></td>
+          <td>
+                <code>&#39;csv&#39;</code>
+          </td>
         </tr>
     </tbody>
   </table>
@@ -2018,43 +2141,13 @@ file will be stored in the S3 bucket with the provided filename.</p>
     <tbody>
         <tr>
           <td>
-                <code>boto3.<span title="boto3.exceptions">exceptions</span>.<span title="boto3.exceptions.S3UploadFailedError">S3UploadFailedError</span></code>
-          </td>
-          <td><p>If the upload to the S3 bucket fails.</p></td>
-        </tr>
-        <tr>
-          <td>
-                <code>AttributeError</code>
-          </td>
-          <td><p>If the provided <code>df</code> is not a pandas DataFrame.</p></td>
-        </tr>
-        <tr>
-          <td>
                 <code>ValueError</code>
           </td>
-          <td><p>If the <code>bucket_name</code> or <code>filename</code> is an empty string or None.</p></td>
+          <td><p>If the specified filetype is not supported.</p></td>
         </tr>
     </tbody>
   </table>
 
-<details class="example">
-  <summary>Example</summary>
-  <blockquote>
-<blockquote>
-<blockquote>
-<p>import pandas as pd
-df = pd.DataFrame({'col1': [1, 2], 'col2': [3, 4]})
-s3 = S3Bucket()
-s3.write_df_to_csv('my_bucket', df, 'my_data.csv')</p>
-</blockquote>
-</blockquote>
-</blockquote>
-</details>
-<details class="note">
-  <summary>Note</summary>
-  <p>Ensure that AWS credentials are properly configured and the <code>boto3</code> client is 
-initialized before calling this function.</p>
-</details>
       <details class="quote">
         <summary>Source code in <code>veetility/s3_bucket.py</code></summary>
         <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">129</span>
@@ -2085,47 +2178,35 @@ initialized before calling this function.</p>
 <span class="normal">154</span>
 <span class="normal">155</span>
 <span class="normal">156</span>
-<span class="normal">157</span>
-<span class="normal">158</span>
-<span class="normal">159</span>
-<span class="normal">160</span>
-<span class="normal">161</span>
-<span class="normal">162</span>
-<span class="normal">163</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">write_df_to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_name</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Writes a pandas DataFrame to a CSV file and uploads it to an AWS S3 bucket.</span>
-
-<span class="sd">    This function converts a given pandas DataFrame to a CSV format and uploads </span>
-<span class="sd">    it directly to the specified S3 bucket without saving it locally. The CSV </span>
-<span class="sd">    file will be stored in the S3 bucket with the provided filename.</span>
+<span class="normal">157</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">write_df_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_name</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">filetype</span><span class="o">=</span><span class="s1">&#39;csv&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write a DataFrame to a file and upload it to an S3 bucket.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        bucket_name (str): The name of the S3 bucket where the CSV file will be stored.</span>
-<span class="sd">        df (pandas.DataFrame): The DataFrame to be written to CSV and uploaded.</span>
-<span class="sd">        filename (str): The filename under which the CSV file will be stored in the S3 bucket.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">        bucket_name (str): Name of the S3 bucket.</span>
+<span class="sd">        df (pandas.DataFrame): DataFrame to be written to file.</span>
+<span class="sd">        filename (str): The name of the file to be created.</span>
+<span class="sd">        filetype (str, optional): Type of file to create (&#39;csv&#39; or &#39;json&#39;). Defaults to &#39;csv&#39;.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        boto3.exceptions.S3UploadFailedError: If the upload to the S3 bucket fails.</span>
-<span class="sd">        AttributeError: If the provided `df` is not a pandas DataFrame.</span>
-<span class="sd">        ValueError: If the `bucket_name` or `filename` is an empty string or None.</span>
+<span class="sd">        ValueError: If the specified filetype is not supported.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-<span class="sd">    Example:</span>
-<span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
-<span class="sd">        &gt;&gt;&gt; df = pd.DataFrame({&#39;col1&#39;: [1, 2], &#39;col2&#39;: [3, 4]})</span>
-<span class="sd">        &gt;&gt;&gt; s3 = S3Bucket()</span>
-<span class="sd">        &gt;&gt;&gt; s3.write_df_to_csv(&#39;my_bucket&#39;, df, &#39;my_data.csv&#39;)</span>
+    <span class="k">if</span> <span class="n">filetype</span> <span class="o">==</span> <span class="s1">&#39;csv&#39;</span><span class="p">:</span>
+        <span class="n">csv_buffer</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">csv_buffer</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">file_buffer</span> <span class="o">=</span> <span class="n">csv_buffer</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
 
-<span class="sd">    Note:</span>
-<span class="sd">        Ensure that AWS credentials are properly configured and the `boto3` client is </span>
-<span class="sd">        initialized before calling this function.&quot;&quot;&quot;</span>
 
-    <span class="n">csv_buffer</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">filetype</span> <span class="o">==</span> <span class="s1">&#39;json&#39;</span><span class="p">:</span>
+        <span class="n">json_buffer</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">json_buffer</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s1">&#39;records&#39;</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">file_buffer</span> <span class="o">=</span> <span class="n">json_buffer</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+        <span class="n">filename</span> <span class="o">+=</span> <span class="s2">&quot;.json&quot;</span>
 
-    <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">csv_buffer</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unsupported filetype. Choose &#39;csv&#39; or &#39;json&#39;.&quot;</span><span class="p">)</span>
 
-    <span class="bp">self</span><span class="o">.</span><span class="n">s3_client</span><span class="o">.</span><span class="n">put_object</span><span class="p">(</span><span class="n">Bucket</span><span class="o">=</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">Key</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">Body</span><span class="o">=</span><span class="n">csv_buffer</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">s3_client</span><span class="o">.</span><span class="n">put_object</span><span class="p">(</span><span class="n">Bucket</span><span class="o">=</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">Key</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">Body</span><span class="o">=</span><span class="n">file_buffer</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
