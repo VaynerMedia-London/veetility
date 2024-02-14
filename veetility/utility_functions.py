@@ -105,6 +105,8 @@ class UtilityFunctions():
         string = emoji_pattern.sub(r'', string) # remove emojis
         string = unidecode(string)  # replace non-ASCII characters with their closest ASCII equivalents
         string = re.sub(r'[^\w\s]', '', string) # remove punctuation
+        string = string.replace(' ', '').replace('\n', '') # remove spaces and newline characters
+        
         return string.replace(' ', '')
 
     def match_ads(

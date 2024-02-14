@@ -63,16 +63,17 @@ class S3Bucket:
         session = boto3.Session(profile_name=aws_profile)
         self.s3_client = session.client("s3")
 
-    def read_csv_to_df(self, bucket_name, file_name):
-        """Reads a CSV file from an AWS S3 bucket and converts it into a pandas DataFrame.
+    def read_csv_to_df(self, bucket_name, folder_path='', file_name=''):
+        """Reads a CSV file from a specified folder in an AWS S3 bucket and converts it into a pandas DataFrame.
 
-        This function fetches the specified CSV file from an S3 bucket and reads it 
+        This function fetches the specified CSV file from the given folder in an S3 bucket and reads it 
         into a pandas DataFrame. The CSV file is read into memory as a binary buffer 
         using BytesIO, and then pandas is used to parse the CSV data from this buffer.
 
         Args:
             bucket_name (str): The name of the S3 bucket from which the CSV file is read.
-            file_name (str): The name (key) of the CSV file within the S3 bucket.
+            folder_path (str): The path of the folder within the S3 bucket. Defaults to the root of the bucket.
+            file_name (str): The name (key) of the CSV file within the specified folder of the S3 bucket.
 
         Returns:
             pandas.DataFrame: A DataFrame containing the data from the CSV file.
@@ -80,50 +81,60 @@ class S3Bucket:
         Raises:
             botocore.exceptions.ClientError: If the file is not found in the S3 bucket 
                                             or the request to S3 fails.
-            ValueError: If the `bucket_name` or `file_name` is an empty string or None.
+            ValueError: If the `bucket_name`, `folder_path`, or `file_name` is an empty string or None.
 
-        Example:
+        Examples:
             >>> s3 = S3Bucket()
-            >>> df = s3.read_csv_to_df('my_bucket', 'my_data.csv')
+            >>> df = s3.read_csv_to_df('my_bucket', 'my_folder/', 'my_data.csv')
             >>> print(df)
 
         Note:
             Ensure that AWS credentials are properly configured and the `boto3` client 
             is initialized before calling this function. This function assumes that the 
             CSV file is properly formatted for use with pandas' `read_csv` function."""
-    
-        obj = self.s3_client.get_object(Bucket=bucket_name, Key=file_name)
+
+        # Ensure the folder path ends with '/' if it's not empty and concatenate it with the file name
+        full_file_path = (folder_path if folder_path.endswith('/') else folder_path + '/') + file_name if folder_path else file_name
+        
+        obj = self.s3_client.get_object(Bucket=bucket_name, Key=full_file_path)
 
         data_buffer = BytesIO(obj['Body'].read())
 
         return pd.read_csv(data_buffer)
 
-    def list_s3_bucket_contents(self, bucket_name):
-        """Lists the contents of the specified S3 bucket.
+    def list_s3_bucket_contents(self, bucket_name, folder_path=''):
+        """Lists the contents of the specified folder in an S3 bucket.
 
-        This method retrieves a list of all objects (files) in the given S3 bucket and returns their keys 
-        (filenames). If the bucket is empty or the specified bucket does not exist, it returns an empty list.
+        This method retrieves a list of all objects (files) in the given folder of an S3 bucket and returns their keys 
+        (filenames). If the folder is empty, does not exist, or the specified bucket does not exist, it returns an empty list.
 
         Args:
-            bucket_name (str): The name of the S3 bucket whose contents are to be listed.
+            bucket_name (str): The name of the S3 bucket.
+            folder_path (str): The path of the folder within the S3 bucket. Defaults to the root of the bucket.
 
         Returns:
-            List[str]: A list of keys (filenames) of all objects in the specified S3 bucket. If the bucket is 
-                    empty or does not exist, an empty list is returned.
+            List[str]: A list of keys (filenames) of all objects in the specified folder of the S3 bucket. If the folder is 
+                    empty, does not exist, or the bucket does not exist, an empty list is returned.
 
         Raises:
             boto3.exceptions.S3Error: If an error occurs while accessing the S3 bucket.
 
-        Example:
+        Examples:
             >>> s3 = S3Bucket()
-            >>> s3.list_s3_bucket_contents('my_bucket')
-            ['file1.csv', 'file2.csv', 'image1.png']
+            >>> s3.list_s3_bucket_contents('my_bucket', 'my_folder/')
+            ['my_folder/file1.csv', 'my_folder/file2.csv', 'my_folder/image1.png']
 
         Note:
-            This method assumes that the AWS credentials and permissions are correctly set up to access the specified S3 bucket."""
+            This method assumes that the AWS credentials and permissions are correctly set up to access the specified S3 bucket and folder."""
+
+        # Ensure the folder path ends with '/' if it's not empty
+        if folder_path and not folder_path.endswith('/'):
+            folder_path += '/'
+
+        # List objects in the specified folder of the bucket
+        contents = self.s3_client.list_objects_v2(Bucket=bucket_name, Prefix=folder_path)
         
-        contents = self.s3_client.list_objects_v2(Bucket=bucket_name)
-        
+        # Extract the keys (filenames) of the objects in the folder
         return [item['Key'] for item in contents.get('Contents', [])]
 
     def write_df_to_file(self, bucket_name, df, filename, filetype='csv'):
@@ -177,7 +188,7 @@ class S3Bucket:
             boto3.exceptions.S3UploadFailedError: If the upload to the S3 bucket fails.
             Exception: If any other error occurs during the process.
 
-        Example:
+        Examples:
             >>> s3 = S3Bucket()
             >>> s3.save_df_to_s3_if_not_exists('my_bucket', my_dataframe, 'sales_data')
             File 'sales_data_2023_11_22.csv' successfully uploaded to bucket 'my_bucket'."""

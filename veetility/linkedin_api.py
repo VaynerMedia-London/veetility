@@ -10,12 +10,13 @@ import numpy as np
 import requests
 import pandas as pd
 from dotenv import load_dotenv
-import requests as re
 import os
 import random
 from tqdm.auto import tqdm
 from veetility import utility_functions
 from veetility import snowflake as sf
+# from veetility import generic_functions as gf
+import re
 from collections import Counter
 import json
 load_dotenv()
@@ -48,15 +49,15 @@ class LinkedInAPI:
         post_stats_dict (dict): Dictionary containing statistics for fetched posts.
 
     Examples:
-        >>> api_client = LinkedIn(api_token="your-api-token")
-        >>> api_client.fetch_org_ids()
+        api_client = LinkedIn(api_token="your-api-token")
+        api_client.fetch_org_ids()
         >>> api_client.fetch_posts()
 
     Notes:
         1. The class is designed to handle both individual and batch requests for efficiency.
         2. Ensure that you have the required libraries installed and valid API credentials."""
 
-    def __init__(self, api_token=None, time_zone="Europe/London"):
+    def __init__(self, api_token=None,time_zone="Europe/London"):
         """Initialize the LinkedIn API client with an API from the developer portal.
             Developer portal: https://developer.linkedin.com/
             
@@ -88,7 +89,7 @@ class LinkedInAPI:
         
         self.headers_v2 = {
             'X-Restli-Protocol-Version': '2.0.0',
-            'LinkedIn-Version' : '202306',
+            'LinkedIn-Version' : '202308',
             'Authorization': 'Bearer ' + self.api_token,
             'Content-Type': 'application/json'
             } 
@@ -115,10 +116,7 @@ class LinkedInAPI:
         print(f"Starting exponential delay of {round(delay + jitter,2)} seconds to give server time to recover")
         time.sleep(delay + jitter)
     
-    def run_request_with_error_handling(
-            self, url, headers, 
-            params=None, max_retries=5,
-            expected_json_response=True):
+    def run_request_with_error_handling(self, url, headers, params=None, max_retries=5, expected_json_response=True):
         """Wrapper function to execute an HTTP GET request with error handling and mutliple time delayed retries.
             
         Args:
@@ -146,7 +144,6 @@ class LinkedInAPI:
             # by testing for response == None, weird behaviour I couldn't figure out. So below i test to see if getting the json from response is possible
             # else it will break the try loop and try again after an exponential delay
             if expected_json_response:
-                print("JSON on response object test")
                 response.json() 
             if response.status_code == 200:
                 self.retry_count=0
@@ -210,7 +207,7 @@ class LinkedInAPI:
                 unix_format = int(unix_format)
             else:
                 print("The input is a string that is not a number")
-                return pd.NaT
+                pd.NaT
         
         try: 
             unix_format = int(unix_format)
@@ -267,7 +264,7 @@ class LinkedInAPI:
             print("No data found in API response.")
 
     
-    def fetch_organization_info(self):
+    def fetch_org_info(self):
         """Fetches the organization information for the authenticated LinkedIn user based on organization IDs.
     
         Returns:
@@ -288,15 +285,26 @@ class LinkedInAPI:
             params={'ids' : str(org_id)}
 
             response = self.run_request_with_error_handling(url, headers, params=params)
-            print(response)
-            df_nested_list = response.json()
-            df_unnested = pd.json_normalize(df_nested_list['results'][org_id], max_level=0)
-            data = [org_info_df,df_unnested]
-            org_info_df = pd.concat(data)
+            try:
+                df_nested_list = response.json()
+                df_unnested = pd.json_normalize(df_nested_list['results'][org_id], max_level=0)
+                data = [org_info_df,df_unnested]
+                org_info_df = pd.concat(data)
+            except:
+                pass
+        
+        self.org_info_df = org_info_df
+
+        # Sometimes an account can appear in the organisational entity control list but not in the organisational info endpoint
+        # This may be because a previous account we worked with no longer gives us permission.
+        # Therefore update the org ids to represent the info from the org info endpoint. This will ensure post metrics can be extracted 
+        
+        # if self.org_ids != self.org_info_df.id.unique().tolist():
+        #     gf.slack_error_notification(webhook=Variable.get("slack_webhook"),)
 
         return org_info_df
     
-    def fetch_posts(self, org_ids=None):
+    def fetch_posts(self,org_ids=None):
         """Fetches LinkedIn posts associated with the specified organization IDs or those found by the fetch_org_ids method.
             The method utilizes `convert_unix_datetime` to convert Unix timestamps in the columns 'createdAt', 'lastModifiedAt' and
             'publishedAt'] to datetime objects.
@@ -309,13 +317,16 @@ class LinkedInAPI:
             pandas.DataFrame: A DataFrame containing fetched posts. Each row corresponds to a post."""
         posts_df = pd.DataFrame()
         retry_count = 0
-        if org_ids is None:
-            if not hasattr(self, 'org_ids'):
-                self.fetch_org_ids()
+        
+        if org_ids == None:
+            self.fetch_org_info()
+
+            self.org_ids == self.org_info_df.id.unique().tolist()
+
             org_ids = self.org_ids
         
         for org_id in org_ids:
-
+            print(f'org_id = {org_id}')
             start = 0
             #first just fetch the first page to find out the total number of posts there are
             URL = "https://api.linkedin.com/rest/posts?q=author&author=urn%3Ali%3Aorganization%3A" +""+ str(org_id) +"" + "&count=1"
@@ -373,9 +384,12 @@ class LinkedInAPI:
             2. The method relies on `run_request_with_error_handling` for API requests and error handling.."""
         post_id = str(post_id)
 
+        org_id_modified = str(org_id).replace(':','%3A') #Sometimes the endpoint wants colons replace with %3A, not sure why
+
         params = {
             'q': 'organizationalEntity',
-            'organizationalEntity': f'{org_id}'}
+            # 'organizationalEntity': f'{org_id}'}
+            'organizationalEntity' : f'{org_id_modified}'}
 
         if 'share' in post_id:
             params['shares'] = f'{post_id}'
@@ -384,12 +398,10 @@ class LinkedInAPI:
             params['ugcPosts'] = f'{post_id}'
 
         url = 'https://api.linkedin.com/rest/organizationalEntityShareStatistics'
-        response = self.run_request_with_error_handling(url, self.headers_v1, params)
+        response = self.run_request_with_error_handling(url, self.headers_v2, params)
         return response.json()
 
-    def fetch_stats_for_posts(
-            self, posts_df=None, 
-            post_id_col='id',org_id_col='author'):
+    def fetch_stats_for_posts(self, posts_df=None, post_id_col='id',org_id_col='author'):
         """Fetches statistics for a list of LinkedIn posts based on their IDs and associated organization IDs.
             The function adds a new column 'date_fetched_from_api' to the DataFrame with the current date which can be used
             to track how a posts metrics change over time.
@@ -462,10 +474,7 @@ class LinkedInAPI:
         response = self.run_request_with_error_handling(url, self.headers_v1, params)
         return response.json()
     
-    def fetch_video_views_for_multiple_posts(
-            self, posts_df, 
-            media_type_col, post_id_col='id',
-            output_col='videoViews'):
+    def fetch_video_views_for_multiple_posts(self, posts_df, media_type_col, post_id_col='id',output_col='videoViews'):
         """Fetches video view statistics for multiple LinkedIn posts and adds them to a DataFrame.
 
         Args:
@@ -582,37 +591,12 @@ class LinkedInAPI:
         reactions_df.rename(columns={'index':id_col_name},inplace=True)
         return reactions_df
 
-    def fetch_follower_count(self, dict_of_urls):
+    def fetch_follower_count(self,dict_of_urls):
         """Fetches the follower count of companies from their LinkedIn URLs.
 
-        This function sends a GET request to each URL present in the given dictionary, scrapes the page's HTML to find 
-        the follower count, and then stores this information in a pandas DataFrame.
-
-        Args:
-            dict_of_urls (dict): A dictionary where keys are company names and values are their respective LinkedIn URLs.
-
-        Returns:
-            pd.DataFrame: A DataFrame with columns: 'index', 'Followers', and 'datetime_fetched'. 
-                        The 'index' column contains the company names, 'Followers' column contains the fetched 
-                        follower counts or 'Error' if not found, and 'datetime_fetched' column contains the time 
-                        the data was fetched.
-
-        Raises:
-            If there's an error during the HTTP request or while extracting the follower count, the respective 
-            company's follower count will be set to 'Error' in the output DataFrame.
-
-        Example:
-            input_dict = {
-                'CompanyA': 'https://www.linkedin.com/company/companyA/',
-                'CompanyB': 'https://www.linkedin.com/company/companyB/'
-            }
-            output_df = obj.fetch_follower_count(input_dict)
-            print(output_df)
-
-        Notes:
-            - The function uses regular expressions to extract the follower count from the HTML content.
-            - The User-Agent header is hardcoded to mimic a browser request."""
-
+        This function sends a GET request to each URL present in the given dictionary, scrapes the page's HTML to find the follower count, and then stores this information in a pandas DataFrame.
+        """
+        
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'}
         
         output_dict = {}
@@ -634,3 +618,9 @@ class LinkedInAPI:
         
         output_df['datetime_fetched'] = str(pd.to_datetime(datetime.today()))
         return output_df
+            
+                        
+
+
+        
+# %%

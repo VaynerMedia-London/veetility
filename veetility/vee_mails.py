@@ -24,24 +24,29 @@ class VEEmail:
         search_string (str): The string written in the IMAP search criteria format
     
     Methods:
-        search_emails(): Searches for emails based on the sender's email address, substrings within a subject, and/or whether they were sent today.
-        get_msg_object(): Return the message object given the email ID, from which you can get details on the properties of the email
-        get_email_body(): Return the email body (i.e. the text) given the email ID
-        does_message_have_attachment(): Check if the message object contains an attachment that is either a CSV or Excel file.
-        csv_from_url_to_df(): Fetches a CSV file from a specified URL and loads it into a Pandas DataFrame.
-        extract_url_from_body(): Extracts a single URL from the given text body.
-        attachments_to_df(): Retrieves an attachment from an email, converts it to a DataFrame, and returns it.
-        parse_csv(): Parses the provided CSV content into a pandas DataFrame, identifying the header row based on key columns.
+        - search_emails(): Searches for emails based on the sender's email address, substrings within a subject, and/or whether they were sent today.
+        - get_msg_object(): Return the message object given the email ID, from which you can get details on the properties of the email
+        - get_email_body(): Return the email body (i.e. the text) given the email ID
+        - does_message_have_attachment(): Check if the message object contains an attachment that is either a CSV or Excel file.
+        - csv_from_url_to_df(): Fetches a CSV file from a specified URL and loads it into a Pandas DataFrame.
+        - extract_url_from_body(): Extracts a single URL from the given text body.
+        - attachments_to_df(): Retrieves an attachment from an email, converts it to a DataFrame, and returns it.
+        - parse_csv(): Parses the provided CSV content into a pandas DataFrame, identifying the header row based on key columns.
     
     Example:
+        # Create an instance of the VEEmail class
         email_handler = VEEmail('example@gmail.com', 'p@ssw0rd')
 
-        email_ids = email_handler.search_emails(subjects=['Report Available','Client Name X'])
+        # Search the emails in the inbox for specific substrings in the subject line of the email
+        email_ids = email_handler.search_emails(substrings_in_subject=['Report Available','Client Name X'])
         
+        # Extract the main text of the first ([0]) and most recent email 
         email_body = email_handler.get_email_body(email_ids[0])
 
+        # Extract the download URL from the text of the email
         url = email_handler.extract_url_from_body(email_body)
 
+        # Download the csv file from the download URL
         df = email_handler.csv_from_url_to_df(url)
     
     Note:
@@ -264,7 +269,7 @@ class VEEmail:
         Raises:
             ValueError: If no URLs or more than one URL are found in the body.
         
-        Example:
+        Examples:
             >>> extract_url_from_body("Check out this website: https://example.com", "https://example.com")
             'https://example.com'
             >>> extract_url_from_body("No URLs here", "https://example.com")
@@ -367,11 +372,6 @@ class VEEmail:
 
         Raises:
             ValueError: If the header row with the specified key columns is not found (if the corresponding code block is uncommented).
-
-        Example:
-            >>> csv_data = "Day,Media Owner,Venue Type,Advertiser\n1,XYZ,Outdoor,ABC Corp\n2,ABC,Online,XYZ Inc"
-            >>> parse_csv(csv_data, ['Day', 'Media Owner', 'Venue Type', 'Advertiser'])
-            [DataFrame with the parsed CSV content]
 
         Note:
             The function currently does not raise an error if the header row is not found. To enable this functionality, uncomment the relevant code block."""

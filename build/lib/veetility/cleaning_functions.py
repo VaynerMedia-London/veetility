@@ -217,13 +217,13 @@ def extract_region_from_country(country):
         str: The region of the given country, if it is in 'UK/IE', 'NL', 'DE', 'FR', 'IT', 'BE',
             it returns "EMEA". If the country is 'CA' or 'US', it returns "N. America". If the
             country is not found, it returns None.
-    Example:
-    >>> extract_region_from_country("FR")
-    'EMEA'
-    >>> extract_region_from_country("US")
-    'N. America'
-    >>> extract_region_from_country("XX")
-    None
+    Examples:
+        >>> extract_region_from_country("FR")
+        'EMEA'
+        >>> extract_region_from_country("US")
+        'N. America'
+        >>> extract_region_from_country("XX")
+        None
     """
     if country == 'UK/IE' or country == 'NL' or country == 'DE' \
             or country == 'FR' or country == 'IT' or country == 'BE':
@@ -252,7 +252,7 @@ def clean_platform_name(platform):
 def clean_url(url):
     """Clean the url of the post to produce a string with just the important information for matching.
 
-        In the case of Tiktok remove everything after and including the ?, This removes the utm parameters"""
+    In the case of Tiktok remove everything after and including the ?, This removes the utm parameters"""
     url = str(url).lower().strip()
     url = url.replace('https://', '')
     url = url.replace('http://', '')
@@ -264,8 +264,9 @@ def clean_url(url):
 
 def updated_value_extract(url):
     """Extract the unique identifier for a post from the url
-        This format of this code depends on the platform, sometimes
-        it is a numerical code, sometimes it is alphanumeric"""
+    This format of this code depends on the platform, sometimes
+    it is a numerical code, sometimes it is alphanumeric"""
+
     try:
         if 'facebook' in url:
             u_url = re.search(r"/(\d{16})/|\w{0,4}/*(\d{11,16})", url).group(0)
@@ -342,6 +343,7 @@ def extract_after_nth_occurrence(string, char, n):
     return extract
 
 def extract_creative_name(name, group_name):
+    "Extract the creative name from either the Ad name or the group name depending on which is available"
     asset_name_from_name = extract_value(name, 'a')
     asset_name_from_group = extract_value(group_name, 'ad')
 
@@ -351,6 +353,7 @@ def extract_creative_name(name, group_name):
         return asset_name_from_name
 
 def extract_value(string, identifier):
+    """Extract value based on naming convention identifier"""
     try:
         string = string+'_'
         search_string = f'_{identifier}:(.*?)_'
@@ -394,6 +397,7 @@ def two_urls_per_post_to_1(x, target_cols=None):
 
 # for ID_Organic__CA_2022_Q2_USD_ENG_TW
 def extract_columns_twitter_2(df):
+    """Special case of extracting columns from unique Twitter campaign naming convention"""
     df['Group Name'] = df['Group Name'].str.lower()
     df['workstream'] = df['Group Name'].apply(
         lambda x: extract_after_nth_occurrence(x, '_', 1))
