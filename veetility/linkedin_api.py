@@ -88,10 +88,10 @@ class LinkedInAPI:
             } 
         
         self.headers_v2 = {
-            'X-Restli-Protocol-Version': '2.0.0',
+            # 'X-Restli-Protocol-Version': '2.0.0',
             'LinkedIn-Version' : '202308',
-            'Authorization': 'Bearer ' + self.api_token,
-            'Content-Type': 'application/json'
+            'Authorization': 'Bearer ' + self.api_token
+            # 'Content-Type': 'application/json'
             } 
         
         self.time_zone = timezone(time_zone)
@@ -164,6 +164,8 @@ class LinkedInAPI:
                 raise Exception(f"Permanent HTTP Error: {response.status_code}, message: {response.json().get('message', '')}, Request params are: {params}.")
 
             elif response.status_code in [429, 500, 502, 503, 504]:
+                print(response.json())
+                print(f'headers = {response.headers}')
                 print(f"Temporary HTTP Error: {response.status_code}, message: {response.json().get('message', '')}, Request params are: {params}.")
                 self.exponential_backoff_delay(self.retry_count)  # Or follow the Retry-After header if available
             
@@ -173,7 +175,7 @@ class LinkedInAPI:
                 
         except Exception as e:
             # Catch all other exceptions
-            print(f"An unexpected error occurred: {e}, Request params are: {params}.")
+            print(f"An unexpected error occurred: {e}, Request params are: {params}. url = {url}")
             self.exponential_backoff_delay(self.retry_count)
 
         # Increment and check retries for potentially temporary issues
@@ -382,23 +384,22 @@ class LinkedInAPI:
         Notes:
             1. This method uses LinkedIn v1 API and requires appropriate headers for authentication.
             2. The method relies on `run_request_with_error_handling` for API requests and error handling.."""
-        post_id = str(post_id)
+        post_id = str(post_id).replace(':','%3A')
 
         org_id_modified = str(org_id).replace(':','%3A') #Sometimes the endpoint wants colons replace with %3A, not sure why
 
-        params = {
-            'q': 'organizationalEntity',
-            # 'organizationalEntity': f'{org_id}'}
-            'organizationalEntity' : f'{org_id_modified}'}
-
         if 'share' in post_id:
-            params['shares'] = f'{post_id}'
+            post_type_q = 'shares[0]'
         
         if 'ugcPost' in post_id:
-            params['ugcPosts'] = f'{post_id}'
+            post_type_q = 'ugcPosts[0]'
 
-        url = 'https://api.linkedin.com/rest/organizationalEntityShareStatistics'
-        response = self.run_request_with_error_handling(url, self.headers_v2, params)
+        url = f'https://api.linkedin.com/rest/organizationalEntityShareStatistics?q=organizationalEntity&organizationalEntity={org_id_modified}&{post_type_q}={post_id}'
+        
+        print(f"url = {url}")
+
+        response = self.run_request_with_error_handling(url, self.headers_v2, params=None)
+        
         return response.json()
 
     def fetch_stats_for_posts(self, posts_df=None, post_id_col='id',org_id_col='author'):
@@ -508,7 +509,7 @@ class LinkedInAPI:
         return posts_df
 
     
-    def fetch_reactions_for_a_post(self, urn_id, count=100):
+    def fetch_reactions_for_a_post(self, urn_id, community_api_token , count=100):
         """Fetches the count of different types of reactions for a LinkedIn post specified by its URN (Uniform Resource Name) ID.
 
         Args:
@@ -535,10 +536,15 @@ class LinkedInAPI:
             'start': start,
             'count': count
         }
+        headers = self.headers_v2
+        headers['Authorization'] = 'Bearer ' + community_api_token
+        headers['X-Restli-Protocol-Version'] = '2.0.0'
+
         reactions_count = Counter()
+
         #Initial query to find total number of reactions
         url = f'https://api.linkedin.com/rest/reactions/(entity:{urn_id})'
-        response = self.run_request_with_error_handling(url, self.headers_v2, params)
+        response = self.run_request_with_error_handling(url, headers, params)
         total_reactions = response.json()['paging']['total']
         num_iterations = int(total_reactions/count)
         
@@ -547,17 +553,16 @@ class LinkedInAPI:
                 params['start'] = start
 
                 url = f'https://api.linkedin.com/rest/reactions/(entity:{urn_id})'
-                response = self.run_request_with_error_handling(url, self.headers_v2, params)
+                response = self.run_request_with_error_handling(url, headers, params)
                 try:
                     elements = response.json()['elements']
                 except:
                     retry_count = 0
-                    print(f"response returned {response}")
                     
                     retry_count +=1
                     if retry_count <=5:
                         self.exponential_backoff_delay(retry_count)
-                        response = self.run_request_with_error_handling(url, self.headers_v2, params)
+                        response = self.run_request_with_error_handling(url, headers, params)
                         elements = response.json['elements'] #Each of the json elements describing who reacted and what reaction
                 
                 reactions_count = reactions_count + Counter([item['reactionType'] for item in elements])
@@ -565,7 +570,7 @@ class LinkedInAPI:
         
         return reactions_count
     
-    def fetch_reactions_for_multiple_posts(self, list_of_posts, id_col_name='id'):
+    def fetch_reactions_for_multiple_posts(self, list_of_posts, community_api_token, id_col_name='id'):
         """Fetches the count of different types of reactions for a list of LinkedIn posts and aggregates them into a DataFrame.
 
         Args:
@@ -583,7 +588,7 @@ class LinkedInAPI:
         reactions_df = pd.DataFrame()
         print(f"Number of posts = {len(list_of_posts)}")
         for post in list_of_posts:
-            reactions = self.fetch_reactions_for_a_post(post)
+            reactions = self.fetch_reactions_for_a_post(post, community_api_token)
             reactions_df = pd.concat([reactions_df,pd.DataFrame(reactions,index=[post])])
         
         reactions_df.fillna(0, inplace=True)
@@ -591,7 +596,7 @@ class LinkedInAPI:
         reactions_df.rename(columns={'index':id_col_name},inplace=True)
         return reactions_df
 
-    def fetch_follower_count(self,dict_of_urls):
+    def fetch_follower_count(self, dict_of_urls):
         """Fetches the follower count of companies from their LinkedIn URLs.
 
         This function sends a GET request to each URL present in the given dictionary, scrapes the page's HTML to find the follower count, and then stores this information in a pandas DataFrame.
@@ -604,6 +609,7 @@ class LinkedInAPI:
         for company, url in dict_of_urls.items():
             response = self.run_request_with_error_handling(url, headers=headers, expected_json_response=False)
             html = response.text
+            print(html)
             pattern = r'([\d,]+) followers on LinkedIn'
             match = re.search(pattern, html)
             try:

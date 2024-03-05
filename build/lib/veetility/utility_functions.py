@@ -70,7 +70,12 @@ class UtilityFunctions():
         # Initialise a logger for the utility functions
         self.logger = Logger(client_name, log_name)
     
-    def prepare_string_matching(self, string, is_url=False):
+    def prepare_string_matching(self, 
+                                string, 
+                                is_url=False, 
+                                readable_form=False, 
+                                ascii_characters='remove',
+                                remove_newlines=True):
         """Removing unnecessary detail, whitespaces and converting to lower case.
         
         Prepare strings for matching say in a merge function by removing unnecessary 
@@ -93,7 +98,13 @@ class UtilityFunctions():
         
         if pd.isna(string):
             return string
-        string = str(string).lower() # Convert the input to a string and make it lower case
+        
+        if readable_form == False: 
+            string = str(string).lower() # Convert the input to a string and make it lower case
+            string = string.replace(' ', '')
+            string = re.sub(r'[^\w\s]', '', string) # remove punctuation
+            string = string.replace(' ', '').replace('\n', '') # remove spaces and newline characters
+        
         if is_url:
             # Remove URLs and characters after the '?'
             string = string.split('?')[0] # Get rid of everything after they start to be utm parameters
@@ -103,11 +114,16 @@ class UtilityFunctions():
             string = re.sub(r'(https?://\S+)\s', '', string) # Remove URLs up to the first whitespace
 
         string = emoji_pattern.sub(r'', string) # remove emojis
-        string = unidecode(string)  # replace non-ASCII characters with their closest ASCII equivalents
-        string = re.sub(r'[^\w\s]', '', string) # remove punctuation
-        string = string.replace(' ', '').replace('\n', '') # remove spaces and newline characters
         
-        return string.replace(' ', '')
+        if ascii_characters == 'replace':
+            string = unidecode(string)  # replace non-ASCII characters with their closest ASCII equivalents
+        if ascii_characters == 'remove':
+            string = re.sub(r'[^\x00-\x7F]+', '', string)
+        
+        if remove_newlines == True:
+            string = string.replace('\n', '') # remove spaces and newline characters
+        
+        return string
 
     def match_ads(
             self, df_1, 
