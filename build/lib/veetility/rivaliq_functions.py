@@ -202,7 +202,7 @@ def check_bulkDownload_status(downloadToken, apiKey, start_time):
             raise Exception(f"Download Failed! Elapsed time: {round(time.time() - start_time, 2)} seconds")
         else:
             print(f"Download is still in progress. Checking again in 60 seconds... Elapsed time: {round(time.time() - start_time, 2)} seconds")
-            time.sleep(60) # wait for 20 seconds before checking again
+            time.sleep(60) # wait for 60 seconds before checking again
             return check_bulkDownload_status(downloadToken, apiKey, start_time)
     else:
         print(f"Error: {response['status_code']}")
