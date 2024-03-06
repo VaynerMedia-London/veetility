@@ -4,8 +4,33 @@ import pandas as pd
 import os
 from datetime import datetime
 from veetility import snowflake as sf
+import random
 import time
 import io
+
+def exponential_backoff(attempt, max_attempts=10, base_delay=2, max_delay=60):
+    """
+    Calculates the delay for exponential backoff with randomization.
+    
+    Args:
+        attempt (int): The current attempt number.
+        max_attempts (int, optional): The maximum number of attempts before giving up. Defaults to 10.
+        base_delay (int, optional): The base delay in seconds. Defaults to 2.
+        max_delay (int, optional): The maximum delay in seconds. Defaults to 60.
+    
+    Returns:
+        int: The delay in seconds, or None if the maximum number of attempts has been reached.
+    """
+    if attempt > max_attempts:
+        return None
+    
+    delay = base_delay * (2 ** (attempt - 1))
+    delay = min(delay, max_delay)
+    
+    # Add some randomization to the delay to avoid thundering herd problem
+    delay = delay + random.uniform(0, 1) * delay
+    
+    return delay
 
 def connect_to_snowflake(connection_parameters):
     """
@@ -118,7 +143,8 @@ def get_bulkSocialPosts(landscapeId: str,
                         companyId: str = '', 
                         mainPeriodStart='2023-01-01', 
                         mainPeriodEnd=datetime.today().strftime('%Y-%m-%d'),
-                        channel='all', format='json', 
+                        channel='all', 
+                        format='json', 
                         save_csv=False):
     """
     Initiates retrieval of the social posts for all companies within the landscape within a given time period
@@ -181,33 +207,44 @@ def get_bulkDownload_status(downloadToken, apiKey):
         raise Exception(f"Error: {response.status_code}")
     
   
-def check_bulkDownload_status(downloadToken, apiKey, start_time):
+
+def check_bulkDownload_status(downloadToken, apiKey, start_time, max_attempts=10):
     """
     Recursively checks bulk download status and returns the download link as soon as the status is ready (status == 2)
+    Uses exponential backoff strategy to handle potential rate limiting or service unavailability.
+    
     :param downloadToken: Bulk download token
     :param apiKey: Rival IQ API key
-    :start_time: Start time of the bulk download
+    :param start_time: Start time of the bulk download
+    :param max_attempts: Maximum number of attempts before giving up
     :return: Download link
     """
-    response = get_bulkDownload_status(downloadToken, apiKey)
-    if response.status_code == 200:
-        data = response.json()
-        status = data['status']
-        if status == 2:
-            print(f"Download link is ready! Elapsed time: {round(time.time() - start_time, 2)} seconds")
-            return data['href']
-        elif status == 3:
+    attempt = 1
+    while attempt <= max_attempts:
+        response = get_bulkDownload_status(downloadToken, apiKey)
+        if response.status_code == 200:
+            data = response.json()
+            status = data['status']
+            if status == 2:
+                print(f"Download link is ready! Elapsed time: {round(time.time() - start_time, 2)} seconds")
+                return data['href']
+            elif status == 3:
+                print(f"Error: {response['status_code']}")
+                print(response['text'])
+                raise Exception(f"Download Failed! Elapsed time: {round(time.time() - start_time, 2)} seconds")
+            else:
+                delay = exponential_backoff(attempt, max_attempts=max_attempts)
+                if delay is None:
+                    print(f"Max attempts reached. Giving up after {round(time.time() - start_time, 2)} seconds.")
+                    raise Exception("Download Failed!")
+                
+                print(f"Download is still in progress. Checking again in {delay} seconds... Elapsed time: {round(time.time() - start_time, 2)} seconds")
+                time.sleep(delay)
+                attempt += 1
+        else:
             print(f"Error: {response['status_code']}")
             print(response['text'])
-            raise Exception(f"Download Failed! Elapsed time: {round(time.time() - start_time, 2)} seconds")
-        else:
-            print(f"Download is still in progress. Checking again in 60 seconds... Elapsed time: {round(time.time() - start_time, 2)} seconds")
-            time.sleep(60) # wait for 60 seconds before checking again
-            return check_bulkDownload_status(downloadToken, apiKey, start_time)
-    else:
-        print(f"Error: {response['status_code']}")
-        print(response['text']) 
-        raise Exception(f"Error: {response['status_code']}")        
+            raise Exception(f"Error: {response['status_code']}")        
 
 def download_bulkSocialPosts_csv(link, landscapeId, companyId, mainPeriodStart, mainPeriodEnd, channel, save_csv):
     """
